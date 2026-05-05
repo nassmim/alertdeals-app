@@ -12,7 +12,9 @@ dist/
 !.env.[NODE_ENV].example
 
 # Stray .env files anywhere in the workspace — env config is centralized at the repo root.
-!.env
+**/.env
+**/.env.*
+!/.env
 !.env.example
 !.env.[NODE_ENV].example
 !packages/db/supabase/.env.preview
