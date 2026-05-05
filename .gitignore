@@ -7,6 +7,7 @@ dist/
 
 # Env files committed:    `.env`, `.env.{development,staging,production}`, `*.example`
 # Env files gitignored:   `.env.local`, `.env.*.local` (secrets)
+.env.local
 .env.*.local
 !.env.example
 !.env.[NODE_ENV].example
@@ -16,6 +17,16 @@ dist/
 !.env.example
 !.env.[NODE_ENV].example
 !packages/db/supabase/.env.preview
+
+# Block any .env in apps/* or packages/* (env is centralized at root)
+apps/*/.env
+apps/*/.env.*
+packages/*/.env
+packages/*/.env.*
+!packages/db/supabase/.env.preview
+
+# Supabase Studio scratch files
+packages/db/supabase/snippets/
 
 *.tsbuildinfo
 next-env.d.ts
