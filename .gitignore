@@ -28,6 +28,9 @@ packages/*/.env.*
 # Supabase Studio scratch files
 packages/db/supabase/snippets/
 
+# Supabase CLI runtime cache (changes on each `supabase start`)
+packages/db/supabase/.temp/
+
 *.tsbuildinfo
 next-env.d.ts
 config.bat
