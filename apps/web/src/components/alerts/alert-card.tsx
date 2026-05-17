@@ -63,26 +63,26 @@ export function AlertCard({ alert }: Props) {
     const newStatus: TAlertStatus = isActive ? EAlertStatus.PAUSED : EAlertStatus.ACTIVE;
     startTransition(async () => {
       setOptimisticStatus(newStatus);
-      try {
-        await updateAlertStatus(alert.id, newStatus);
-        router.refresh();
-      } catch (error) {
-        toast.error(getErrorMessage(error));
+      const result = await updateAlertStatus(alert.id, newStatus);
+      if ('error' in result) {
+        toast.error(getErrorMessage(result.error));
+        return;
       }
+      router.refresh();
     });
   };
 
   const handleDelete = () => {
     startTransition(async () => {
       setIsDeleted(true);
-      try {
-        await deleteAlert(alert.id);
-        toast.success('Alerte supprimée.');
-        router.refresh();
-      } catch (error) {
+      const result = await deleteAlert(alert.id);
+      if ('error' in result) {
         setIsDeleted(false);
-        toast.error(getErrorMessage(error));
+        toast.error(getErrorMessage(result.error));
+        return;
       }
+      toast.success('Alerte supprimée.');
+      router.refresh();
     });
   };
 

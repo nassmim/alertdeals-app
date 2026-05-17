@@ -90,19 +90,15 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
 
   const onSubmit = async (data: TAlertFormData) => {
     setSubmitError(null);
-    try {
-      if (isEditMode) {
-        await updateAlert(alert.id, data);
-      } else {
-        await createAlert(data);
-      }
-      toast.success(
-        isEditMode ? 'Alerte mise à jour avec succès !' : 'Alerte créée avec succès !',
-      );
-      router.push(pages.alerts.list);
-    } catch (err) {
-      setSubmitError(getErrorMessage(err));
+    const result = isEditMode ? await updateAlert(alert.id, data) : await createAlert(data);
+    if ('error' in result) {
+      setSubmitError(getErrorMessage(result.error));
+      return;
     }
+    toast.success(
+      isEditMode ? 'Alerte mise à jour avec succès !' : 'Alerte créée avec succès !',
+    );
+    router.push(pages.alerts.list);
   };
 
   if (!isSubscribed && !isEditMode) {

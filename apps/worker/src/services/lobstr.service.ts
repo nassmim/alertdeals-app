@@ -1,8 +1,12 @@
 import {
   ads as adsTable,
+  and,
   brands as brandsTable,
+  eq,
   getDBAdminClient,
   getTableColumns,
+  isNull,
+  locations as locationsTable,
   sql,
   TAdInsert,
   TAdReferenceData,
@@ -283,7 +287,7 @@ const getAdData = async (
     hasBeenBoosted: ad.is_boosted,
     isUrgent: ad.urgent,
     modelYear: customParseInt(adDetails['Année modèle']),
-    model: adMoreDetails.model,
+    dinPower: customParseInt(adMoreDetails.horse_power_din),
     entryYear: customParseInt(
       adDetails['Date de première mise en circulation'].slice(-4),
     ),
@@ -306,8 +310,6 @@ const getAdData = async (
     technicalInspectionYear: customParseInt(
       adDetails['Date de fin de validité du contrôle technique'],
     ),
-    acceptSalesmen: !ad.no_salesmen,
-    isMobilePhone: ad.is_mobile ?? false,
   };
 
   // FK lookups via reference Maps; brand/model auto-create if unseen.
@@ -319,6 +321,14 @@ const getAdData = async (
   adData.marketPositionId =
     referenceData.marketPositions.get(adMoreDetails.car_price_positioning) || null;
   adData.locationId = referenceData.zipcodes.get(ad.postal_code) || 1;
+
+  
+  if (ad.region && adData.locationId) {
+    await db
+      .update(locationsTable)
+      .set({ region: ad.region })
+      .where(and(eq(locationsTable.id, adData.locationId), isNull(locationsTable.region)));
+  }
   adData.gearBoxId = referenceData.gearBoxes.get(adDetails['Boîte de vitesse']) || null;
   adData.drivingLicenceId = referenceData.drivingLicences.get(adDetails['Permis']) || 1;
   adData.fuelId = referenceData.fuels.get(adMoreDetails.fuel) || null;
