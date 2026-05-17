@@ -3,4 +3,5 @@ export const CACHE_TAGS = {
   alert: (id: string) => `alert:${id}`,
   brands: 'brands',
   vehicleModels: 'vehicle-models',
+  ads: 'ads',
 } as const;
