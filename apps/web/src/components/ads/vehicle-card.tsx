@@ -5,6 +5,7 @@ import { pages } from '@/config/routes';
 import type { TAdWithRelations } from '@/services/ad.service';
 import {
   Calendar,
+  CalendarClock,
   Car,
   ExternalLink,
   Gauge,
@@ -30,6 +31,12 @@ const eurosFormatter = new Intl.NumberFormat('fr-FR', {
 });
 
 const kmFormatter = new Intl.NumberFormat('fr-FR');
+
+const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
+  day: '2-digit',
+  month: 'long',
+  year: 'numeric',
+});
 
 const DESCRIPTION_MAX_LENGTH = 200;
 
@@ -160,6 +167,11 @@ export function VehicleCard({ ad, isLocked = false }: Props) {
             </span>
           </div>
         )}
+
+        <div className="flex items-center gap-2 text-sm">
+          <CalendarClock className="size-4" />
+          <span>Publié le {dateFormatter.format(new Date(ad.lastPublicationDate))}</span>
+        </div>
 
         <div className="flex items-center gap-2 text-sm">
           <Phone className="size-4" />
