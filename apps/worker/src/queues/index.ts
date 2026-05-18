@@ -3,6 +3,7 @@ import { connection } from '../redis.js';
 
 export const QUEUE_NAMES = {
   SCRAPING: 'scraping',
+  DAILY_ORCHESTRATOR: 'daily-orchestrator',
 } as const;
 
 export const scrapingQueue = new Queue(QUEUE_NAMES.SCRAPING, {
@@ -13,8 +14,17 @@ export const scrapingQueue = new Queue(QUEUE_NAMES.SCRAPING, {
   },
 });
 
+export const dailyOrchestratorQueue = new Queue(QUEUE_NAMES.DAILY_ORCHESTRATOR, {
+  connection,
+  defaultJobOptions: {
+    removeOnComplete: 100,
+    removeOnFail: 1000,
+  },
+});
+
 export const queues = {
   [QUEUE_NAMES.SCRAPING]: scrapingQueue,
+  [QUEUE_NAMES.DAILY_ORCHESTRATOR]: dailyOrchestratorQueue,
 };
 
 export async function getQueueStats(queueName: string) {
