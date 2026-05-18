@@ -1,20 +1,26 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { pages } from '@/config/routes';
 import type { TAdWithRelations } from '@/services/ad.service';
 import {
   Calendar,
   Car,
   ExternalLink,
   Gauge,
+  Lock,
   MapPin,
   Phone,
+  Repeat,
   Settings,
   Tag,
   Zap,
 } from 'lucide-react';
+import Link from 'next/link';
 
 type Props = {
   ad: TAdWithRelations;
+  isLocked?: boolean;
 };
 
 const eurosFormatter = new Intl.NumberFormat('fr-FR', {
@@ -27,7 +33,7 @@ const kmFormatter = new Intl.NumberFormat('fr-FR');
 
 const DESCRIPTION_MAX_LENGTH = 200;
 
-export function VehicleCard({ ad }: Props) {
+export function VehicleCard({ ad, isLocked = false }: Props) {
   const medianPrice =
     ad.priceMin != null && ad.priceMax != null ? (ad.priceMin + ad.priceMax) / 2 : null;
 
@@ -40,10 +46,52 @@ export function VehicleCard({ ad }: Props) {
       : ad.description
     : null;
 
+  if (isLocked) {
+    return (
+      <Card className="relative overflow-hidden">
+        <div className="pointer-events-none select-none blur-sm">
+          <CardHeader>
+            <CardTitle>{ad.title}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {ad.picture && (
+              <img
+                src={ad.picture}
+                alt=""
+                className="aspect-video w-full rounded-md object-cover"
+              />
+            )}
+            <div className="space-y-1 text-sm">
+              <div>Prix annonce : {eurosFormatter.format(ad.price)}</div>
+              {medianPrice != null && (
+                <div>Prix marché médian : {eurosFormatter.format(medianPrice)}</div>
+              )}
+            </div>
+          </CardContent>
+        </div>
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-background/70 p-4 text-center backdrop-blur-sm">
+          <Lock className="size-8" />
+          <p className="text-sm font-medium">Annonce réservée aux abonnés</p>
+          <Button asChild size="sm">
+            <Link href={pages.subscription}>S'abonner</Link>
+          </Button>
+        </div>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{ad.title}</CardTitle>
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle>{ad.title}</CardTitle>
+          {ad.hasBeenReposted && (
+            <Badge variant="secondary" className="gap-1 shrink-0">
+              <Repeat className="size-3" />
+              Republiée
+            </Badge>
+          )}
+        </div>
       </CardHeader>
 
       <CardContent className="space-y-4">
