@@ -42,6 +42,10 @@ type Props = {
   alert?: TAccountAlert;
 };
 
+const blockNegativeKeystroke = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === '-' || e.key === 'e' || e.key === 'E') e.preventDefault();
+};
+
 export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props) {
   const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -219,7 +223,7 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
                 <FormItem>
                   <FormLabel>Année min</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="2018" {...field} value={field.value ?? ''} />
+                    <Input type="number" min={0} onKeyDown={blockNegativeKeystroke} placeholder="2018" {...field} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -233,7 +237,7 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
                 <FormItem>
                   <FormLabel>Année max</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="2024" {...field} value={field.value ?? ''} />
+                    <Input type="number" min={0} onKeyDown={blockNegativeKeystroke} placeholder="2024" {...field} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -247,7 +251,7 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
                 <FormItem>
                   <FormLabel>Kilométrage min</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
+                    <Input type="number" min={0} onKeyDown={blockNegativeKeystroke} placeholder="0" {...field} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -263,6 +267,8 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
                   <FormControl>
                     <Input
                       type="number"
+                      min={0}
+                      onKeyDown={blockNegativeKeystroke}
                       placeholder="150000"
                       {...field}
                       value={field.value ?? ''}
@@ -298,7 +304,7 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
                 <FormItem>
                   <FormLabel>Périmètre (km)</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="50" {...field} value={field.value ?? ''} />
+                    <Input type="number" min={0} onKeyDown={blockNegativeKeystroke} placeholder="50" {...field} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -312,7 +318,7 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
                 <FormItem className="md:col-span-2">
                   <FormLabel>Prix minimum (EUR)</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="3000" {...field} value={field.value ?? ''} />
+                    <Input type="number" min={0} onKeyDown={blockNegativeKeystroke} placeholder="3000" {...field} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -373,6 +379,8 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
                     <FormControl>
                       <Input
                         type="number"
+                        min={0}
+                        onKeyDown={blockNegativeKeystroke}
                         placeholder="15000"
                         {...field}
                         value={field.value ?? ''}
@@ -394,7 +402,9 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
                     <FormControl>
                       <Input
                         type="number"
+                        min={0}
                         step="0.1"
+                        onKeyDown={blockNegativeKeystroke}
                         placeholder="15"
                         {...field}
                         value={field.value ?? ''}
