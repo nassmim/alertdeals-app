@@ -50,7 +50,7 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
   const form = useForm<TAlertFormData>({
     resolver: zodResolver(alertFormSchema),
     defaultValues: {
-      name: alert?.name ?? null,
+      name: alert?.name ?? '',
       brandId: alert?.brandId ?? null,
       modelId: alert?.modelId ?? null,
       locationId: alert?.locationId ?? null,
@@ -127,7 +127,7 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nom de l'alerte</FormLabel>
+              <FormLabel>Nom de l'alerte *</FormLabel>
               <FormControl>
                 <Input
                   placeholder="Ex. Peugeot 208 Île-de-France"
@@ -135,7 +135,7 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
                   value={field.value ?? ''}
                 />
               </FormControl>
-              <FormDescription>Optionnel — pour retrouver l'alerte plus facilement.</FormDescription>
+              <FormDescription>Pour retrouver l'alerte plus facilement.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

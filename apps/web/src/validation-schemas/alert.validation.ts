@@ -17,7 +17,7 @@ const notificationChannelsSchema = z.object({
 
 export const alertFormSchema = z
   .object({
-    name: z.preprocess(emptyToNull, z.string().trim().max(255).nullable()),
+    name: z.string().trim().min(1, "Le nom de l'alerte est requis").max(255),
 
     brandId: optionalNumber(z.coerce.number().int().positive()),
     modelId: optionalNumber(z.coerce.number().int().positive()),
