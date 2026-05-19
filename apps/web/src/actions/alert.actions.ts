@@ -6,7 +6,7 @@ import { getCurrentAccountId } from '@/services/account.service';
 import { getAccountAlerts } from '@/services/alert.service';
 import { hasActiveSubscription } from '@/services/subscription.service';
 import { alertFormSchema, createAlertSchema } from '@/validation-schemas';
-import { alerts, eq } from '@alertdeals/db';
+import { alertBrands, alertModels, alerts, eq } from '@alertdeals/db';
 import {
   EAccountErrorCode,
   EAlertErrorCode,
@@ -59,8 +59,6 @@ export async function createAlert(data: unknown): Promise<TCreateAlertResult> {
         .values({
           accountId,
           name: validated.name ?? null,
-          brandId: validated.brandId ?? null,
-          modelId: validated.modelId ?? null,
           locationId: validated.locationId ?? null,
           radiusInKm: validated.radiusInKm ?? null,
           modelYearMin: validated.modelYearMin ?? null,
@@ -74,6 +72,21 @@ export async function createAlert(data: unknown): Promise<TCreateAlertResult> {
           notificationChannels: validated.notificationChannels,
         })
         .returning({ id: alerts.id });
+
+      if (!row) return null;
+
+      // Multi-select : on stocke les marques/modèles cibles dans les join tables
+      // `alert_brands` / `alert_models` (plutôt qu'une seule FK sur alerts).
+      if (validated.brandIds.length > 0) {
+        await tx
+          .insert(alertBrands)
+          .values(validated.brandIds.map((brandId) => ({ alertId: row.id, brandId })));
+      }
+      if (validated.modelIds.length > 0) {
+        await tx
+          .insert(alertModels)
+          .values(validated.modelIds.map((modelId) => ({ alertId: row.id, modelId })));
+      }
 
       return row;
     });
@@ -112,13 +125,11 @@ export async function updateAlert(
     const db = await createDrizzleSupabaseClient();
 
     // RLS enforces account ownership via the `using/withCheck: accountId = auth.uid()` policy.
-    const [updated] = await db.rls(async (tx) =>
-      tx
+    const updated = await db.rls(async (tx) => {
+      const [row] = await tx
         .update(alerts)
         .set({
           name: validated.name ?? null,
-          brandId: validated.brandId ?? null,
-          modelId: validated.modelId ?? null,
           locationId: validated.locationId ?? null,
           radiusInKm: validated.radiusInKm ?? null,
           modelYearMin: validated.modelYearMin ?? null,
@@ -132,8 +143,28 @@ export async function updateAlert(
           notificationChannels: validated.notificationChannels,
         })
         .where(eq(alerts.id, alertId))
-        .returning({ id: alerts.id }),
-    );
+        .returning({ id: alerts.id });
+
+      if (!row) return null;
+
+      // Sync simple : on vide les join tables puis on réinsère.
+      // Volume négligeable (qq marques/modèles par alerte), perf non critique.
+      await tx.delete(alertBrands).where(eq(alertBrands.alertId, alertId));
+      await tx.delete(alertModels).where(eq(alertModels.alertId, alertId));
+
+      if (validated.brandIds.length > 0) {
+        await tx
+          .insert(alertBrands)
+          .values(validated.brandIds.map((brandId) => ({ alertId, brandId })));
+      }
+      if (validated.modelIds.length > 0) {
+        await tx
+          .insert(alertModels)
+          .values(validated.modelIds.map((modelId) => ({ alertId, modelId })));
+      }
+
+      return row;
+    });
 
     if (!updated) {
       return { error: EAlertErrorCode.ALERT_NOT_FOUND };

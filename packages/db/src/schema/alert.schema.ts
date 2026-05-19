@@ -16,6 +16,7 @@ import {
   real,
   smallint,
   timestamp,
+  unique,
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
@@ -33,8 +34,6 @@ export const alerts = pgTable(
     accountId: uuid('account_id').notNull(),
     name: varchar({ length: 255 }),
     status: alertStatus().notNull().default(EAlertStatus.ACTIVE),
-    brandId: smallint('brand_id').references(() => brands.id),
-    modelId: smallint('model_id').references(() => vehicleModels.id),
     locationId: integer('location_id').references(() => locations.id),
     radiusInKm: smallint('radius_in_km'),
     modelYearMin: smallint('model_year_min'),
@@ -74,12 +73,103 @@ export const alerts = pgTable(
   ],
 );
 
-export const alertsRelations = relations(alerts, ({ one }) => ({
+export const alertBrands = pgTable(
+  'alert_brands',
+  {
+    id: uuid().defaultRandom().primaryKey(),
+    alertId: uuid('alert_id').notNull(),
+    brandId: smallint('brand_id').notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.alertId],
+      foreignColumns: [alerts.id],
+      name: 'alert_brand_alert_id_fk',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.brandId],
+      foreignColumns: [brands.id],
+      name: 'alert_brand_brand_id_fk',
+    }).onDelete('no action'),
+    unique('alert_brand_alert_id_brand_id_key').on(table.alertId, table.brandId),
+    index('alert_brand_alert_id_idx').on(table.alertId),
+    pgPolicy('enable all crud for the alert owners', {
+      as: 'permissive',
+      for: 'all',
+      to: authenticatedRole,
+      using: sql`exists (
+        select 1 from alerts a
+        where a.id = ${table.alertId}
+        and a.account_id = ${authUid}
+      )`,
+      withCheck: sql`exists (
+        select 1 from alerts a
+        where a.id = ${table.alertId}
+        and a.account_id = ${authUid}
+      )`,
+    }),
+  ],
+);
+
+export const alertModels = pgTable(
+  'alert_models',
+  {
+    id: uuid().defaultRandom().primaryKey(),
+    alertId: uuid('alert_id').notNull(),
+    modelId: smallint('model_id').notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.alertId],
+      foreignColumns: [alerts.id],
+      name: 'alert_model_alert_id_fk',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.modelId],
+      foreignColumns: [vehicleModels.id],
+      name: 'alert_model_model_id_fk',
+    }).onDelete('no action'),
+    unique('alert_model_alert_id_model_id_key').on(table.alertId, table.modelId),
+    index('alert_model_alert_id_idx').on(table.alertId),
+    pgPolicy('enable all crud for the alert owners', {
+      as: 'permissive',
+      for: 'all',
+      to: authenticatedRole,
+      using: sql`exists (
+        select 1 from alerts a
+        where a.id = ${table.alertId}
+        and a.account_id = ${authUid}
+      )`,
+      withCheck: sql`exists (
+        select 1 from alerts a
+        where a.id = ${table.alertId}
+        and a.account_id = ${authUid}
+      )`,
+    }),
+  ],
+);
+
+export const alertsRelations = relations(alerts, ({ one, many }) => ({
   account: one(accounts, { fields: [alerts.accountId], references: [accounts.id] }),
-  brand: one(brands, { fields: [alerts.brandId], references: [brands.id] }),
-  vehicleModel: one(vehicleModels, { fields: [alerts.modelId], references: [vehicleModels.id] }),
   location: one(locations, { fields: [alerts.locationId], references: [locations.id] }),
+  brands: many(alertBrands),
+  models: many(alertModels),
+}));
+
+export const alertBrandsRelations = relations(alertBrands, ({ one }) => ({
+  alert: one(alerts, { fields: [alertBrands.alertId], references: [alerts.id] }),
+  brand: one(brands, { fields: [alertBrands.brandId], references: [brands.id] }),
+}));
+
+export const alertModelsRelations = relations(alertModels, ({ one }) => ({
+  alert: one(alerts, { fields: [alertModels.alertId], references: [alerts.id] }),
+  vehicleModel: one(vehicleModels, {
+    fields: [alertModels.modelId],
+    references: [vehicleModels.id],
+  }),
 }));
 
 export type TAlert = InferSelectModel<typeof alerts>;
 export type TAlertInsert = Omit<InferInsertModel<typeof alerts>, 'createdAt'>;
+export type TAlertBrand = InferSelectModel<typeof alertBrands>;
+export type TAlertModel = InferSelectModel<typeof alertModels>;
