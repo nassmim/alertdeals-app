@@ -3,6 +3,7 @@ import {
   EAlertErrorCode,
   EAuthErrorCode,
   EGeneralErrorCode,
+  ESettingsErrorCode,
   ESubscriptionErrorCode,
   type TErrorCode,
 } from '@alertdeals/shared';
@@ -30,6 +31,11 @@ const ALERT_ERROR_MESSAGES: Record<EAlertErrorCode, string> = {
     "Impossible d'enregistrer l'alerte. Réessaie.",
 };
 
+const SETTINGS_ERROR_MESSAGES: Record<ESettingsErrorCode, string> = {
+  [ESettingsErrorCode.SETTINGS_SAVE_FAILED]:
+    "Impossible d'enregistrer les réglages. Réessaie.",
+};
+
 const AUTH_ERROR_MESSAGES: Record<EAuthErrorCode, string> = {
   [EAuthErrorCode.AUTH_ERROR]:
     'La connexion a échoué. Réessaie ou contacte-nous si le problème persiste.',
@@ -49,6 +55,7 @@ const ERROR_MESSAGES: Record<TErrorCode, string> = {
   ...ACCOUNT_ERROR_MESSAGES,
   ...SUBSCRIPTION_ERROR_MESSAGES,
   ...ALERT_ERROR_MESSAGES,
+  ...SETTINGS_ERROR_MESSAGES,
   ...AUTH_ERROR_MESSAGES,
 };
 
