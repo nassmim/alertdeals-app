@@ -42,20 +42,34 @@ type Props = {
   alert?: TAccountAlert;
 };
 
+// Empêche la saisie de valeurs négatives ou en notation scientifique dans les inputs numériques
+// (montant, kilométrage, années…). On bloque au keydown plutôt qu'au validate pour un retour immédiat.
 const blockNegativeKeystroke = (e: React.KeyboardEvent<HTMLInputElement>) => {
   if (e.key === '-' || e.key === 'e' || e.key === 'E') e.preventDefault();
 };
 
 // Liste centralisée des canaux de notification.
 // Chaque canal peut porter un `warning` affiché sous la case si elle est cochée
-// (ex. rappel de fournir le numéro WhatsApp).
+// (ex. tuto d'installation pour les notifs téléphone, rappel de fournir le numéro WhatsApp).
 const CHANNEL_OPTIONS: {
   key: 'email' | 'phone' | 'whatsapp';
   label: string;
   warning?: React.ReactNode;
 }[] = [
   { key: 'email', label: 'Email' },
-  { key: 'phone', label: 'Téléphone' },
+  {
+    key: 'phone',
+    label: 'Téléphone',
+    warning: (
+      <>
+        Pour ce mode, tu dois d'abord installer l'application sur ton téléphone. Regarde le tuto{' '}
+        <a href="#" className="font-medium underline">
+          ici
+        </a>
+        .
+      </>
+    ),
+  },
   {
     key: 'whatsapp',
     label: 'WhatsApp',
