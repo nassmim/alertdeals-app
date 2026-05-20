@@ -25,6 +25,7 @@ import {
   Loader2,
   Mail,
   MapPin,
+  MessageCircle,
   Pause,
   Pencil,
   Phone,
@@ -117,6 +118,11 @@ export function AlertCard({ alert }: Props) {
               {alert.notificationChannels.phone && (
                 <Badge variant="outline" className="gap-1">
                   <Phone className="size-3" /> SMS
+                </Badge>
+              )}
+              {alert.notificationChannels.whatsapp && (
+                <Badge variant="outline" className="gap-1">
+                  <MessageCircle className="size-3" /> WhatsApp
                 </Badge>
               )}
             </div>
