@@ -429,11 +429,23 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
                 control={form.control}
                 name={`notificationChannels.${channel}`}
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center gap-3 space-y-0 rounded-lg border border-border bg-card p-3 transition hover:bg-accent">
-                    <FormControl>
-                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormLabel className="cursor-pointer capitalize">{channel}</FormLabel>
+                  <FormItem className="space-y-2 rounded-lg border border-border bg-card p-3 transition hover:bg-accent">
+                    <div className="flex flex-row items-center gap-3">
+                      <FormControl>
+                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                      </FormControl>
+                      <FormLabel className="cursor-pointer capitalize">{channel}</FormLabel>
+                    </div>
+                    {channel === 'whatsapp' && field.value && (
+                      <p className="ml-7 text-xs text-muted-foreground">
+                        Tu devras nous communiquer le numéro WhatsApp sur lequel t'envoyer les
+                        alertes. Tu peux le faire{' '}
+                        <a href="#" className="font-medium underline">
+                          ici
+                        </a>
+                        .
+                      </p>
+                    )}
                   </FormItem>
                 )}
               />
