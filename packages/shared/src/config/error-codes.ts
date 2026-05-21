@@ -21,6 +21,11 @@ export enum EAlertErrorCode {
 }
 export type TAlertErrorCode = EAlertErrorCode;
 
+export enum ESettingsErrorCode {
+  SETTINGS_SAVE_FAILED = 'SETTINGS_SAVE_FAILED',
+}
+export type TSettingsErrorCode = ESettingsErrorCode;
+
 export enum EAuthErrorCode {
   AUTH_ERROR = 'AUTH_ERROR',
   LINK_EXPIRED = 'LINK_EXPIRED',
@@ -36,4 +41,5 @@ export type TErrorCode =
   | TAccountErrorCode
   | TSubscriptionErrorCode
   | TAlertErrorCode
+  | TSettingsErrorCode
   | TAuthErrorCode;

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { Bell, BellRing, CreditCard, Flame, LogOut, Menu, User, X } from 'lucide-react';
+import { Bell, BellRing, CreditCard, Flame, LogOut, Menu, Settings, User, X } from 'lucide-react';
 import { signOut } from '@/actions/auth.actions';
 import { pages } from '@/config/routes';
 import { cn } from '@/lib/utils';
@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 const navItems = [
   { label: 'Hot Deals', href: pages.hotDeals, icon: Flame },
   { label: 'Alertes', href: pages.alerts.list, icon: Bell },
+  { label: 'Réglages', href: pages.settings, icon: Settings },
   { label: 'Abonnement', href: pages.subscription, icon: CreditCard },
   { label: 'Mon compte', href: pages.account, icon: User },
 ] as const;

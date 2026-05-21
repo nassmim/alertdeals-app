@@ -10,6 +10,8 @@ export const accounts = pgTable(
     hasSubscription: boolean('has_subscription').default(false).notNull(),
     confirmedByAdmin: boolean('confirmed_by_admin').default(false).notNull(),
     isFirstConnexion: boolean('is_first_connexion').default(true).notNull(),
+    whatsappPhoneNumber: varchar('whatsapp_phone_number', { length: 64 }),
+    whatsappIsGroup: boolean('whatsapp_is_group').default(false).notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
