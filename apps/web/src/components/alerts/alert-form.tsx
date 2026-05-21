@@ -46,6 +46,32 @@ const blockNegativeKeystroke = (e: React.KeyboardEvent<HTMLInputElement>) => {
   if (e.key === '-' || e.key === 'e' || e.key === 'E') e.preventDefault();
 };
 
+// Liste centralisée des canaux de notification.
+// Chaque canal peut porter un `warning` affiché sous la case si elle est cochée
+// (ex. rappel de fournir le numéro WhatsApp).
+const CHANNEL_OPTIONS: {
+  key: 'email' | 'phone' | 'whatsapp';
+  label: string;
+  warning?: React.ReactNode;
+}[] = [
+  { key: 'email', label: 'Email' },
+  { key: 'phone', label: 'Téléphone' },
+  {
+    key: 'whatsapp',
+    label: 'WhatsApp',
+    warning: (
+      <>
+        Tu devras nous communiquer le numéro WhatsApp sur lequel t'envoyer les alertes. Tu peux le
+        faire{' '}
+        <a href="#" className="font-medium underline">
+          ici
+        </a>
+        .
+      </>
+    ),
+  },
+];
+
 export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props) {
   const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -419,28 +445,23 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
             <CardTitle>Canaux de notification</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {(['email', 'phone', 'whatsapp'] as const).map((channel) => (
+            {CHANNEL_OPTIONS.map(({ key, label, warning }) => (
               <FormField
-                key={channel}
+                key={key}
                 control={form.control}
-                name={`notificationChannels.${channel}`}
+                name={`notificationChannels.${key}`}
                 render={({ field }) => (
                   <FormItem className="space-y-2 rounded-lg border border-border bg-card p-3 transition hover:bg-accent">
                     <div className="flex flex-row items-center gap-3">
                       <FormControl>
                         <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                       </FormControl>
-                      <FormLabel className="cursor-pointer capitalize">{channel}</FormLabel>
+                      <FormLabel className="cursor-pointer">{label}</FormLabel>
                     </div>
-                    {channel === 'whatsapp' && field.value && (
-                      <p className="ml-7 text-xs text-muted-foreground">
-                        Tu devras nous communiquer le numéro WhatsApp sur lequel t'envoyer les
-                        alertes. Tu peux le faire{' '}
-                        <a href="#" className="font-medium underline">
-                          ici
-                        </a>
-                        .
-                      </p>
+                    {/* Affiche le warning associé au canal s'il existe et que la case est cochée.
+                        Évite de hard-coder un test par canal (ex: `channel === 'whatsapp'`). */}
+                    {warning && field.value && (
+                      <p className="ml-7 text-xs text-muted-foreground">{warning}</p>
                     )}
                   </FormItem>
                 )}

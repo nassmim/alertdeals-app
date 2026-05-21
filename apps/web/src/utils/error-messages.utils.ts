@@ -5,6 +5,7 @@ import {
   EGeneralErrorCode,
   ESettingsErrorCode,
   ESubscriptionErrorCode,
+  EWorkerErrorCode,
   type TErrorCode,
 } from '@alertdeals/shared';
 
@@ -36,6 +37,13 @@ const SETTINGS_ERROR_MESSAGES: Record<ESettingsErrorCode, string> = {
     "Impossible d'enregistrer les réglages. Réessaie.",
 };
 
+// Côté web on ne déclenche jamais le cron, mais le code d'erreur existe dans le shared union.
+// On fournit un libellé générique pour rester exhaustif sur `Record<TErrorCode, string>`.
+const WORKER_ERROR_MESSAGES: Record<EWorkerErrorCode, string> = {
+  [EWorkerErrorCode.CRON_DISPATCH_FAILED]:
+    "Le déclenchement automatique a échoué. Réessaie plus tard ou contacte-nous.",
+};
+
 const AUTH_ERROR_MESSAGES: Record<EAuthErrorCode, string> = {
   [EAuthErrorCode.AUTH_ERROR]:
     'La connexion a échoué. Réessaie ou contacte-nous si le problème persiste.',
@@ -56,6 +64,7 @@ const ERROR_MESSAGES: Record<TErrorCode, string> = {
   ...SUBSCRIPTION_ERROR_MESSAGES,
   ...ALERT_ERROR_MESSAGES,
   ...SETTINGS_ERROR_MESSAGES,
+  ...WORKER_ERROR_MESSAGES,
   ...AUTH_ERROR_MESSAGES,
 };
 
