@@ -106,25 +106,27 @@ export function AlertCard({ alert }: Props) {
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <CardTitle className="truncate">{title}</CardTitle>
-            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            <div className="mt-2 space-y-1.5">
               <Badge variant={isActive ? 'default' : 'secondary'}>
                 {isActive ? 'Active' : 'En pause'}
               </Badge>
-              {alert.notificationChannels.email && (
-                <Badge variant="outline" className="gap-1">
-                  <Mail className="size-3" /> Email
-                </Badge>
-              )}
-              {alert.notificationChannels.phone && (
-                <Badge variant="outline" className="gap-1">
-                  <Phone className="size-3" /> SMS
-                </Badge>
-              )}
-              {alert.notificationChannels.whatsapp && (
-                <Badge variant="outline" className="gap-1">
-                  <MessageCircle className="size-3" /> WhatsApp
-                </Badge>
-              )}
+              <div className="flex flex-wrap items-center gap-1.5">
+                {alert.notificationChannels.email && (
+                  <Badge variant="outline" className="gap-1">
+                    <Mail className="size-3" /> Email
+                  </Badge>
+                )}
+                {alert.notificationChannels.phone && (
+                  <Badge variant="outline" className="gap-1">
+                    <Phone className="size-3" /> SMS
+                  </Badge>
+                )}
+                {alert.notificationChannels.whatsapp && (
+                  <Badge variant="outline" className="gap-1">
+                    <MessageCircle className="size-3" /> WhatsApp
+                  </Badge>
+                )}
+              </div>
             </div>
           </div>
           <Button
