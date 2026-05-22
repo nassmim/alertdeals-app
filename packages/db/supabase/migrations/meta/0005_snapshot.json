@@ -1,6 +1,6 @@
 {
-  "id": "84ecbf7d-6ae1-4104-9894-cc603af6d5a2",
-  "prevId": "769282b7-5917-4782-a61e-f87a22f82052",
+  "id": "55f1901a-354e-48ab-b0b3-c4c6e8616dcb",
+  "prevId": "869a9379-184f-4468-af27-53b1504a46a9",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -40,6 +40,19 @@
           "primaryKey": false,
           "notNull": true,
           "default": true
+        },
+        "whatsapp_phone_number": {
+          "name": "whatsapp_phone_number",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "whatsapp_is_group": {
+          "name": "whatsapp_is_group",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "created_at": {
           "name": "created_at",
