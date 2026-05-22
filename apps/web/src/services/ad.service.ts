@@ -1,14 +1,19 @@
 import { CACHE_TAGS } from '@/lib/cache.config';
 import { getCurrentAccountId } from '@/services/account.service';
 import {
+  ads,
   alerts,
   and,
+  asc,
+  desc,
   eq,
   getDBAdminClient,
+  inArray,
   matchedAds,
   sql,
 } from '@alertdeals/db';
 import { EAlertStatus } from '@alertdeals/shared';
+import { DEFAULT_HOT_DEALS_SORT, EHotDealsSort } from '@/validation-schemas';
 import { cacheTag } from 'next/cache';
 
 const PAGE_SIZE = 20;
@@ -47,19 +52,32 @@ export type TMatchingAdsPage =
       totalCount: number;
     };
 
-export async function getMatchingAdsPage(params: { page: number }): Promise<TMatchingAdsPage> {
+type TGetMatchingAdsPageParams = {
+  page: number;
+  sort?: EHotDealsSort;
+};
+
+export async function getMatchingAdsPage(
+  params: TGetMatchingAdsPageParams,
+): Promise<TMatchingAdsPage> {
   const accountId = await getCurrentAccountId();
-  return getCachedMatchingAdsPage(accountId, params.page);
+  return getCachedMatchingAdsPage(accountId, params.page, params.sort ?? DEFAULT_HOT_DEALS_SORT);
 }
 
 /**
  * Reads pre-computed matches from `matched_ads` (populated by the worker's
  * daily-orchestrator). Empty states still distinguish "no alerts at all" from
  * "alerts exist but nothing matched yet" so the page can show the right CTA.
+ *
+ * Le tri se fait sur les colonnes de `ads` (createdAt, price, marge), ce qui
+ * impose un JOIN sur ads dans la 1ère requête. La query relationnelle de
+ * Drizzle ne supporte pas l'orderBy sur des tables jointes — on passe donc
+ * On rehydrate ensuite les ads avec leurs relations via l'API relationnelle.
  */
 async function getCachedMatchingAdsPage(
   accountId: string,
   page: number,
+  sort: EHotDealsSort,
 ): Promise<TMatchingAdsPage> {
   'use cache';
   cacheTag(
@@ -84,28 +102,77 @@ async function getCachedMatchingAdsPage(
   const totalCount = totalRows[0]?.count ?? 0;
   if (totalCount === 0) return { kind: 'NO_MATCH' };
 
-  const matchRows = await db.query.matchedAds.findMany({
-    where: eq(matchedAds.accountId, accountId),
-    orderBy: (table, { desc }) => [desc(table.matchedAt)],
-    limit: PAGE_SIZE,
-    offset: (page - 1) * PAGE_SIZE,
+  // Étape 1 : on récupère les IDs des ads à afficher, déjà triés et paginés,
+  // en joignant `ads` pour pouvoir trier par ses colonnes.
+  const orderedRows = await db
+    .select({ adId: matchedAds.adId })
+    .from(matchedAds)
+    .innerJoin(ads, eq(matchedAds.adId, ads.id))
+    .where(eq(matchedAds.accountId, accountId))
+    .orderBy(...buildOrderBy(sort))
+    .limit(PAGE_SIZE)
+    .offset((page - 1) * PAGE_SIZE);
+
+  const orderedAdIds = orderedRows.map((r) => r.adId);
+
+  if (orderedAdIds.length === 0) {
+    return {
+      kind: 'OK',
+      ads: [],
+      page,
+      totalPages: Math.max(1, Math.ceil(totalCount / PAGE_SIZE)),
+      totalCount,
+    };
+  }
+
+  // Étape 2 : on rehydrate les ads avec leurs relations via l'API relationnelle.
+  // `findMany` ne préserve pas l'ordre de la liste d'IDs → on réordonne en JS via la map.
+  const adsWithRelations = await db.query.ads.findMany({
+    where: inArray(ads.id, orderedAdIds),
     with: {
-      ad: {
-        with: {
-          brand: true,
-          vehicleModel: true,
-          gearBox: true,
-          location: true,
-        },
-      },
+      brand: true,
+      vehicleModel: true,
+      gearBox: true,
+      location: true,
     },
   });
 
+  const adsById = new Map(adsWithRelations.map((a) => [a.id, a]));
+  const orderedAds = orderedAdIds
+    .map((id) => adsById.get(id))
+    .filter((a): a is TAdWithRelations => a != null);
+
   return {
     kind: 'OK',
-    ads: matchRows.map((row) => row.ad),
+    ads: orderedAds,
     page,
     totalPages: Math.max(1, Math.ceil(totalCount / PAGE_SIZE)),
     totalCount,
   };
+}
+
+/**
+ * Mapping du critère de tri choisi par l'user vers la clause `ORDER BY`.
+ * `NULLS LAST` est utilisé sur les colonnes nullable (marge) pour ne pas faire
+ * remonter les ads sans valeur en haut/bas du tri.
+ */
+function buildOrderBy(sort: EHotDealsSort) {
+  switch (sort) {
+    case EHotDealsSort.DATE_DESC:
+      return [desc(ads.createdAt)];
+    case EHotDealsSort.DATE_ASC:
+      return [asc(ads.createdAt)];
+    case EHotDealsSort.PRICE_ASC:
+      return [asc(ads.price)];
+    case EHotDealsSort.PRICE_DESC:
+      return [desc(ads.price)];
+    case EHotDealsSort.MARGIN_AMOUNT_DESC:
+      return [sql`${ads.marginAmountMin} DESC NULLS LAST`];
+    case EHotDealsSort.MARGIN_AMOUNT_ASC:
+      return [sql`${ads.marginAmountMin} ASC NULLS LAST`];
+    case EHotDealsSort.MARGIN_PERCENTAGE_DESC:
+      return [sql`${ads.marginPercentageMin} DESC NULLS LAST`];
+    case EHotDealsSort.MARGIN_PERCENTAGE_ASC:
+      return [sql`${ads.marginPercentageMin} ASC NULLS LAST`];
+  }
 }

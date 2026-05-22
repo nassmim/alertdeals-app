@@ -1,14 +1,25 @@
 import { Button } from '@/components/ui/button';
 import { pages } from '@/config/routes';
+import { DEFAULT_HOT_DEALS_SORT, type EHotDealsSort } from '@/validation-schemas';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
 type Props = {
   page: number;
   totalPages: number;
+  sort: EHotDealsSort;
 };
 
-export function HotDealsPagination({ page, totalPages }: Props) {
+// Construit l'URL d'une page de la liste en conservant le tri courant (`?sort=`).
+// Si le tri est celui par défaut, on omet le param pour garder l'URL propre.
+function buildPageHref(targetPage: number, sort: EHotDealsSort): string {
+  const params = new URLSearchParams();
+  params.set('page', String(targetPage));
+  if (sort !== DEFAULT_HOT_DEALS_SORT) params.set('sort', sort);
+  return `${pages.hotDeals}?${params.toString()}`;
+}
+
+export function HotDealsPagination({ page, totalPages, sort }: Props) {
   if (totalPages <= 1) return null;
 
   const hasPrev = page > 1;
@@ -27,7 +38,7 @@ export function HotDealsPagination({ page, totalPages }: Props) {
         aria-label="Page précédente"
       >
         {hasPrev ? (
-          <Link href={`${pages.hotDeals}?page=${page - 1}`}>
+          <Link href={buildPageHref(page - 1, sort)}>
             <ChevronLeft className="size-4" />
             Précédent
           </Link>
@@ -51,7 +62,7 @@ export function HotDealsPagination({ page, totalPages }: Props) {
         aria-label="Page suivante"
       >
         {hasNext ? (
-          <Link href={`${pages.hotDeals}?page=${page + 1}`}>
+          <Link href={buildPageHref(page + 1, sort)}>
             Suivant
             <ChevronRight className="size-4" />
           </Link>
