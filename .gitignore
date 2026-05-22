@@ -16,4 +16,7 @@ config.bat
 # Supabase CLI temp files
 supabase/.temp/
 
+# Supabase Studio scratch SQL (saved automatically by the local Studio UI, not project artefacts)
+packages/db/supabase/snippets/
+
 ClAUDE.md

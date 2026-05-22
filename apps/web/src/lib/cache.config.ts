@@ -4,4 +4,6 @@ export const CACHE_TAGS = {
   brands: 'brands',
   vehicleModels: 'vehicle-models',
   accountSettings: (accountId: string) => `account-settings:${accountId}`,
+  ads: 'ads',
+  matchedAdsByAccount: (accountId: string) => `matched-ads:${accountId}`,
 } as const;

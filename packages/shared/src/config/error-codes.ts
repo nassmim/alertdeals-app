@@ -26,6 +26,11 @@ export enum ESettingsErrorCode {
 }
 export type TSettingsErrorCode = ESettingsErrorCode;
 
+export enum EWorkerErrorCode {
+  CRON_DISPATCH_FAILED = 'CRON_DISPATCH_FAILED',
+}
+export type TWorkerErrorCode = EWorkerErrorCode;
+
 export enum EAuthErrorCode {
   AUTH_ERROR = 'AUTH_ERROR',
   LINK_EXPIRED = 'LINK_EXPIRED',
@@ -42,4 +47,5 @@ export type TErrorCode =
   | TSubscriptionErrorCode
   | TAlertErrorCode
   | TSettingsErrorCode
-  | TAuthErrorCode;
+  | TAuthErrorCode
+  | TWorkerErrorCode;
