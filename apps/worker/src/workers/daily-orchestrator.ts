@@ -1,6 +1,5 @@
 import {
   alerts as alertsTable,
-  and,
   eq,
   getDBAdminClient,
   matchedAds as matchedAdsTable,
@@ -8,6 +7,7 @@ import {
 import { EAlertStatus } from '@alertdeals/shared';
 import { Job } from 'bullmq';
 import { findMatchedAdIdsForAccount } from '../services/matching.service.js';
+import { dispatchAlertMatchNotifications } from '../services/notification.service.js';
 
 interface DailyOrchestratorJob {
   triggeredAt: string;
@@ -27,6 +27,8 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
     return { matchedRows: 0, accountsProcessed: 0, durationMs: Date.now() - startTime };
   }
 
+  // Regroupement par compte pour matcher chaque user contre toutes ses alertes
+  // en un seul appel à matching.service (limite les round-trips DB).
   const alertsByAccount = new Map<string, typeof activeAlerts>();
   for (const alert of activeAlerts) {
     const list = alertsByAccount.get(alert.accountId) ?? [];
@@ -35,6 +37,7 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
   }
 
   let totalInserted = 0;
+  let totalNotificationsDispatched = 0;
   let accountsProcessed = 0;
 
   for (const [accountId, accountAlerts] of alertsByAccount) {
@@ -44,7 +47,9 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
       const matches = await findMatchedAdIdsForAccount(accountAlerts);
       if (matches.length === 0) continue;
 
-      // Dedup by adId — one match row per ad even if multiple alerts hit (unique constraint).
+      // Dédup par adId — la contrainte UNIQUE(accountId, adId) sur matched_ads
+      // veut une seule row par (compte, ad), même si l'ad matche plusieurs alertes.
+      // Le 1er alertId rencontré gagne, les autres sont ignorés.
       const seenAdIds = new Set<string>();
       const rowsToInsert: { accountId: string; alertId: string; adId: string }[] = [];
       for (const { adId, alertId } of matches) {
@@ -53,15 +58,39 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
         rowsToInsert.push({ accountId, alertId, adId });
       }
 
+      // `onConflictDoNothing` + `returning` → la liste retournée contient
+      // uniquement les NEW rows. Les ads déjà matchées dans une run précédente
+      // ne sont pas retournées et donc pas re-notifiées.
       const inserted = await db
         .insert(matchedAdsTable)
         .values(rowsToInsert)
         .onConflictDoNothing({
           target: [matchedAdsTable.accountId, matchedAdsTable.adId],
         })
-        .returning({ id: matchedAdsTable.id });
+        .returning({ id: matchedAdsTable.id, alertId: matchedAdsTable.alertId });
 
       totalInserted += inserted.length;
+      if (inserted.length === 0) continue;
+
+      // Comptage des nouveaux matches par alerte pour générer une notif par alerte
+      // (et pas une par match — sinon on spam le user).
+      const newMatchesByAlert = new Map<string, number>();
+      for (const row of inserted) {
+        newMatchesByAlert.set(
+          row.alertId,
+          (newMatchesByAlert.get(row.alertId) ?? 0) + 1,
+        );
+      }
+
+      // Dispatch des notifs (mockées). On retrouve l'alerte complète depuis
+      // `accountAlerts` pour avoir le `name` et `notificationChannels`.
+      const alertsById = new Map(accountAlerts.map((a) => [a.id, a]));
+      for (const [alertId, newMatchesCount] of newMatchesByAlert) {
+        const alert = alertsById.get(alertId);
+        if (!alert) continue;
+        dispatchAlertMatchNotifications({ accountId, alert, newMatchesCount });
+        totalNotificationsDispatched += 1;
+      }
     } catch (error) {
       console.error(`[daily-orchestrator] failed for account ${accountId}`, error);
     }
@@ -69,8 +98,13 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
 
   const durationMs = Date.now() - startTime;
   console.log(
-    `[daily-orchestrator] processed ${accountsProcessed} accounts, inserted ${totalInserted} new matches in ${durationMs}ms`,
+    `[daily-orchestrator] processed ${accountsProcessed} accounts, inserted ${totalInserted} new matches, dispatched ${totalNotificationsDispatched} notifications in ${durationMs}ms`,
   );
 
-  return { matchedRows: totalInserted, accountsProcessed, durationMs };
+  return {
+    matchedRows: totalInserted,
+    accountsProcessed,
+    notificationsDispatched: totalNotificationsDispatched,
+    durationMs,
+  };
 }
