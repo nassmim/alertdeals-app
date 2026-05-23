@@ -8,6 +8,8 @@ CREATE TABLE "matched_ads" (
 );
 --> statement-breakpoint
 ALTER TABLE "matched_ads" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "ads" ADD COLUMN "din_power" smallint;--> statement-breakpoint
+ALTER TABLE "locations" ADD COLUMN "region" text;--> statement-breakpoint
 ALTER TABLE "matched_ads" ADD CONSTRAINT "matched_ad_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "public"."accounts"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "matched_ads" ADD CONSTRAINT "matched_ad_alert_id_fk" FOREIGN KEY ("alert_id") REFERENCES "public"."alerts"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "matched_ads" ADD CONSTRAINT "matched_ad_ad_id_fk" FOREIGN KEY ("ad_id") REFERENCES "public"."ads"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
