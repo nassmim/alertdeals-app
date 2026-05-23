@@ -122,7 +122,7 @@ export function AlertCard({ alert }: Props) {
                 )}
                 {alert.notificationChannels.phone && (
                   <Badge variant="outline" className="gap-1">
-                    <Phone className="size-3" /> SMS
+                    <Phone className="size-3" /> Mobile
                   </Badge>
                 )}
                 {alert.notificationChannels.whatsapp && (
