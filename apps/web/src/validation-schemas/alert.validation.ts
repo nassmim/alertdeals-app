@@ -19,8 +19,8 @@ export const alertFormSchema = z
   .object({
     name: z.string().trim().min(1, "Le nom de l'alerte est requis").max(255),
 
-    brandId: optionalNumber(z.coerce.number().int().positive()),
-    modelId: optionalNumber(z.coerce.number().int().positive()),
+    brandIds: z.array(z.number().int().positive()).default([]),
+    modelIds: z.array(z.number().int().positive()).default([]),
     locationId: optionalNumber(z.coerce.number().int().positive()),
     radiusInKm: optionalNumber(z.coerce.number().int().min(0).max(200)),
     modelYearMin: optionalNumber(
@@ -47,9 +47,9 @@ export const alertFormSchema = z
 
     notificationChannels: notificationChannelsSchema,
   })
-  .refine((data) => !(data.modelId != null && data.brandId == null), {
+  .refine((data) => !(data.modelIds.length > 0 && data.brandIds.length === 0), {
     message: 'Vous devez sélectionner une marque avant de choisir un modèle',
-    path: ['modelId'],
+    path: ['modelIds'],
   })
   .refine(
     (data) =>

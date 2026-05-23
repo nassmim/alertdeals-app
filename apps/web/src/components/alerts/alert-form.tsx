@@ -16,14 +16,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { MultiSelect } from '@/components/ui/multi-select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { getErrorMessage } from '@/utils/error-messages.utils';
 import { alertFormSchema, type TAlertFormData } from '@/validation-schemas';
 import type { TBrand, TLocation, TVehicleModel } from '@alertdeals/db';
@@ -81,8 +75,11 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
     resolver: zodResolver(alertFormSchema),
     defaultValues: {
       name: alert?.name ?? '',
-      brandId: alert?.brandId ?? null,
-      modelId: alert?.modelId ?? null,
+      // Multi-select : une alerte peut cibler plusieurs marques et modèles.
+      // Les valeurs viennent des tables de jointure `alert_brands` / `alert_models`,
+      // on aplatit en simple liste d'IDs côté form.
+      brandIds: alert?.brands?.map((b) => b.brandId) ?? [],
+      modelIds: alert?.models?.map((m) => m.modelId) ?? [],
       locationId: alert?.locationId ?? null,
       radiusInKm: alert?.radiusInKm ?? null,
       modelYearMin: alert?.modelYearMin ?? null,
@@ -101,7 +98,7 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
     },
   });
 
-  const selectedBrandId = useWatch({ control: form.control, name: 'brandId' });
+  const selectedBrandIds = useWatch({ control: form.control, name: 'brandIds' }) ?? [];
   const selectedMode = useWatch({ control: form.control, name: 'mode' });
   // Local state to display the selected location's name/zipcode in the LocationSearch trigger.
   // The form only stores the locationId, which is what the server action expects.
@@ -110,9 +107,9 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
   );
 
   const filteredModels = useMemo(() => {
-    if (!selectedBrandId) return [];
-    return vehicleModels.filter((m) => m.brandId === selectedBrandId);
-  }, [selectedBrandId, vehicleModels]);
+    if (selectedBrandIds.length === 0) return [];
+    return vehicleModels.filter((m) => selectedBrandIds.includes(m.brandId));
+  }, [selectedBrandIds, vehicleModels]);
 
   const onSubmit = async (data: TAlertFormData) => {
     setSubmitError(null);
@@ -174,30 +171,31 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
           <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
-              name="brandId"
+              name="brandIds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Marque</FormLabel>
-                  <Select
-                    onValueChange={(v) => {
-                      field.onChange(v ? Number(v) : null);
-                      form.setValue('modelId', null);
-                    }}
-                    value={field.value?.toString() ?? ''}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Toutes les marques" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {brands.map((b) => (
-                        <SelectItem key={b.id} value={b.id.toString()}>
-                          {b.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>Marques</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      options={brands}
+                      selectedIds={field.value ?? []}
+                      onChange={(ids) => {
+                        field.onChange(ids);
+                        // Drop models that no longer match the selected brands.
+                        const allowedModelIds = new Set(
+                          vehicleModels
+                            .filter((m) => ids.includes(m.brandId))
+                            .map((m) => m.id),
+                        );
+                        const currentModelIds = form.getValues('modelIds') ?? [];
+                        form.setValue(
+                          'modelIds',
+                          currentModelIds.filter((id) => allowedModelIds.has(id)),
+                        );
+                      }}
+                      placeholder="Toutes les marques"
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -205,34 +203,23 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
 
             <FormField
               control={form.control}
-              name="modelId"
+              name="modelIds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Modèle</FormLabel>
-                  <Select
-                    onValueChange={(v) => field.onChange(v ? Number(v) : null)}
-                    value={field.value?.toString() ?? ''}
-                    disabled={!selectedBrandId}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue
-                          placeholder={
-                            selectedBrandId
-                              ? 'Tous les modèles'
-                              : "Sélectionnez d'abord une marque"
-                          }
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {filteredModels.map((m) => (
-                        <SelectItem key={m.id} value={m.id.toString()}>
-                          {m.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>Modèles</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      options={filteredModels}
+                      selectedIds={field.value ?? []}
+                      onChange={field.onChange}
+                      disabled={selectedBrandIds.length === 0}
+                      placeholder={
+                        selectedBrandIds.length === 0
+                          ? "Sélectionnez d'abord une marque"
+                          : 'Tous les modèles'
+                      }
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

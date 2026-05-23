@@ -4,7 +4,7 @@ SET session_replication_role = replica;
 -- PostgreSQL database dump
 --
 
--- \restrict Y4KM9fYZPlcjQ1FKFdOSSHshhMcaHGILMCi7SSB4zWs6eikzenqtBsUAYxQCkMw
+-- \restrict Ik2o3dbnEkjs8HGbbgYnIW5NyVGuFlQOMAP9752LktIJsFQkecFYOd5AoTEbNcF
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 17.6
@@ -25,48 +25,18 @@ SET row_security = off;
 -- Data for Name: audit_log_entries; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created_at", "ip_address") VALUES
-	('00000000-0000-0000-0000-000000000000', '2fc7ad6f-2eec-47d3-af55-060c6c8d2694', '{"action":"user_signedup","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2026-05-12 14:58:04.337623+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'd22ad8a6-46d5-435d-9b70-7c6ac9769910', '{"action":"login","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-05-12 14:58:04.368122+00', ''),
-	('00000000-0000-0000-0000-000000000000', '1e77f91e-aab8-4b7a-bac2-217a51c92f8f', '{"action":"user_recovery_requested","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"user"}', '2026-05-12 14:58:04.559667+00', ''),
-	('00000000-0000-0000-0000-000000000000', '3e2803cb-7eb9-41c7-8d64-9105a61151b8', '{"action":"login","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"google"}}', '2026-05-12 14:58:55.300111+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'a0e4affb-87d4-4c4e-98a4-893f31daf514', '{"action":"user_recovery_requested","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"user"}', '2026-05-12 15:01:56.759117+00', ''),
-	('00000000-0000-0000-0000-000000000000', '7cb7e280-f97c-4ed0-85d8-eb5b4c875368', '{"action":"login","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-05-12 15:02:07.255688+00', ''),
-	('00000000-0000-0000-0000-000000000000', '2824e5ea-353a-4888-89d0-e74bcffbc099', '{"action":"login","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider_type":"magiclink"}}', '2026-05-12 15:02:07.680372+00', ''),
-	('00000000-0000-0000-0000-000000000000', '8aa169a9-60a5-4583-b47b-80555e519868', '{"action":"logout","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-05-12 15:02:07.964903+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'd446edc8-405a-4e65-8feb-bc7df2a20f22', '{"action":"user_recovery_requested","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"user"}', '2026-05-12 15:03:14.722011+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'f068a8d8-446e-4722-af08-6cd62fcbc9d7', '{"action":"login","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-05-12 15:03:29.425084+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'd34250a7-5da5-4518-b0b4-4df325e2b7a5', '{"action":"login","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider_type":"magiclink"}}', '2026-05-12 15:03:29.591557+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'e9d1f544-ec67-4e8d-a50c-fa36250a35c8', '{"action":"token_refreshed","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-12 16:02:19.592685+00', ''),
-	('00000000-0000-0000-0000-000000000000', '53631eb8-f6f5-4d3b-94e2-19c4085ef11d', '{"action":"token_revoked","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-12 16:02:19.642007+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'abb0de86-eda5-490e-a0f3-ff64d33aa9c0', '{"action":"token_refreshed","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-12 16:02:20.70963+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'c1993ab4-e3ba-4727-9c55-e9b5c3020bd7', '{"action":"token_refreshed","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-12 16:02:21.347046+00', ''),
-	('00000000-0000-0000-0000-000000000000', '3d850bad-4b4a-4064-a4e4-c395ab89b3c5', '{"action":"token_refreshed","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-12 16:02:21.572747+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'bfe22ff7-41c4-41c7-99c9-3b916f907f68', '{"action":"user_recovery_requested","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"user"}', '2026-05-12 16:59:27.65804+00', ''),
-	('00000000-0000-0000-0000-000000000000', '7ea63020-69ff-44e1-8ea5-ea71742f166d', '{"action":"login","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-05-12 16:59:59.799337+00', ''),
-	('00000000-0000-0000-0000-000000000000', '26c01d14-abe7-480e-839b-28b6716e9781', '{"action":"login","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider_type":"magiclink"}}', '2026-05-12 17:00:00.914086+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'aa5443fc-96f2-4468-9617-1fc18f0b931e', '{"action":"token_refreshed","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-12 17:03:34.854508+00', ''),
-	('00000000-0000-0000-0000-000000000000', '9eee0139-bb5f-401a-b232-315bf78d4fc2', '{"action":"token_revoked","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-12 17:03:34.858928+00', ''),
-	('00000000-0000-0000-0000-000000000000', '0faf21a7-3717-401b-802f-773a47d67f5d', '{"action":"token_refreshed","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-12 17:03:40.786844+00', ''),
-	('00000000-0000-0000-0000-000000000000', '12551f75-b092-4f20-93f3-28690d1ac96b', '{"action":"token_refreshed","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-12 17:03:46.221854+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'b48e4dc0-c42a-47a9-a7a2-31686baf1e57', '{"action":"token_refreshed","actor_id":"3f9aece5-b357-422b-b15f-43a5ec73261a","actor_name":"Sanaâ Hamliri","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-12 17:03:49.717722+00', '');
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous") VALUES
-	('00000000-0000-0000-0000-000000000000', '3f9aece5-b357-422b-b15f-43a5ec73261a', 'authenticated', 'authenticated', 'hamlirisanaa@gmail.com', '$2a$10$9gX.j.fNKrLrtCwwKNWhueXoDu19TUilKZrxCQIlOF1krDLwYC6Uy', '2026-05-12 14:58:04.343027+00', NULL, '', NULL, '', '2026-05-12 16:59:27.676033+00', '', '', NULL, '2026-05-12 17:00:00.91725+00', '{"provider": "email", "providers": ["email", "google"]}', '{"iss": "https://accounts.google.com", "sub": "117593614962888952304", "name": "Sanaâ Hamliri", "email": "hamlirisanaa@gmail.com", "picture": "https://lh3.googleusercontent.com/a/ACg8ocKq5TtBHixvX4lJ8UVXHyhwer7eYhZ4CtEQ2Q9Ug7rWIvGOpVB_=s96-c", "full_name": "Sanaâ Hamliri", "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocKq5TtBHixvX4lJ8UVXHyhwer7eYhZ4CtEQ2Q9Ug7rWIvGOpVB_=s96-c", "provider_id": "117593614962888952304", "email_verified": true, "phone_verified": false}', NULL, '2026-05-12 14:58:04.241196+00', '2026-05-12 17:03:34.877415+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
 
 
 --
 -- Data for Name: identities; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "provider", "last_sign_in_at", "created_at", "updated_at", "id") VALUES
-	('3f9aece5-b357-422b-b15f-43a5ec73261a', '3f9aece5-b357-422b-b15f-43a5ec73261a', '{"sub": "3f9aece5-b357-422b-b15f-43a5ec73261a", "email": "hamlirisanaa@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2026-05-12 14:58:04.323046+00', '2026-05-12 14:58:04.323093+00', '2026-05-12 14:58:04.323093+00', '7372300e-5343-421a-bf34-931f7626da75'),
-	('117593614962888952304', '3f9aece5-b357-422b-b15f-43a5ec73261a', '{"iss": "https://accounts.google.com", "sub": "117593614962888952304", "name": "Sanaâ Hamliri", "email": "hamlirisanaa@gmail.com", "picture": "https://lh3.googleusercontent.com/a/ACg8ocKq5TtBHixvX4lJ8UVXHyhwer7eYhZ4CtEQ2Q9Ug7rWIvGOpVB_=s96-c", "full_name": "Sanaâ Hamliri", "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocKq5TtBHixvX4lJ8UVXHyhwer7eYhZ4CtEQ2Q9Ug7rWIvGOpVB_=s96-c", "provider_id": "117593614962888952304", "email_verified": true, "phone_verified": false}', 'google', '2026-05-12 14:58:55.29012+00', '2026-05-12 14:58:55.290237+00', '2026-05-12 14:58:55.290237+00', 'caab65b8-e058-43fa-b6c2-1cbff9bb927e');
 
 
 --
@@ -85,9 +55,6 @@ INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "pro
 -- Data for Name: mfa_amr_claims; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
 --
 
-INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "authentication_method", "id") VALUES
-	('e853b1f2-33cc-400f-ad84-42888dae011a', '2026-05-12 15:03:29.600407+00', '2026-05-12 15:03:29.600407+00', 'magiclink', 'af20712c-3d7f-422d-9e94-033946c38f95'),
-	('45518697-b0c5-416e-8352-b418473c7230', '2026-05-12 17:00:00.949909+00', '2026-05-12 17:00:00.949909+00', 'magiclink', '5a544372-6ac8-45b8-b5b3-871f9144a00e');
 
 
 --
@@ -154,8 +121,6 @@ INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "
 -- Data for Name: accounts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."accounts" ("id", "email", "has_subscription", "confirmed_by_admin", "is_first_connexion", "created_at") VALUES
-	('3f9aece5-b357-422b-b15f-43a5ec73261a', 'hamlirisanaa@gmail.com', true, true, false, '2026-05-12 14:58:04.2389+00');
 
 
 --
@@ -38978,10 +38943,18 @@ INSERT INTO "public"."vehicle_states" ("id", "name", "lbc_value", "lobstr_value"
 -- Data for Name: alerts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."alerts" ("id", "account_id", "name", "status", "brand_id", "model_id", "location_id", "radius_in_km", "model_year_min", "model_year_max", "mileage_min", "mileage_max", "price_min", "mode", "price_max", "margin_min_percentage", "notification_channels", "created_at") VALUES
-	('37a66cd6-7919-4b1f-8405-b92cbc206111', '3f9aece5-b357-422b-b15f-43a5ec73261a', NULL, 'active', 2, 56, 1, 48, 2018, 2024, NULL, NULL, NULL, 'price_max', 15000, NULL, '{"email": true, "phone": false, "whatsapp": false}', '2026-05-12 16:06:31.610069+00'),
-	('257cf54a-307d-4975-95c9-f1ef1ba13c7d', '3f9aece5-b357-422b-b15f-43a5ec73261a', 'test alert', 'active', 4, 152, 1, NULL, 2018, 2024, NULL, NULL, NULL, 'margin_min', NULL, 19.7, '{"email": true, "phone": false, "whatsapp": false}', '2026-05-12 16:55:15.017058+00'),
-	('99e74f8f-8b03-470f-b319-8b01a3caa13a', '3f9aece5-b357-422b-b15f-43a5ec73261a', NULL, 'active', 4, 159, 2, NULL, 2016, 2024, NULL, NULL, NULL, 'price_max', 13456, NULL, '{"email": true, "phone": false, "whatsapp": false}', '2026-05-12 17:09:03.060894+00');
+
+
+--
+-- Data for Name: alert_brands; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: alert_models; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
 
 
 --
@@ -39048,7 +39021,7 @@ INSERT INTO "public"."alerts" ("id", "account_id", "name", "status", "brand_id",
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
 --
 
-SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 6, true);
+SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 1, false);
 
 
 --
@@ -39139,6 +39112,6 @@ SELECT pg_catalog.setval('"supabase_functions"."hooks_id_seq"', 1, false);
 -- PostgreSQL database dump complete
 --
 
--- \unrestrict Y4KM9fYZPlcjQ1FKFdOSSHshhMcaHGILMCi7SSB4zWs6eikzenqtBsUAYxQCkMw
+-- \unrestrict Ik2o3dbnEkjs8HGbbgYnIW5NyVGuFlQOMAP9752LktIJsFQkecFYOd5AoTEbNcF
 
 RESET ALL;

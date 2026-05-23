@@ -88,9 +88,13 @@ export function AlertCard({ alert }: Props) {
 
   if (isDeleted) return null;
 
+  const brandNames = alert.brands?.map((b) => b.brand?.name).filter(Boolean) ?? [];
+  const modelNames =
+    alert.models?.map((m) => m.vehicleModel?.name).filter(Boolean) ?? [];
+
   const title =
     alert.name?.trim() ||
-    [alert.brand?.name, alert.vehicleModel?.name].filter(Boolean).join(' ') ||
+    [brandNames.join(', '), modelNames.join(', ')].filter(Boolean).join(' · ') ||
     'Alerte sans nom';
 
   const yearRange = formatRange(alert.modelYearMin, alert.modelYearMax);
@@ -144,6 +148,20 @@ export function AlertCard({ alert }: Props) {
       </CardHeader>
 
       <CardContent>
+        {(brandNames.length > 0 || modelNames.length > 0) && (
+          <div className="mb-3 flex flex-wrap gap-1.5">
+            {brandNames.map((name) => (
+              <Badge key={`brand-${name}`} variant="outline">
+                {name}
+              </Badge>
+            ))}
+            {modelNames.map((name) => (
+              <Badge key={`model-${name}`} variant="outline">
+                {name}
+              </Badge>
+            ))}
+          </div>
+        )}
         <div className="space-y-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Target className="size-4 shrink-0" />
