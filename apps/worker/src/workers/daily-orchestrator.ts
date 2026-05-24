@@ -20,7 +20,7 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
 
   const activeAlerts = await db.query.alerts.findMany({
     where: eq(alertsTable.status, EAlertStatus.ACTIVE),
-    with: { location: true },
+    with: { location: true, brands: true, models: true },
   });
 
   if (activeAlerts.length === 0) {
