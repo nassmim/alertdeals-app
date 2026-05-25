@@ -16,8 +16,14 @@ import { EAlertStatus } from '@alertdeals/shared';
 import { DEFAULT_HOT_DEALS_SORT, EHotDealsSort } from '@/validation-schemas';
 import { cacheTag } from 'next/cache';
 
+// Taille de page utilisée pour la pagination des bonnes affaires (hot-deals).
+// 20 = compromis entre temps de chargement et nombre de scrolls user.
 const PAGE_SIZE = 20;
 
+/**
+ * 20 dernières annonces ingérées, toutes catégories confondues.
+ * Cachée à l'échelle globale (pas par account) car la liste est la même pour tout le monde.
+ */
 async function getCachedRecentAds() {
   'use cache';
   cacheTag(CACHE_TAGS.ads);
@@ -35,12 +41,21 @@ async function getCachedRecentAds() {
   });
 }
 
+/**
+ * Public wrapper sur le cache : isole les server components du détail "use cache".
+ */
 export async function getRecentAds() {
   return getCachedRecentAds();
 }
 
+// Une annonce avec ses relations chargées (brand, model, gearbox, location).
+// Type dérivé pour éviter de redéfinir la forme à la main.
 export type TAdWithRelations = Awaited<ReturnType<typeof getRecentAds>>[number];
 
+// 3 états possibles de la page "bonnes affaires" :
+//  - NO_ALERTS : l'user n'a aucune alerte active → CTA "créer une alerte"
+//  - NO_MATCH  : alertes actives mais 0 match enregistré → "le worker n'a encore rien trouvé"
+//  - OK        : on a au moins une page de matches à afficher
 export type TMatchingAdsPage =
   | { kind: 'NO_ALERTS' }
   | { kind: 'NO_MATCH' }
@@ -57,6 +72,10 @@ type TGetMatchingAdsPageParams = {
   sort?: EHotDealsSort;
 };
 
+/**
+ * Point d'entrée pour la page /dashboard/hot-deals.
+ * Délègue au cache une fois l'accountId résolu (sinon le cache serait commun à tous les users).
+ */
 export async function getMatchingAdsPage(
   params: TGetMatchingAdsPageParams,
 ): Promise<TMatchingAdsPage> {

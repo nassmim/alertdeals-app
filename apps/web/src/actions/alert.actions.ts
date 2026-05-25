@@ -18,8 +18,10 @@ import {
 } from '@alertdeals/shared';
 import { updateTag } from 'next/cache';
 
-// All enum values across error code namespaces — used to whitelist messages
-// caught from service throws before re-emitting them across the action → client boundary.
+// Set des codes d'erreur connus de l'app — utilisé comme whitelist pour
+// décider si un Error.message remonté par un service est un code valide
+// qu'on peut renvoyer au client tel quel. Le reste = UNKNOWN_ERROR (sécurité
+// pour ne jamais leak un raw stack-trace côté UI).
 const KNOWN_ERROR_CODES = new Set<string>([
   ...Object.values(EGeneralErrorCode),
   ...Object.values(EAccountErrorCode),
@@ -27,6 +29,11 @@ const KNOWN_ERROR_CODES = new Set<string>([
   ...Object.values(EAlertErrorCode),
 ]);
 
+/**
+ * Convertit une exception (souvent lancée par un service via `throw new Error(CODE)`)
+ * en réponse d'action `{ error }` mappable côté client par `getErrorMessage`.
+ * Les codes inconnus retombent sur UNKNOWN_ERROR.
+ */
 function toActionError(error: unknown): { error: TErrorCode } {
   if (error instanceof Error && KNOWN_ERROR_CODES.has(error.message)) {
     return { error: error.message as TErrorCode };
@@ -36,6 +43,11 @@ function toActionError(error: unknown): { error: TErrorCode } {
 
 type TCreateAlertResult = { id: string } | { error: TErrorCode };
 
+/**
+ * Crée une alerte (et ses associations brands/models via les join tables).
+ * Étapes : auth → validation Zod → check abonnement → insert dans une transaction.
+ * Le throw côté caller `getCurrentAccountId` est rattrapé par `toActionError`.
+ */
 export async function createAlert(data: unknown): Promise<TCreateAlertResult> {
   try {
     const accountId = await getCurrentAccountId();
@@ -103,12 +115,20 @@ export async function createAlert(data: unknown): Promise<TCreateAlertResult> {
   }
 }
 
+/**
+ * Wrapper "use server" exposé aux client components qui ont besoin de
+ * recharger la liste après une mutation optimiste.
+ */
 export async function fetchAccountAlerts() {
   return getAccountAlerts();
 }
 
 type TUpdateAlertResult = { id: string } | { error: TErrorCode };
 
+/**
+ * Update full d'une alerte. Pour la sync des marques/modèles, on suit un
+ * pattern "delete-all + reinsert" (voir commentaire interne).
+ */
 export async function updateAlert(
   alertId: string,
   data: unknown,
@@ -183,6 +203,10 @@ type TUpdateAlertStatusResult =
   | { id: string; status: TAlertStatus }
   | { error: TErrorCode };
 
+/**
+ * Toggle ACTIVE / PAUSED depuis le toggle de la liste.
+ * Passer en ACTIVE requiert un abonnement → on bloque tôt avant l'update.
+ */
 export async function updateAlertStatus(
   alertId: string,
   status: TAlertStatus,
@@ -222,6 +246,10 @@ export async function updateAlertStatus(
 
 type TDeleteAlertResult = { success: true } | { error: TErrorCode };
 
+/**
+ * Suppression hard. Les join tables (alertBrands/alertModels) et les
+ * matched_ads cascadent automatiquement (ON DELETE CASCADE en DB).
+ */
 export async function deleteAlert(alertId: string): Promise<TDeleteAlertResult> {
   try {
     const accountId = await getCurrentAccountId();

@@ -3,6 +3,11 @@ import { createClient } from '@/lib/supabase/server';
 import type { TAccount, TAccountSelectedKeys } from '@alertdeals/db';
 import { EAccountErrorCode, EGeneralErrorCode } from '@alertdeals/shared';
 
+/**
+ * Récupère l'id du compte courant à partir du JWT Supabase.
+ * Throw UNAUTHORIZED si pas de session — les callers (actions/services)
+ * remontent ce code via le pattern `toActionError`.
+ */
 export async function getCurrentAccountId() {
   const supabase = await createClient();
   const {
@@ -12,6 +17,12 @@ export async function getCurrentAccountId() {
   return user.id;
 }
 
+/**
+ * Charge le compte de l'user courant via RLS (le where est implicite côté DB).
+ * Surcharges :
+ *  - Sans options → row complet (TAccount)
+ *  - Avec `columnsToKeep` → projection partielle typée
+ */
 export async function getUserAccount(): Promise<TAccount>;
 export async function getUserAccount<
   T extends Partial<Record<keyof TAccount, boolean>>,
