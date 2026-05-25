@@ -6,7 +6,7 @@ import { ilike, locations, or, type TLocation } from '@alertdeals/db';
 export async function searchLocations(query: string): Promise<TLocation[]> {
   const db = await createDrizzleSupabaseClient();
 
-  return db.rls(async (tx) => {
+  return db.rls((tx) => {
     if (!query || query.trim().length < 2) {
       return tx.query.locations.findMany({ limit: 10 });
     }

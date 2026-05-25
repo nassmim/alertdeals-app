@@ -4,7 +4,7 @@ import { accounts, eq } from '@alertdeals/db';
 export async function hasActiveSubscription(accountId: string): Promise<boolean> {
   const client = await createDrizzleSupabaseClient();
 
-  const account = await client.rls(async (tx) =>
+  const account = await client.rls((tx) =>
     tx.query.accounts.findFirst({
       where: eq(accounts.id, accountId),
       columns: { hasSubscription: true },

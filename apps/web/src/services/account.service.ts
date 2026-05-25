@@ -21,7 +21,7 @@ export async function getUserAccount(
 ): Promise<TAccount | Partial<TAccount>> {
   const client = await createDrizzleSupabaseClient();
 
-  const account = await client.rls(async (tx) =>
+  const account = await client.rls((tx) =>
     tx.query.accounts.findFirst({
       ...(options?.columnsToKeep && { columns: options.columnsToKeep }),
     }),
