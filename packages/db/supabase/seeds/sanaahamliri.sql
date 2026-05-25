@@ -39128,12 +39128,19 @@ RESET ALL;
 -- ─────────────────────────────────────────────────────────────────────
 -- Le mot de passe ci-dessous est un hash bcrypt de "Password123!"
 -- (réutilisé depuis le seed auto-prospect — pour login local uniquement).
+-- GoTrue (Supabase Auth) lit auth.users avec un scan Go strict : si les
+-- colonnes de tokens sont NULL au lieu de '', le lookup plante avec
+-- "Database error finding user". On force '' partout par sécurité.
 INSERT INTO "auth"."users" (
   "instance_id", "id", "aud", "role",
   "email", "encrypted_password", "email_confirmed_at",
   "raw_app_meta_data", "raw_user_meta_data",
   "created_at", "updated_at",
-  "is_super_admin", "is_sso_user", "is_anonymous"
+  "is_super_admin", "is_sso_user", "is_anonymous",
+  "confirmation_token", "recovery_token",
+  "email_change_token_new", "email_change",
+  "email_change_token_current", "phone_change", "phone_change_token",
+  "reauthentication_token"
 ) VALUES (
   '00000000-0000-0000-0000-000000000000',
   '11111111-1111-1111-1111-111111111111',
@@ -39144,7 +39151,11 @@ INSERT INTO "auth"."users" (
   '{"provider": "email", "providers": ["email"]}',
   '{}',
   NOW(), NOW(),
-  false, false, false
+  false, false, false,
+  '', '',
+  '', '',
+  '', '', '',
+  ''
 )
 ON CONFLICT (id) DO NOTHING;
 
