@@ -12,6 +12,9 @@ export type TAccountErrorCode = EAccountErrorCode;
 
 export enum ESubscriptionErrorCode {
   SUBSCRIPTION_REQUIRED = 'SUBSCRIPTION_REQUIRED',
+  CHECKOUT_FAILED = 'CHECKOUT_FAILED',
+  BILLING_PORTAL_FAILED = 'BILLING_PORTAL_FAILED',
+  NO_ACTIVE_CUSTOMER = 'NO_ACTIVE_CUSTOMER',
 }
 export type TSubscriptionErrorCode = ESubscriptionErrorCode;
 
