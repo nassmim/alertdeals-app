@@ -26,15 +26,15 @@ SET row_security = off;
 --
 
 INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created_at", "ip_address") VALUES
-	('00000000-0000-0000-0000-000000000000', '9d63564d-6bc0-4473-b6d2-090d47eecd26', '{"action":"user_signedup","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2026-05-22 23:32:23.217839+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'cc909f27-021b-43c7-a98b-e7ca3fe23f3a', '{"action":"login","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-05-22 23:32:23.273069+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'd9e134a8-3325-4fc9-b7e6-9763add86eaf', '{"action":"user_recovery_requested","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"user"}', '2026-05-22 23:32:23.572451+00', ''),
-	('00000000-0000-0000-0000-000000000000', '5ac06faa-91ee-4e82-aaf5-e01cc93414c1', '{"action":"login","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-05-22 23:33:02.754076+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'd4e7364f-4b25-499d-8c63-b00eaa701204', '{"action":"login","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider_type":"magiclink"}}', '2026-05-22 23:33:03.425775+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'f229d4e9-594f-463b-8558-236ea013befc', '{"action":"token_refreshed","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-23 01:33:11.836522+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'a930d050-4b00-4341-a31b-5e593ae88acf', '{"action":"token_revoked","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-23 01:33:11.915801+00', ''),
-	('00000000-0000-0000-0000-000000000000', '82f75bf3-3046-48e0-bf4c-90bbe7948f8d', '{"action":"token_refreshed","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-23 01:33:12.36553+00', ''),
-	('00000000-0000-0000-0000-000000000000', '6669ccfd-213c-4823-bdc8-5ac2dde56778', '{"action":"token_refreshed","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-23 01:33:12.970851+00', '');
+	('00000000-0000-0000-0000-000000000000', '9d63564d-6bc0-4473-b6d2-090d47eecd26', '{"action":"user_signedup","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"nassmim972@gmail.com","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2026-05-22 23:32:23.217839+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'cc909f27-021b-43c7-a98b-e7ca3fe23f3a', '{"action":"login","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"nassmim972@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-05-22 23:32:23.273069+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'd9e134a8-3325-4fc9-b7e6-9763add86eaf', '{"action":"user_recovery_requested","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"nassmim972@gmail.com","actor_via_sso":false,"log_type":"user"}', '2026-05-22 23:32:23.572451+00', ''),
+	('00000000-0000-0000-0000-000000000000', '5ac06faa-91ee-4e82-aaf5-e01cc93414c1', '{"action":"login","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"nassmim972@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-05-22 23:33:02.754076+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'd4e7364f-4b25-499d-8c63-b00eaa701204', '{"action":"login","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"nassmim972@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider_type":"magiclink"}}', '2026-05-22 23:33:03.425775+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'f229d4e9-594f-463b-8558-236ea013befc', '{"action":"token_refreshed","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"nassmim972@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-23 01:33:11.836522+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'a930d050-4b00-4341-a31b-5e593ae88acf', '{"action":"token_revoked","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"nassmim972@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-23 01:33:11.915801+00', ''),
+	('00000000-0000-0000-0000-000000000000', '82f75bf3-3046-48e0-bf4c-90bbe7948f8d', '{"action":"token_refreshed","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"nassmim972@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-23 01:33:12.36553+00', ''),
+	('00000000-0000-0000-0000-000000000000', '6669ccfd-213c-4823-bdc8-5ac2dde56778', '{"action":"token_refreshed","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"nassmim972@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-23 01:33:12.970851+00', '');
 
 
 --
@@ -42,7 +42,7 @@ INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created
 --
 
 INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous") VALUES
-	('00000000-0000-0000-0000-000000000000', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', 'authenticated', 'authenticated', 'hamlirisanaa@gmail.com', '$2a$10$50p5PwieZtrsKrq1qT2Ciu2brOVXU70mMH.xxrLbbdoPc5z1/9S8W', '2026-05-22 23:32:23.226862+00', NULL, '', NULL, '', '2026-05-22 23:32:23.575981+00', '', '', NULL, '2026-05-22 23:33:03.427598+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "9f4c6921-f22b-4b55-b916-94f58d1a65d3", "email": "hamlirisanaa@gmail.com", "email_verified": true, "phone_verified": false}', NULL, '2026-05-22 23:32:23.129869+00', '2026-05-23 01:33:12.004441+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
+	('00000000-0000-0000-0000-000000000000', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', 'authenticated', 'authenticated', 'nassmim972@gmail.com', '$2a$10$50p5PwieZtrsKrq1qT2Ciu2brOVXU70mMH.xxrLbbdoPc5z1/9S8W', '2026-05-22 23:32:23.226862+00', NULL, '', NULL, '', '2026-05-22 23:32:23.575981+00', '', '', NULL, '2026-05-22 23:33:03.427598+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "9f4c6921-f22b-4b55-b916-94f58d1a65d3", "email": "nassmim972@gmail.com", "email_verified": true, "phone_verified": false}', NULL, '2026-05-22 23:32:23.129869+00', '2026-05-23 01:33:12.004441+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
 
 
 --
@@ -50,7 +50,7 @@ INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encryp
 --
 
 INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "provider", "last_sign_in_at", "created_at", "updated_at", "id") VALUES
-	('9f4c6921-f22b-4b55-b916-94f58d1a65d3', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '{"sub": "9f4c6921-f22b-4b55-b916-94f58d1a65d3", "email": "hamlirisanaa@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2026-05-22 23:32:23.195311+00', '2026-05-22 23:32:23.195402+00', '2026-05-22 23:32:23.195402+00', '612b6fdb-1d08-441e-a37a-253d0223723e');
+	('9f4c6921-f22b-4b55-b916-94f58d1a65d3', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '{"sub": "9f4c6921-f22b-4b55-b916-94f58d1a65d3", "email": "nassmim972@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2026-05-22 23:32:23.195311+00', '2026-05-22 23:32:23.195402+00', '2026-05-22 23:32:23.195402+00', '612b6fdb-1d08-441e-a37a-253d0223723e');
 
 
 --
@@ -139,7 +139,7 @@ INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "
 --
 
 INSERT INTO "public"."accounts" ("id", "email", "has_subscription", "confirmed_by_admin", "is_first_connexion", "created_at", "whatsapp_phone_number", "whatsapp_is_group") VALUES
-	('9f4c6921-f22b-4b55-b916-94f58d1a65d3', 'hamlirisanaa@gmail.com', true, true, true, '2026-05-22 23:32:23.124994+00', NULL, false);
+	('9f4c6921-f22b-4b55-b916-94f58d1a65d3', 'nassmim972@gmail.com', true, true, true, '2026-05-22 23:32:23.124994+00', NULL, false);
 
 
 --
@@ -39812,8 +39812,8 @@ Prix négociable', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/42/2a/e3/422ae
 -- Data for Name: alerts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."alerts" ("id", "account_id", "name", "status", "brand_id", "model_id", "location_id", "radius_in_km", "model_year_min", "model_year_max", "mileage_min", "mileage_max", "price_min", "mode", "price_max", "margin_min_percentage", "notification_channels", "created_at") VALUES
-	('4803156c-a829-4ef2-98a7-de4eda07a687', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', 'teste matching ads', 'active', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'price_max', 29998, NULL, '{"email": true, "phone": false, "whatsapp": false}', '2026-05-22 23:33:29.310764+00');
+INSERT INTO "public"."alerts" ("account_id", "name", "status", "location_id", "radius_in_km", "model_year_min", "model_year_max", "mileage_min", "mileage_max", "price_min", "mode", "price_max", "margin_min_percentage", "notification_channels", "created_at") VALUES
+	('c9c43dc0-3095-49a6-80e5-328a854c30f8', 'teste matching ads', 'active', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'price_max', 29998, NULL, '{"email": true, "phone": false, "whatsapp": false}', '2026-05-22 23:33:29.310764+00');
 
 
 --
@@ -39821,28 +39821,29 @@ INSERT INTO "public"."alerts" ("id", "account_id", "name", "status", "brand_id",
 --
 
 INSERT INTO "public"."matched_ads" ("id", "account_id", "alert_id", "ad_id", "matched_at") VALUES
-	('3fe0ebf4-9a00-4a22-af44-d384e09d3ac3', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '729e0ee4-3cc1-4426-b051-dacbfdd07062', '2026-05-23 01:39:49.809674+00'),
-	('031fa140-ef5e-4938-b00e-59795a2b5b77', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'f776fd07-babe-4436-8b6c-101cb600b6e3', '2026-05-23 01:39:49.809674+00'),
-	('829b447a-5c33-4ee3-bf67-f5cabc473099', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '9607ecf8-211d-419d-8510-7eb439ee8c5f', '2026-05-23 01:39:49.809674+00'),
-	('676a0ae5-fc99-43c8-ae1a-afa78ef951cd', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '8cf734ef-651f-435f-bb11-23adb8b74708', '2026-05-23 01:39:49.809674+00'),
-	('b60b6fa4-e157-4d68-8ba1-f70c3797c310', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'a45bcccc-f38f-4bd1-b3d6-bc1734a56c62', '2026-05-23 01:39:49.809674+00'),
-	('ebb72c51-ad91-449f-ad00-d7e0eaa719b2', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'de4bc0e6-dfd6-4bf8-9bca-6d6bb7687f8f', '2026-05-23 01:39:49.809674+00'),
-	('81fe3b4e-0ed8-4b4c-abd2-14d048155f04', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '53ee894c-6252-4068-b9e2-178a5107cdd2', '2026-05-23 01:39:49.809674+00'),
-	('c79e6fbf-61b8-45a9-92a2-b9cc059e48e9', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'f256ae8d-860a-41e1-aa42-e4cb6a8b7e5a', '2026-05-23 01:39:49.809674+00'),
-	('ff379292-1c02-448f-9c1a-91f347d8b771', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'f9dc494b-4676-4536-a509-229ff0e5e0fa', '2026-05-23 01:39:49.809674+00'),
-	('acf96bfc-c97b-4627-ae84-705fead761f2', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '84067f00-edf8-44b7-bbd9-f00367ee0a3e', '2026-05-23 01:39:49.809674+00'),
-	('6186bd93-3bb4-4282-a54d-21bde41879b9', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '5491f0b9-2f64-4e9a-b2a9-76dbffc70bdf', '2026-05-23 01:39:49.809674+00'),
-	('c7f7cf50-965f-48e9-808d-ff7171bd8571', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '9d1c1b72-1dab-4c54-a8a2-34b9fd21cfc2', '2026-05-23 01:39:49.809674+00'),
-	('5e5d55d6-f45e-4348-bc5b-a59b042250ea', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'a3633c8e-1ddc-4969-844a-79d44c54d14d', '2026-05-23 01:39:49.809674+00'),
-	('cffb4736-a158-4058-b6d4-f40d67c359c9', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '3f46c903-30eb-40c1-b3de-a3f3aa347c7e', '2026-05-23 01:39:49.809674+00'),
-	('e92cf032-e9ae-4633-9415-043585c818ee', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '04610ddd-c69c-4f27-ba82-b60344584003', '2026-05-23 01:39:49.809674+00'),
-	('340d78f7-2461-42bd-9633-b45a15b3d178', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'cc30fab9-cd65-4717-aceb-16c2b73b4891', '2026-05-23 01:39:49.809674+00'),
-	('5a9e06e3-a16f-4c9f-947e-3d99e5f9fc03', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'ca0409f6-1b02-4b3f-9a26-2a1ba548f7d4', '2026-05-23 01:39:49.809674+00'),
-	('db76114e-e779-4574-82fa-4fd2f1882c54', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '4f3cd6db-919a-494c-bd75-393179621b5c', '2026-05-23 01:39:49.809674+00'),
-	('52f5ed4d-6cee-4efb-8214-ca9d395beecf', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '85693577-3014-4516-a65f-55621b0f618c', '2026-05-23 01:39:49.809674+00'),
-	('d4bb1772-f88b-42f8-b893-a8de262f3bd6', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '97a45a12-505e-4462-b857-0904f2344cc9', '2026-05-23 01:39:49.809674+00'),
-	('04e25e52-7316-4214-8e88-229bbf09b1db', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'b9b7f778-f1fd-4b76-9f9a-8de042f9fd31', '2026-05-23 01:39:49.809674+00'),
-	('72f61c24-9149-4bc8-ae1d-147184f16042', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '85faa9a8-e6c6-416f-9d88-b1f702d30377', '2026-05-23 01:39:49.809674+00');
+	('3fe0ebf4-9a00-4a22-af44-d384e09d3ac3', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', '729e0ee4-3cc1-4426-b051-dacbfdd07062', '2026-05-23 01:39:49.809674+00'),
+	('031fa140-ef5e-4938-b00e-59795a2b5b77', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', 'f776fd07-babe-4436-8b6c-101cb600b6e3', '2026-05-23 01:39:49.809674+00'),
+	('829b447a-5c33-4ee3-bf67-f5cabc473099', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', '9607ecf8-211d-419d-8510-7eb439ee8c5f', '2026-05-23 01:39:49.809674+00'),
+	('676a0ae5-fc99-43c8-ae1a-afa78ef951cd', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', '8cf734ef-651f-435f-bb11-23adb8b74708', '2026-05-23 01:39:49.809674+00'),
+	('b60b6fa4-e157-4d68-8ba1-f70c3797c310', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', 'a45bcccc-f38f-4bd1-b3d6-bc1734a56c62', '2026-05-23 01:39:49.809674+00'),
+	('ebb72c51-ad91-449f-ad00-d7e0eaa719b2', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', 'de4bc0e6-dfd6-4bf8-9bca-6d6bb7687f8f', '2026-05-23 01:39:49.809674+00'),
+	('81fe3b4e-0ed8-4b4c-abd2-14d048155f04', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', '53ee894c-6252-4068-b9e2-178a5107cdd2', '2026-05-23 01:39:49.809674+00'),
+	('c79e6fbf-61b8-45a9-92a2-b9cc059e48e9', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', 'f256ae8d-860a-41e1-aa42-e4cb6a8b7e5a', '2026-05-23 01:39:49.809674+00'),
+	('ff379292-1c02-448f-9c1a-91f347d8b771', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', 'f9dc494b-4676-4536-a509-229ff0e5e0fa', '2026-05-23 01:39:49.809674+00'),
+	('acf96bfc-c97b-4627-ae84-705fead761f2', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', '84067f00-edf8-44b7-bbd9-f00367ee0a3e', '2026-05-23 01:39:49.809674+00'),
+	('6186bd93-3bb4-4282-a54d-21bde41879b9', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', '5491f0b9-2f64-4e9a-b2a9-76dbffc70bdf', '2026-05-23 01:39:49.809674+00'),
+	('c7f7cf50-965f-48e9-808d-ff7171bd8571', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', '9d1c1b72-1dab-4c54-a8a2-34b9fd21cfc2', '2026-05-23 01:39:49.809674+00'),
+	('5e5d55d6-f45e-4348-bc5b-a59b042250ea', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', 'a3633c8e-1ddc-4969-844a-79d44c54d14d', '2026-05-23 01:39:49.809674+00'),
+	('cffb4736-a158-4058-b6d4-f40d67c359c9', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', '3f46c903-30eb-40c1-b3de-a3f3aa347c7e', '2026-05-23 01:39:49.809674+00'),
+	('e92cf032-e9ae-4633-9415-043585c818ee', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', '04610ddd-c69c-4f27-ba82-b60344584003', '2026-05-23 01:39:49.809674+00'),
+	('340d78f7-2461-42bd-9633-b45a15b3d178', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', 'cc30fab9-cd65-4717-aceb-16c2b73b4891', '2026-05-23 01:39:49.809674+00'),
+	('5a9e06e3-a16f-4c9f-947e-3d99e5f9fc03', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', 'ca0409f6-1b02-4b3f-9a26-2a1ba548f7d4', '2026-05-23 01:39:49.809674+00'),
+	('db76114e-e779-4574-82fa-4fd2f1882c54', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', '4f3cd6db-919a-494c-bd75-393179621b5c', '2026-05-23 01:39:49.809674+00'),
+	('52f5ed4d-6cee-4efb-8214-ca9d395beecf', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', '85693577-3014-4516-a65f-55621b0f618c', '2026-05-23 01:39:49.809674+00'),
+	('d4bb1772-f88b-42f8-b893-a8de262f3bd6', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', '97a45a12-505e-4462-b857-0904f2344cc9', '2026-05-23 01:39:49.809674+00'),
+	('04e25e52-7316-4214-8e88-229bbf09b1db', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', 'b9b7f778-f1fd-4b76-9f9a-8de042f9fd31', '2026-05-23 01:39:49.809674+00'),
+	('72f61c24-9149-4bc8-ae1d-147184f16042', 'c9c43dc0-3095-49a6-80e5-328a854c30f8', '4803156c-a829-4ef2-98a7-de4eda07a687', '85faa9a8-e6c6-416f-9d88-b1f702d30377', '2026-05-23 01:39:49.809674+00');
+
 
 
 --
