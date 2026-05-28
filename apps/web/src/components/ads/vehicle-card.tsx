@@ -65,7 +65,7 @@ export function VehicleCard({ ad, isLocked = false }: Props) {
               <img
                 src={ad.picture}
                 alt=""
-                className="h-40 w-full rounded-md object-cover"
+                className="aspect-video w-full rounded-md object-cover"
               />
             )}
             <div className="space-y-1 text-sm">
@@ -90,7 +90,7 @@ export function VehicleCard({ ad, isLocked = false }: Props) {
   return (
     <Card className="h-full">
       <CardHeader className="overflow-hidden">
-        <div className="flex items-start justify-between gap-2 overflow-hidden">
+        <div className="flex min-h-7 items-center justify-between gap-2 overflow-hidden">
           <CardTitle className="min-w-0 truncate" title={ad.title}>{ad.title}</CardTitle>
           {ad.hasBeenReposted && (
             <Badge variant="secondary" className="gap-1 shrink-0">
@@ -106,7 +106,7 @@ export function VehicleCard({ ad, isLocked = false }: Props) {
           <img
             src={ad.picture}
             alt={ad.title}
-            className="h-40 w-full rounded-md object-cover"
+            className="aspect-video w-full rounded-md object-cover"
           />
         )}
 
