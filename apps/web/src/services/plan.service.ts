@@ -1,45 +1,22 @@
-import { stripe } from '@/lib/stripe';
-import type Stripe from 'stripe';
+import { createDrizzleSupabaseClient } from '@/lib/db';
+import { asc, plans, type TPlan } from '@alertdeals/db';
 
-export type TPlan = {
-  productId: string;
-  productName: string;
-  productDescription: string | null;
-  priceId: string;
-  unitAmount: number | null;
-  currency: string;
-  interval: 'day' | 'week' | 'month' | 'year' | null;
-};
+export type { TPlan };
 
 /**
- * Lists subscription plans live from Stripe.
+ * Returns active subscription plans, sorted for display.
  *
- * Returned plans are filtered to active recurring prices with active products.
+ * Plans live in DB (not live-fetched from Stripe) so we own display metadata
+ * (name, description, sortOrder) and adding a plan is just a seed row.
+ * RLS allows any authenticated user to read this table.
  */
 export async function getMainPlans(): Promise<TPlan[]> {
-  // Expand `product` so we get name/description in a single round-trip.
-  const prices = await stripe.prices.list({
-    active: true,
-    type: 'recurring',
-    expand: ['data.product'],
-    limit: 100,
-  });
+  const db = await createDrizzleSupabaseClient();
 
-  return prices.data
-    .filter((price) => {
-      const product = price.product as Stripe.Product | Stripe.DeletedProduct;
-      return !('deleted' in product) && product.active;
-    })
-    .map((price) => {
-      const product = price.product as Stripe.Product;
-      return {
-        productId: product.id,
-        productName: product.name,
-        productDescription: product.description,
-        priceId: price.id,
-        unitAmount: price.unit_amount,
-        currency: price.currency,
-        interval: price.recurring?.interval ?? null,
-      };
-    });
+  return db.rls((tx) =>
+    tx.query.plans.findMany({
+      where: (table, { eq }) => eq(table.isActive, true),
+      orderBy: asc(plans.sortOrder),
+    }),
+  );
 }

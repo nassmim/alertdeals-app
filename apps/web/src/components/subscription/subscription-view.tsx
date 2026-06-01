@@ -6,13 +6,12 @@ import {
 } from '@/actions/subscription.actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import type { TPlan } from '@/services/plan.service';
 import { getErrorMessage } from '@/utils/error-messages.utils';
 import {
   ACTIVE_SUBSCRIPTION_STATUSES,
   type TSubscriptionStatus,
 } from '@alertdeals/shared';
-import type { TSubscription } from '@alertdeals/db';
+import type { TPlan, TSubscription } from '@alertdeals/db';
 import { ArrowRight, Check, CircleCheck, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -28,7 +27,7 @@ const STATUS_LABELS: Record<string, string> = {
   canceled: 'Annulé',
 };
 
-// Stripe amounts are in cents; we show whole-euro prices (alertdeals plans are integer-priced).
+// Prices are stored in cents in DB (Stripe convention); we show whole euros.
 function formatAmount(amountInCents: number): string {
   return (amountInCents / 100).toFixed(0);
 }
@@ -119,17 +118,17 @@ export function SubscriptionView({ subscription, plans }: Props) {
             <p className="text-sm text-slate-400">Aucun plan disponible pour le moment.</p>
           )}
           {plans.map((plan) => (
-            <Card key={plan.priceId} className="border-slate-800 bg-slate-900/50">
+            <Card key={plan.id} className="border-slate-800 bg-slate-900/50">
               <CardHeader>
-                <CardTitle className="text-slate-100">{plan.productName}</CardTitle>
+                <CardTitle className="text-slate-100">{plan.name}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {plan.productDescription && (
-                    <p className="text-sm text-slate-400">{plan.productDescription}</p>
+                  {plan.description && (
+                    <p className="text-sm text-slate-400">{plan.description}</p>
                   )}
                   <p className="text-3xl font-bold text-slate-100">
-                    {plan.unitAmount != null ? formatAmount(plan.unitAmount) : '—'}
+                    {formatAmount(plan.priceEur)}
                     <span className="text-base font-normal text-slate-400">
                       {' '}
                       € / {plan.interval === 'year' ? 'an' : 'mois'}
@@ -146,11 +145,11 @@ export function SubscriptionView({ subscription, plans }: Props) {
                     </li>
                   </ul>
                   <Button
-                    onClick={() => handleSubscribe(plan.priceId)}
+                    onClick={() => handleSubscribe(plan.stripePriceId)}
                     disabled={loadingAction !== null}
                     className="w-full"
                   >
-                    {loadingAction === plan.priceId ? (
+                    {loadingAction === plan.stripePriceId ? (
                       <span className="flex items-center gap-2">
                         <Loader2 className="h-4 w-4 animate-spin" />
                         Redirection...
