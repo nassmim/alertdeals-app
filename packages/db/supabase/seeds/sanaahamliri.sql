@@ -38934,6 +38934,15 @@ INSERT INTO "public"."vehicle_states" ("id", "name", "lbc_value", "lobstr_value"
 
 
 --
+-- Data for Name: plans; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."plans" ("name", "stripe_price_id", "price_eur", "interval", "description", "sort_order") VALUES
+	('Pro Mensuel', 'price_1TdtEtE2rOg332FNrWq2szkH', 2900,  'month', 'Accès complet à AlertDeals', 0),
+	('Pro Annuel',  'price_1TdtGLE2rOg332FNTyjXiPhE', 29000, 'year',  'Économie de 58€/an',         1);
+
+
+--
 -- Data for Name: ads; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
