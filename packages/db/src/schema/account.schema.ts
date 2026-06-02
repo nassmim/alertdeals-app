@@ -9,10 +9,6 @@ export const accounts = pgTable(
     email: varchar({ length: 320 }).notNull(),
     confirmedByAdmin: boolean('confirmed_by_admin').default(false).notNull(),
     isFirstConnexion: boolean('is_first_connexion').default(true).notNull(),
-    // Trial state — written by startTrial() on first connection, read by hasActiveSubscription().
-    // Single source of truth for "is the user allowed to use the app right now": this OR an active row in `subscriptions`.
-    isInTrial: boolean('is_in_trial').default(false).notNull(),
-    trialEndDate: timestamp('trial_end_date', { withTimezone: true }),
     whatsappPhoneNumber: varchar('whatsapp_phone_number', { length: 64 }),
     whatsappIsGroup: boolean('whatsapp_is_group').default(false).notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

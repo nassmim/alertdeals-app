@@ -1,6 +1,4 @@
-// Single source of truth for subscription/trial timings and statuses.
-export const TRIAL_DURATION_DAYS = 15;
-
+// Single source of truth for subscription statuses.
 export const ESubscriptionStatus = {
   ACTIVE: 'active',
   CANCELED: 'canceled',
