@@ -5,14 +5,20 @@ import {
   createCheckoutSession,
 } from '@/actions/subscription.actions';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { getErrorMessage } from '@/utils/error-messages.utils';
 import {
   ACTIVE_SUBSCRIPTION_STATUSES,
   type TSubscriptionStatus,
 } from '@alertdeals/shared';
 import type { TPlan, TSubscription } from '@alertdeals/db';
-import { ArrowRight, Check, CircleCheck, Loader2 } from 'lucide-react';
+import {
+  ArrowRight,
+  CalendarDays,
+  Check,
+  Loader2,
+  Sparkles,
+} from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -27,9 +33,24 @@ const STATUS_LABELS: Record<string, string> = {
   canceled: 'Annulé',
 };
 
+// Subtle tone per status — green for healthy, amber for past_due, slate for ended/other.
+const STATUS_TONES: Record<string, { dot: string; text: string; bg: string }> = {
+  active: { dot: 'bg-emerald-400', text: 'text-emerald-300', bg: 'bg-emerald-500/10' },
+  past_due: { dot: 'bg-amber-400', text: 'text-amber-300', bg: 'bg-amber-500/10' },
+  canceled: { dot: 'bg-slate-400', text: 'text-slate-300', bg: 'bg-slate-500/10' },
+};
+
 // Prices are stored in cents in DB (Stripe convention); we show whole euros.
 function formatAmount(amountInCents: number): string {
   return (amountInCents / 100).toFixed(0);
+}
+
+function formatDate(date: Date | string): string {
+  return new Date(date).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 }
 
 export function SubscriptionView({ subscription, plans }: Props) {
@@ -40,6 +61,13 @@ export function SubscriptionView({ subscription, plans }: Props) {
   const isActive = subscription
     ? ACTIVE_SUBSCRIPTION_STATUSES.includes(subscription.status as TSubscriptionStatus)
     : false;
+
+  // Look up the plan the user is subscribed to so we can display its name and price.
+  // Fallback to undefined: the plan may have been retired from the catalog while the
+  // user is grandfathered on its price — Stripe still bills, but we lose display data.
+  const currentPlan = subscription
+    ? plans.find((plan) => plan.stripePriceId === subscription.stripePriceId)
+    : undefined;
 
   const handleSubscribe = async (priceId: string) => {
     setLoadingAction(priceId);
@@ -75,41 +103,64 @@ export function SubscriptionView({ subscription, plans }: Props) {
       </div>
 
       {isActive && subscription ? (
-        <Card className="border-slate-800 bg-slate-900/50">
-          <CardHeader>
-            <CardTitle className="text-slate-100">Abonnement actif</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <CircleCheck className="h-5 w-5 text-emerald-400" />
-                <span className="text-slate-200">
-                  {STATUS_LABELS[subscription.status] ?? subscription.status}
-                </span>
-              </div>
-              <p className="text-sm text-slate-400">
-                Prochaine échéance le{' '}
-                {new Date(subscription.currentPeriodEnd).toLocaleDateString('fr-FR')}
-              </p>
-              <Button
-                onClick={handleManage}
-                disabled={loadingAction !== null}
-                variant="outline"
-                className="mt-2"
-              >
-                {loadingAction === 'manage' ? (
-                  <span className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Chargement...
+        <Card className="relative overflow-hidden border-slate-800 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/40">
+          {/* Soft glow blob to give the card a subtle premium feel without becoming garish */}
+          <div className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-indigo-500/10 blur-3xl" />
+
+          <CardContent className="relative p-6 sm:p-8">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-indigo-400" />
+                  <span className="text-xs font-medium uppercase tracking-wider text-indigo-300">
+                    Plan actuel
                   </span>
-                ) : (
-                  <span className="flex items-center gap-2">
-                    Gérer mon abonnement
-                    <ArrowRight className="h-4 w-4" />
-                  </span>
+                </div>
+                <h2 className="text-2xl font-semibold text-slate-100">
+                  {currentPlan?.name ?? 'Abonnement'}
+                </h2>
+                {currentPlan && (
+                  <p className="text-3xl font-bold text-slate-100">
+                    {formatAmount(currentPlan.priceEur)}
+                    <span className="ml-1 text-base font-normal text-slate-400">
+                      € / {currentPlan.interval === 'year' ? 'an' : 'mois'}
+                    </span>
+                  </p>
                 )}
-              </Button>
+              </div>
+
+              <StatusBadge status={subscription.status} />
             </div>
+
+            <div className="my-6 h-px bg-slate-800" />
+
+            <div className="flex items-center gap-2 text-sm text-slate-400">
+              <CalendarDays className="h-4 w-4" />
+              <span>
+                Prochaine échéance le{' '}
+                <span className="text-slate-200">
+                  {formatDate(subscription.currentPeriodEnd)}
+                </span>
+              </span>
+            </div>
+
+            <Button
+              onClick={handleManage}
+              disabled={loadingAction !== null}
+              className="mt-6 w-full sm:w-auto"
+            >
+              {loadingAction === 'manage' ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Chargement...
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  Gérer mon abonnement
+                  <ArrowRight className="h-4 w-4" />
+                </span>
+              )}
+            </Button>
           </CardContent>
         </Card>
       ) : (
@@ -119,11 +170,9 @@ export function SubscriptionView({ subscription, plans }: Props) {
           )}
           {plans.map((plan) => (
             <Card key={plan.id} className="border-slate-800 bg-slate-900/50">
-              <CardHeader>
-                <CardTitle className="text-slate-100">{plan.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
+              <CardContent className="p-6">
                 <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-slate-100">{plan.name}</h3>
                   {plan.description && (
                     <p className="text-sm text-slate-400">{plan.description}</p>
                   )}
@@ -168,5 +217,21 @@ export function SubscriptionView({ subscription, plans }: Props) {
         </div>
       )}
     </div>
+  );
+}
+
+// Status pill: colored dot + label. Tones come from STATUS_TONES; falls back to slate
+// for any unmapped status so we never crash on a future Stripe status code.
+function StatusBadge({ status }: { status: string }) {
+  const tone = STATUS_TONES[status] ?? STATUS_TONES.canceled;
+  const label = STATUS_LABELS[status] ?? status;
+
+  return (
+    <span
+      className={`inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-xs font-medium ${tone.bg} ${tone.text}`}
+    >
+      <span className={`h-1.5 w-1.5 animate-pulse rounded-full ${tone.dot}`} />
+      {label}
+    </span>
   );
 }
