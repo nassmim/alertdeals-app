@@ -52,6 +52,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 
+  // Webhooks are called server-to-server by Stripe — there is no user JWT, so RLS
+  // would block all writes. Admin client is the only correct choice here.
   const db = getDBAdminClient();
 
   switch (event.type) {
