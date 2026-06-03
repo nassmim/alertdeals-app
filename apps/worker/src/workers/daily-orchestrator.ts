@@ -6,6 +6,7 @@ import {
 } from '@alertdeals/db';
 import { EAlertStatus } from '@alertdeals/shared';
 import { Job } from 'bullmq';
+import { expireTrials } from '../services/expire-trials.service.js';
 import { findMatchedAdIdsForAccount } from '../services/matching.service.js';
 import { dispatchAlertMatchNotifications } from '../services/notification.service.js';
 
@@ -17,6 +18,14 @@ interface DailyOrchestratorJob {
 export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
   const startTime = Date.now();
   const db = getDBAdminClient();
+
+  // Run trial expiration FIRST so any alerts paused on this run are excluded from matching below.
+  const expired = await expireTrials(db);
+  if (expired.expiredAccounts > 0) {
+    console.log(
+      `[daily-orchestrator] expired ${expired.expiredAccounts} trials, paused ${expired.alertsPaused} alerts`,
+    );
+  }
 
   const activeAlerts = await db.query.alerts.findMany({
     where: eq(alertsTable.status, EAlertStatus.ACTIVE),

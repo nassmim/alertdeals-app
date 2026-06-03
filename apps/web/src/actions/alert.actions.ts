@@ -4,7 +4,7 @@ import { CACHE_TAGS } from '@/lib/cache.config';
 import { createDrizzleSupabaseClient } from '@/lib/db';
 import { getCurrentAccountId } from '@/services/account.service';
 import { getAccountAlerts } from '@/services/alert.service';
-import { hasActiveSubscription } from '@/services/subscription.service';
+import { canCreateAlert, startTrialCountdown } from '@/services/trial.service';
 import { alertFormSchema, createAlertSchema } from '@/validation-schemas';
 import { alertBrands, alertModels, alerts, eq } from '@alertdeals/db';
 import {
@@ -46,8 +46,10 @@ export async function createAlert(data: unknown): Promise<TCreateAlertResult> {
     }
     const validated = parseResult.data;
 
-    const isSubscribed = await hasActiveSubscription(accountId);
-    if (!isSubscribed) {
+    // Trial-aware gate: blocks only "trial expired AND no subscription" users.
+    // Users still in their 3-day trial (or who haven't started one yet) are allowed.
+    const isAllowed = await canCreateAlert(accountId);
+    if (!isAllowed) {
       return { error: ESubscriptionErrorCode.SUBSCRIPTION_REQUIRED };
     }
 
@@ -94,6 +96,9 @@ export async function createAlert(data: unknown): Promise<TCreateAlertResult> {
     if (!created) {
       return { error: EAlertErrorCode.ALERT_SAVE_FAILED };
     }
+
+    // First alert ever → kick off the 3-day countdown. Idempotent (no-op if already started).
+    await startTrialCountdown(accountId);
 
     updateTag(CACHE_TAGS.alertsByAccount(accountId));
 
@@ -191,8 +196,10 @@ export async function updateAlertStatus(
     const accountId = await getCurrentAccountId();
 
     if (status === EAlertStatus.ACTIVE) {
-      const isSubscribed = await hasActiveSubscription(accountId);
-      if (!isSubscribed) {
+      // Same trial-aware gate as creation — a user with an expired trial and no
+      // subscription cannot reactivate alerts the cron paused on trial expiry.
+      const isAllowed = await canCreateAlert(accountId);
+      if (!isAllowed) {
         return { error: ESubscriptionErrorCode.SUBSCRIPTION_REQUIRED };
       }
     }

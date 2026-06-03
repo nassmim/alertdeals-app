@@ -5,7 +5,7 @@ import { VehicleCard } from '@/components/ads/vehicle-card';
 import { FREE_AD_QUOTA } from '@/config/premium.config';
 import { getCurrentAccountId } from '@/services/account.service';
 import { getMatchingAdsPage } from '@/services/ad.service';
-import { hasActiveSubscription } from '@/services/subscription.service';
+import { canCreateAlert } from '@/services/trial.service';
 import { hotDealsSortSchema } from '@/validation-schemas';
 
 type Props = {
@@ -20,8 +20,10 @@ const HotDealsPage = async ({ searchParams }: Props) => {
   const sort = hotDealsSortSchema.parse(sortParam);
 
   const accountId = await getCurrentAccountId();
-  const [isSubscribed, result] = await Promise.all([
-    hasActiveSubscription(accountId),
+  // hasFullAccess = active subscription OR ongoing trial. Trial users see all ads
+  // (no FREE_AD_QUOTA blur) because the trial is meant to showcase the paid experience.
+  const [hasFullAccess, result] = await Promise.all([
+    canCreateAlert(accountId),
     getMatchingAdsPage({ page, sort }),
   ]);
 
@@ -40,7 +42,7 @@ const HotDealsPage = async ({ searchParams }: Props) => {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {result.ads.map((ad, index) => {
               const isLocked =
-                !isSubscribed && (result.page > 1 || index >= FREE_AD_QUOTA);
+                !hasFullAccess && (result.page > 1 || index >= FREE_AD_QUOTA);
               return <VehicleCard key={ad.id} ad={ad} isLocked={isLocked} />;
             })}
           </div>
