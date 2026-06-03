@@ -34,10 +34,12 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 // Subtle tone per status — green for healthy, amber for past_due, slate for ended/other.
-const STATUS_TONES: Record<string, { dot: string; text: string; bg: string }> = {
+// Slate also doubles as the fallback for any unmapped Stripe status code.
+const FALLBACK_TONE = { dot: 'bg-slate-400', text: 'text-slate-300', bg: 'bg-slate-500/10' };
+const STATUS_TONES: Record<string, typeof FALLBACK_TONE> = {
   active: { dot: 'bg-emerald-400', text: 'text-emerald-300', bg: 'bg-emerald-500/10' },
   past_due: { dot: 'bg-amber-400', text: 'text-amber-300', bg: 'bg-amber-500/10' },
-  canceled: { dot: 'bg-slate-400', text: 'text-slate-300', bg: 'bg-slate-500/10' },
+  canceled: FALLBACK_TONE,
 };
 
 // Prices are stored in cents in DB (Stripe convention); we show whole euros.
@@ -223,7 +225,7 @@ export function SubscriptionView({ subscription, plans }: Props) {
 // Status pill: colored dot + label. Tones come from STATUS_TONES; falls back to slate
 // for any unmapped status so we never crash on a future Stripe status code.
 function StatusBadge({ status }: { status: string }) {
-  const tone = STATUS_TONES[status] ?? STATUS_TONES.canceled;
+  const tone = STATUS_TONES[status] ?? FALLBACK_TONE;
   const label = STATUS_LABELS[status] ?? status;
 
   return (
