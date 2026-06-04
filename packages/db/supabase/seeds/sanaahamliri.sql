@@ -39154,3 +39154,178 @@ SELECT pg_catalog.setval('"supabase_functions"."hooks_id_seq"', 1, false);
 -- \unrestrict yd0FmQ6pZ2GfFitE273zf90MzDwhvLNcPcvjZufyabMyfZbKnfgM42rpMfXHZm0
 
 RESET ALL;
+
+-- ════════════════════════════════════════════════════════════════════
+-- App data perso de Sanaa (compte + alertes + ads + matched_ads).
+-- Ajouté APRÈS le RESET ALL pour que les triggers (notamment
+-- on_auth_user_created_account) soient bien actifs : l'insert sur
+-- auth.users crée automatiquement la row public.accounts.
+-- ════════════════════════════════════════════════════════════════════
+
+-- ─────────────────────────────────────────────────────────────────────
+-- 1. Auth user + account
+-- ─────────────────────────────────────────────────────────────────────
+-- Le mot de passe ci-dessous est un hash bcrypt de "Password123!"
+-- (réutilisé depuis le seed auto-prospect — pour login local uniquement).
+-- GoTrue (Supabase Auth) lit auth.users avec un scan Go strict : si les
+-- colonnes de tokens sont NULL au lieu de '', le lookup plante avec
+-- "Database error finding user". On force '' partout par sécurité.
+INSERT INTO "auth"."users" (
+  "instance_id", "id", "aud", "role",
+  "email", "encrypted_password", "email_confirmed_at",
+  "raw_app_meta_data", "raw_user_meta_data",
+  "created_at", "updated_at",
+  "is_super_admin", "is_sso_user", "is_anonymous",
+  "confirmation_token", "recovery_token",
+  "email_change_token_new", "email_change",
+  "email_change_token_current", "phone_change", "phone_change_token",
+  "reauthentication_token"
+) VALUES (
+  '00000000-0000-0000-0000-000000000000',
+  '11111111-1111-1111-1111-111111111111',
+  'authenticated', 'authenticated',
+  'hamlirisanaa@gmail.com',
+  '$2a$10$einJ.u6ztuGIDlD820U.ruR4tQQZv3AwAPjKBAjWiq/6jrzjeEOq2',
+  NOW(),
+  '{"provider": "email", "providers": ["email"]}',
+  '{}',
+  NOW(), NOW(),
+  false, false, false,
+  '', '',
+  '', '',
+  '', '', '',
+  ''
+)
+ON CONFLICT (id) DO NOTHING;
+
+-- Identity : sans ça le login email/password ne marche pas.
+INSERT INTO "auth"."identities" (
+  "id", "provider_id", "user_id", "identity_data",
+  "provider", "last_sign_in_at", "created_at", "updated_at"
+) VALUES (
+  '11111111-1111-1111-1111-111111111111',
+  '11111111-1111-1111-1111-111111111111',
+  '11111111-1111-1111-1111-111111111111',
+  '{"sub": "11111111-1111-1111-1111-111111111111", "email": "hamlirisanaa@gmail.com", "email_verified": true}',
+  'email',
+  NOW(), NOW(), NOW()
+)
+ON CONFLICT (id) DO NOTHING;
+
+-- Le trigger a créé l'account avec confirmed_by_admin=false (défaut).
+-- On débloque pour pouvoir utiliser l'app sans validation admin manuelle.
+UPDATE "public"."accounts"
+SET "confirmed_by_admin" = true,
+    "has_subscription" = true,
+    "is_first_connexion" = false
+WHERE id = '11111111-1111-1111-1111-111111111111';
+
+-- ─────────────────────────────────────────────────────────────────────
+-- 2. Alertes (2 alertes actives, modes différents pour tester le filtre)
+-- ─────────────────────────────────────────────────────────────────────
+INSERT INTO "public"."alerts" (
+  "id", "account_id", "name", "status",
+  "model_year_min", "mileage_max", "price_min",
+  "mode", "price_max", "margin_min_percentage",
+  "notification_channels"
+) VALUES
+  (
+    '22222222-2222-2222-2222-222222222222',
+    '11111111-1111-1111-1111-111111111111',
+    'Peugeot 208 sous 8000€',
+    'active',
+    2015, 150000, 1000,
+    'price_max', 8000, NULL,
+    '{"email": true, "phone": false, "whatsapp": false}'
+  ),
+  (
+    '33333333-3333-3333-3333-333333333333',
+    '11111111-1111-1111-1111-111111111111',
+    'BMW avec marge >= 15%',
+    'active',
+    2010, NULL, NULL,
+    'margin_min', NULL, 15,
+    '{"email": true, "phone": true, "whatsapp": true}'
+  );
+
+-- Marques ciblées (Peugeot=8, BMW=2 — IDs du common seed).
+INSERT INTO "public"."alert_brands" ("alert_id", "brand_id") VALUES
+  ('22222222-2222-2222-2222-222222222222', 8),
+  ('33333333-3333-3333-3333-333333333333', 2);
+
+-- Modèles ciblés (208=444, 3008=445 — Peugeot uniquement, BMW reste ouverte
+-- sur tous les modèles puisqu'aucune ligne ici pour son alerte).
+INSERT INTO "public"."alert_models" ("alert_id", "model_id") VALUES
+  ('22222222-2222-2222-2222-222222222222', 444),
+  ('22222222-2222-2222-2222-222222222222', 445);
+
+-- ─────────────────────────────────────────────────────────────────────
+-- 3. Annonces (mix marques/modèles/états pour tester tous les filtres)
+-- ─────────────────────────────────────────────────────────────────────
+-- type_id=1 (Voitures), location_id=1 (1ʳᵉ ville du seed),
+-- vehicle_state_id : 1=Endommagé, 4=Bon état.
+-- has_phone alterné pour tester le filtre "Avec téléphone".
+INSERT INTO "public"."ads" (
+  "id", "type_id", "location_id", "brand_id", "model_id",
+  "vehicle_state_id", "url", "original_ad_id", "title",
+  "price", "model_year", "mileage",
+  "initial_publication_date", "last_publication_date", "owner_name",
+  "has_phone", "phone_number",
+  "margin_amount_min", "margin_percentage_min"
+) VALUES
+  ('aaaa1111-0000-0000-0000-000000000001', 1, 1, 8, 444, 4,
+   'https://example.com/ad-1', 'lbc-mock-1', 'Peugeot 208 1.2 PureTech',
+   7500, 2018, 80000, '2026-05-01', '2026-05-20', 'Jean Dupont',
+   true, '0612345678', 1200, 0.16),
+  ('aaaa1111-0000-0000-0000-000000000002', 1, 1, 8, 444, 1,
+   'https://example.com/ad-2', 'lbc-mock-2', 'Peugeot 208 endommagée — moteur OK',
+   3500, 2016, 120000, '2026-05-10', '2026-05-22', 'Marie Martin',
+   false, NULL, 2000, 0.36),
+  ('aaaa1111-0000-0000-0000-000000000003', 1, 1, 8, 445, 4,
+   'https://example.com/ad-3', 'lbc-mock-3', 'Peugeot 3008 GT Line',
+   18000, 2019, 60000, '2026-05-15', '2026-05-23', 'Paul Garage',
+   true, '0698765432', 800, 0.04),
+  ('aaaa1111-0000-0000-0000-000000000004', 1, 1, 2, NULL, 4,
+   'https://example.com/ad-4', 'lbc-mock-4', 'BMW Série 3 320d',
+   12000, 2014, 180000, '2026-05-12', '2026-05-21', 'Karim Auto',
+   true, '0611223344', 3500, 0.23),
+  ('aaaa1111-0000-0000-0000-000000000005', 1, 1, 2, NULL, 1,
+   'https://example.com/ad-5', 'lbc-mock-5', 'BMW Série 1 — sinistrée',
+   4000, 2012, 200000, '2026-05-08', '2026-05-19', 'Anonyme',
+   false, NULL, 2500, 0.38),
+  ('aaaa1111-0000-0000-0000-000000000006', 1, 1, 2, NULL, 4,
+   'https://example.com/ad-6', 'lbc-mock-6', 'BMW X1 xDrive 2.0d',
+   16500, 2016, 95000, '2026-05-18', '2026-05-23', 'Lucas Concession',
+   true, '0633445566', 1500, 0.08),
+  -- Ad qui ne matche AUCUNE alerte (Renault hors brand list) — sert à vérifier
+  -- que le filtre par alerte fonctionne (cette ad ne doit jamais sortir).
+  ('aaaa1111-0000-0000-0000-000000000007', 1, 1, 9, NULL, 4,
+   'https://example.com/ad-7', 'lbc-mock-7', 'Renault Clio (non matché)',
+   6500, 2017, 110000, '2026-05-11', '2026-05-20', 'Fatima Auto',
+   true, '0644556677', NULL, NULL);
+
+-- ─────────────────────────────────────────────────────────────────────
+-- 4. Matched ads (ce que le daily-orchestrator aurait inséré)
+-- ─────────────────────────────────────────────────────────────────────
+-- 3 ads matchent l'alerte Peugeot, 3 matchent l'alerte BMW.
+-- Note la contrainte UNIQUE(account_id, ad_id) : on ne peut PAS lier
+-- 2 fois la même ad au même compte, même via 2 alertes différentes.
+INSERT INTO "public"."matched_ads" ("account_id", "alert_id", "ad_id") VALUES
+  ('11111111-1111-1111-1111-111111111111',
+   '22222222-2222-2222-2222-222222222222',
+   'aaaa1111-0000-0000-0000-000000000001'),
+  ('11111111-1111-1111-1111-111111111111',
+   '22222222-2222-2222-2222-222222222222',
+   'aaaa1111-0000-0000-0000-000000000002'),
+  ('11111111-1111-1111-1111-111111111111',
+   '22222222-2222-2222-2222-222222222222',
+   'aaaa1111-0000-0000-0000-000000000003'),
+  ('11111111-1111-1111-1111-111111111111',
+   '33333333-3333-3333-3333-333333333333',
+   'aaaa1111-0000-0000-0000-000000000004'),
+  ('11111111-1111-1111-1111-111111111111',
+   '33333333-3333-3333-3333-333333333333',
+   'aaaa1111-0000-0000-0000-000000000005'),
+  ('11111111-1111-1111-1111-111111111111',
+   '33333333-3333-3333-3333-333333333333',
+   'aaaa1111-0000-0000-0000-000000000006');

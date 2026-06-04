@@ -13,7 +13,7 @@ import {
   EHotDealsSort,
   HOT_DEALS_SORT_LABELS,
 } from '@/validation-schemas';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
 
 type Props = {
@@ -26,13 +26,21 @@ type Props = {
 // Le `useTransition` permet de griser le select pendant que la page reload.
 export function HotDealsSortSelect({ value }: Props) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
   const handleChange = (next: string) => {
     const sort = next as EHotDealsSort;
-    const params = new URLSearchParams();
-    // On omet `?sort=` quand on revient au tri par défaut pour garder l'URL propre.
-    if (sort !== DEFAULT_HOT_DEALS_SORT) params.set('sort', sort);
+    // On part de l'URL courante pour conserver les filtres actifs (brand,
+    // model, etc.), on override juste `sort` et on reset `page`.
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('page');
+    if (sort === DEFAULT_HOT_DEALS_SORT) {
+      // On omet `?sort=` quand on revient au tri par défaut pour garder l'URL propre.
+      params.delete('sort');
+    } else {
+      params.set('sort', sort);
+    }
     const query = params.toString();
     const href = query ? `${pages.hotDeals}?${query}` : pages.hotDeals;
     startTransition(() => {

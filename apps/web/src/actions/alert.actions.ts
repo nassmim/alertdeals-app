@@ -206,14 +206,13 @@ export async function updateAlertStatus(
 
     const db = await createDrizzleSupabaseClient();
 
-    const updated = await db.rls(async (tx) => {
-      const [row] = await tx
+    const [updated] = await db.rls((tx) =>
+      tx
         .update(alerts)
         .set({ status })
         .where(eq(alerts.id, alertId))
-        .returning({ id: alerts.id, status: alerts.status });
-      return row;
-    });
+        .returning({ id: alerts.id, status: alerts.status }),
+    );
 
     if (!updated) {
       return { error: EAlertErrorCode.ALERT_NOT_FOUND };
@@ -234,7 +233,7 @@ export async function deleteAlert(alertId: string): Promise<TDeleteAlertResult> 
     const accountId = await getCurrentAccountId();
     const db = await createDrizzleSupabaseClient();
 
-    const deleted = await db.rls(async (tx) =>
+    const deleted = await db.rls((tx) =>
       tx.delete(alerts).where(eq(alerts.id, alertId)).returning({ id: alerts.id }),
     );
 
