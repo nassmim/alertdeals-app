@@ -23,3 +23,16 @@ export async function getVehicleModels() {
     orderBy: (table, { asc }) => [asc(table.name)],
   });
 }
+
+// Liste des états de véhicule (Bon état, Endommagé, Pour pièces, etc.).
+// Référentiel statique → cache long, pas de tag par compte.
+export async function getVehicleStates() {
+  'use cache';
+  cacheTag(CACHE_TAGS.vehicleStates);
+  cacheLife('weeks');
+
+  const db = getDBAdminClient();
+  return db.query.vehicleStates.findMany({
+    orderBy: (table, { asc }) => [asc(table.name)],
+  });
+}

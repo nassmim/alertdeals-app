@@ -13,7 +13,12 @@ import {
   sql,
 } from '@alertdeals/db';
 import { EAlertStatus } from '@alertdeals/shared';
-import { DEFAULT_HOT_DEALS_SORT, EHotDealsSort } from '@/validation-schemas';
+import {
+  DEFAULT_HOT_DEALS_SORT,
+  EHotDealsSort,
+  EMPTY_HOT_DEALS_FILTERS,
+  THotDealsFilters,
+} from '@/validation-schemas';
 import { cacheTag } from 'next/cache';
 
 const PAGE_SIZE = 20;
@@ -55,13 +60,19 @@ export type TMatchingAdsPage =
 type TGetMatchingAdsPageParams = {
   page: number;
   sort?: EHotDealsSort;
+  filters?: THotDealsFilters;
 };
 
 export async function getMatchingAdsPage(
   params: TGetMatchingAdsPageParams,
 ): Promise<TMatchingAdsPage> {
   const accountId = await getCurrentAccountId();
-  return getCachedMatchingAdsPage(accountId, params.page, params.sort ?? DEFAULT_HOT_DEALS_SORT);
+  return getCachedMatchingAdsPage(
+    accountId,
+    params.page,
+    params.sort ?? DEFAULT_HOT_DEALS_SORT,
+    params.filters ?? EMPTY_HOT_DEALS_FILTERS,
+  );
 }
 
 /**
@@ -73,11 +84,17 @@ export async function getMatchingAdsPage(
  * impose un JOIN sur ads dans la 1ère requête. La query relationnelle de
  * Drizzle ne supporte pas l'orderBy sur des tables jointes — on passe donc
  * On rehydrate ensuite les ads avec leurs relations via l'API relationnelle.
+ *
+ * Côté filtres : on garde `NO_MATCH` réservé au cas "aucun match tout court"
+ * (compte non filtré). Si l'user a des matchs mais aucun ne passe ses filtres,
+ * on renvoie `OK` avec `ads: []` → la page affiche "Aucun résultat" plutôt
+ * que la CTA "lance ton premier scrape".
  */
 async function getCachedMatchingAdsPage(
   accountId: string,
   page: number,
   sort: EHotDealsSort,
+  filters: THotDealsFilters,
 ): Promise<TMatchingAdsPage> {
   'use cache';
   cacheTag(
@@ -94,21 +111,47 @@ async function getCachedMatchingAdsPage(
 
   if ((activeAlertsCount[0]?.count ?? 0) === 0) return { kind: 'NO_ALERTS' };
 
+  // Compte non filtré → permet de distinguer "rien matché jamais" (CTA) de
+  // "rien matché AVEC CES FILTRES" (état vide normal).
   const totalRows = await db
     .select({ count: sql<number>`cast(count(*) as integer)` })
     .from(matchedAds)
     .where(eq(matchedAds.accountId, accountId));
 
-  const totalCount = totalRows[0]?.count ?? 0;
-  if (totalCount === 0) return { kind: 'NO_MATCH' };
+  if ((totalRows[0]?.count ?? 0) === 0) return { kind: 'NO_MATCH' };
+
+  // WHERE clauses cumulatives : on part de la condition de base (matched_ads
+  // du compte courant) et on ajoute chaque filtre seulement s'il est renseigné.
+  const whereConditions = buildWhereConditions(accountId, filters);
+
+  // Compte filtré → utilisé pour la pagination. Doit refléter le WHERE
+  // appliqué sinon on génère des pages vides en fin de pagination.
+  const filteredCountRows = await db
+    .select({ count: sql<number>`cast(count(*) as integer)` })
+    .from(matchedAds)
+    .innerJoin(ads, eq(matchedAds.adId, ads.id))
+    .where(and(...whereConditions));
+
+  const filteredCount = filteredCountRows[0]?.count ?? 0;
+
+  if (filteredCount === 0) {
+    return {
+      kind: 'OK',
+      ads: [],
+      page,
+      totalPages: 1,
+      totalCount: 0,
+    };
+  }
 
   // Étape 1 : on récupère les IDs des ads à afficher, déjà triés et paginés,
-  // en joignant `ads` pour pouvoir trier par ses colonnes.
+  // en joignant `ads` pour pouvoir trier par ses colonnes ET appliquer les
+  // filtres qui portent sur ses colonnes (brand, model, vehicleState, hasPhone).
   const orderedRows = await db
     .select({ adId: matchedAds.adId })
     .from(matchedAds)
     .innerJoin(ads, eq(matchedAds.adId, ads.id))
-    .where(eq(matchedAds.accountId, accountId))
+    .where(and(...whereConditions))
     .orderBy(...buildOrderBy(sort))
     .limit(PAGE_SIZE)
     .offset((page - 1) * PAGE_SIZE);
@@ -120,8 +163,8 @@ async function getCachedMatchingAdsPage(
       kind: 'OK',
       ads: [],
       page,
-      totalPages: Math.max(1, Math.ceil(totalCount / PAGE_SIZE)),
-      totalCount,
+      totalPages: Math.max(1, Math.ceil(filteredCount / PAGE_SIZE)),
+      totalCount: filteredCount,
     };
   }
 
@@ -146,9 +189,38 @@ async function getCachedMatchingAdsPage(
     kind: 'OK',
     ads: orderedAds,
     page,
-    totalPages: Math.max(1, Math.ceil(totalCount / PAGE_SIZE)),
-    totalCount,
+    totalPages: Math.max(1, Math.ceil(filteredCount / PAGE_SIZE)),
+    totalCount: filteredCount,
   };
+}
+
+/**
+ * Construit la liste des conditions WHERE en fonction des filtres actifs.
+ * Pattern auto-prospect : on n'ajoute la condition QUE si le filtre est
+ * renseigné, sinon on retombe sur "pas de contrainte". Renvoyer la liste
+ * brute laisse le caller décider de l'opérateur (`and(...)`) et permet de
+ * réutiliser pour le count + la query principale.
+ */
+function buildWhereConditions(accountId: string, filters: THotDealsFilters) {
+  const conditions = [eq(matchedAds.accountId, accountId)];
+
+  if (filters.alertId) {
+    conditions.push(eq(matchedAds.alertId, filters.alertId));
+  }
+  if (filters.brandIds.length > 0) {
+    conditions.push(inArray(ads.brandId, filters.brandIds));
+  }
+  if (filters.modelIds.length > 0) {
+    conditions.push(inArray(ads.modelId, filters.modelIds));
+  }
+  if (filters.vehicleStateIds.length > 0) {
+    conditions.push(inArray(ads.vehicleStateId, filters.vehicleStateIds));
+  }
+  if (filters.hasPhone) {
+    conditions.push(eq(ads.hasPhone, true));
+  }
+
+  return conditions;
 }
 
 /**

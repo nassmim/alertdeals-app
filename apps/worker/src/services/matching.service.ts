@@ -15,8 +15,10 @@ import {
 } from '@alertdeals/db';
 import { EAlertMode } from '@alertdeals/shared';
 
-// Alerts target brands/models as M:N (alert_brands / alert_models). The orchestrator
-// must fetch these relations so the matcher can filter correctly — see daily-orchestrator.ts.
+// Depuis la PR multi-select, les marques/modèles d'une alerte vivent dans
+// des tables de jointure (`alertBrands`, `alertModels`) et non plus en
+// colonnes directes sur `alerts`. Le caller doit donc charger ces relations
+// avec `db.query.alerts.findMany({ with: { brands: true, models: true } })`.
 type AlertWithRelations = TAlert & {
   location: TLocation | null;
   brands: TAlertBrand[];
@@ -36,12 +38,14 @@ export async function findMatchedAdIdsForAccount(
   for (const alert of alertsForAccount) {
     const conditions: SQL[] = [];
 
-    // An alert can target multiple brands/models (multi-select form), so we OR them
-    // via `inArray` rather than equating against a single column on the alert row.
+    // Marques/modèles : l'utilisateur peut en sélectionner plusieurs.
+    // Si la liste est vide → pas de contrainte (alerte tous-modèles confondus),
+    // sinon `inArray` matche tout ad dont la marque/modèle est dans la sélection.
     const brandIds = alert.brands.map((b) => b.brandId);
     const modelIds = alert.models.map((m) => m.modelId);
     if (brandIds.length > 0) conditions.push(inArray(ads.brandId, brandIds));
     if (modelIds.length > 0) conditions.push(inArray(ads.modelId, modelIds));
+
     if (alert.modelYearMin != null) conditions.push(gte(ads.modelYear, alert.modelYearMin));
     if (alert.modelYearMax != null) conditions.push(lte(ads.modelYear, alert.modelYearMax));
     if (alert.mileageMin != null) conditions.push(gte(ads.mileage, alert.mileageMin));

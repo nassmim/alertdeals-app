@@ -1,26 +1,30 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { pages } from '@/config/routes';
-import { DEFAULT_HOT_DEALS_SORT, type EHotDealsSort } from '@/validation-schemas';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 type Props = {
   page: number;
   totalPages: number;
-  sort: EHotDealsSort;
 };
 
-// Construit l'URL d'une page de la liste en conservant le tri courant (`?sort=`).
-// Si le tri est celui par défaut, on omet le param pour garder l'URL propre.
-function buildPageHref(targetPage: number, sort: EHotDealsSort): string {
-  const params = new URLSearchParams();
-  params.set('page', String(targetPage));
-  if (sort !== DEFAULT_HOT_DEALS_SORT) params.set('sort', sort);
-  return `${pages.hotDeals}?${params.toString()}`;
-}
+export function HotDealsPagination({ page, totalPages }: Props) {
+  const searchParams = useSearchParams();
 
-export function HotDealsPagination({ page, totalPages, sort }: Props) {
   if (totalPages <= 1) return null;
+
+  // Construit l'URL de la page cible en conservant tous les autres params
+  // (sort, filtres) tels qu'ils sont dans l'URL courante. On override juste
+  // `page`. Avantage : pas besoin de passer chaque param explicitement en
+  // prop, ça scale tout seul si on rajoute un nouveau filtre demain.
+  const buildPageHref = (targetPage: number): string => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', String(targetPage));
+    return `${pages.hotDeals}?${params.toString()}`;
+  };
 
   const hasPrev = page > 1;
   const hasNext = page < totalPages;
@@ -38,7 +42,7 @@ export function HotDealsPagination({ page, totalPages, sort }: Props) {
         aria-label="Page précédente"
       >
         {hasPrev ? (
-          <Link href={buildPageHref(page - 1, sort)}>
+          <Link href={buildPageHref(page - 1)}>
             <ChevronLeft className="size-4" />
             Précédent
           </Link>
@@ -62,7 +66,7 @@ export function HotDealsPagination({ page, totalPages, sort }: Props) {
         aria-label="Page suivante"
       >
         {hasNext ? (
-          <Link href={buildPageHref(page + 1, sort)}>
+          <Link href={buildPageHref(page + 1)}>
             Suivant
             <ChevronRight className="size-4" />
           </Link>

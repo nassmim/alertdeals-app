@@ -55,10 +55,10 @@ export function VehicleCard({ ad, isLocked = false }: Props) {
 
   if (isLocked) {
     return (
-      <Card className="relative overflow-hidden">
+      <Card className="relative h-full overflow-hidden">
         <div className="pointer-events-none select-none blur-sm">
           <CardHeader>
-            <CardTitle>{ad.title}</CardTitle>
+            <CardTitle className="truncate" title={ad.title}>{ad.title}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {ad.picture && (
@@ -88,10 +88,10 @@ export function VehicleCard({ ad, isLocked = false }: Props) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-start justify-between gap-2">
-          <CardTitle>{ad.title}</CardTitle>
+    <Card className="h-full">
+      <CardHeader className="overflow-hidden">
+        <div className="flex min-h-7 items-center justify-between gap-2 overflow-hidden">
+          <CardTitle className="min-w-0 truncate" title={ad.title}>{ad.title}</CardTitle>
           {ad.hasBeenReposted && (
             <Badge variant="secondary" className="gap-1 shrink-0">
               <Repeat className="size-3" />
@@ -101,7 +101,7 @@ export function VehicleCard({ ad, isLocked = false }: Props) {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="flex flex-1 flex-col space-y-4">
         {ad.picture && (
           <img
             src={ad.picture}
@@ -180,7 +180,7 @@ export function VehicleCard({ ad, isLocked = false }: Props) {
 
         {description && <p className="text-sm text-muted-foreground">{description}</p>}
 
-        <Button asChild>
+        <Button asChild className="mt-auto">
           <a href={ad.url} target="_blank" rel="noopener noreferrer">
             <ExternalLink className="size-4" />
             Voir sur LeBonCoin

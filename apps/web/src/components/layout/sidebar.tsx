@@ -1,19 +1,29 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState, useTransition } from 'react';
-import { Bell, BellRing, CreditCard, Flame, LogOut, Menu, Settings, User, X } from 'lucide-react';
-import { signOut } from '@/actions/auth.actions';
-import { pages } from '@/config/routes';
-import { cn } from '@/lib/utils';
+import { signOut } from "@/actions/auth.actions";
+import { pages } from "@/config/routes";
+import { cn } from "@/lib/utils";
+import {
+  Bell,
+  BellRing,
+  CreditCard,
+  Flame,
+  LogOut,
+  Menu,
+  Settings,
+  User,
+  X,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState, useTransition } from "react";
 
 const navItems = [
-  { label: 'Hot Deals', href: pages.hotDeals, icon: Flame },
-  { label: 'Alertes', href: pages.alerts.list, icon: Bell },
-  { label: 'Réglages', href: pages.settings, icon: Settings },
-  { label: 'Abonnement', href: pages.subscription, icon: CreditCard },
-  { label: 'Mon compte', href: pages.account, icon: User },
+  { label: "Hot Deals", href: pages.hotDeals, icon: Flame },
+  { label: "Alertes", href: pages.alerts.list, icon: Bell },
+  { label: "Réglages", href: pages.settings, icon: Settings },
+  { label: "Abonnement", href: pages.subscription, icon: CreditCard },
+  { label: "Mon compte", href: pages.account, icon: User },
 ] as const;
 
 export const Sidebar = () => {
@@ -21,7 +31,8 @@ export const Sidebar = () => {
   const [open, setOpen] = useState(false);
   const [isSigningOut, startSignOut] = useTransition();
 
-  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(`${href}/`);
 
   const handleSignOut = () => {
     setOpen(false);
@@ -37,11 +48,13 @@ export const Sidebar = () => {
           <div className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-fuchsia-500 text-white shadow-lg shadow-indigo-500/30">
             <BellRing className="h-4 w-4" />
           </div>
-          <span className="text-base font-bold tracking-tight text-white">AlertDeals</span>
+          <span className="text-base font-bold tracking-tight text-white">
+            AlertDeals
+          </span>
         </Link>
         <button
           type="button"
-          aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
+          aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
           onClick={() => setOpen((v) => !v)}
           className="rounded-lg border border-white/10 bg-white/5 p-2 text-white transition-colors hover:bg-white/10"
         >
@@ -51,8 +64,8 @@ export const Sidebar = () => {
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-40 w-64 border-r border-white/10 bg-white/5 backdrop-blur-xl transition-transform md:translate-x-0',
-          open ? 'translate-x-0' : '-translate-x-full',
+          "fixed inset-y-0 left-0 z-40 w-64 border-r border-white/10 bg-white/5 backdrop-blur-xl transition-transform md:translate-x-0",
+          open ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="flex h-full flex-col">
@@ -63,7 +76,9 @@ export const Sidebar = () => {
             <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 to-fuchsia-500 text-white shadow-lg shadow-indigo-500/30">
               <BellRing className="h-5 w-5" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-white">AlertDeals</span>
+            <span className="text-xl font-bold tracking-tight text-white">
+              AlertDeals
+            </span>
           </Link>
 
           <nav className="flex-1 space-y-1 p-3">
@@ -75,13 +90,16 @@ export const Sidebar = () => {
                   href={href}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all',
+                    "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all",
                     active
-                      ? 'bg-linear-to-r from-indigo-500/90 to-fuchsia-500/80 text-white shadow-lg shadow-indigo-500/20'
-                      : 'text-slate-300 hover:bg-white/5 hover:text-white',
+                      ? "bg-linear-to-r from-indigo-500/90 to-fuchsia-500/80 text-white shadow-lg shadow-indigo-500/20"
+                      : "text-slate-300 hover:bg-white/5 hover:text-white",
                   )}
                 >
-                  <Icon size={18} className={active ? 'text-white' : 'text-slate-400'} />
+                  <Icon
+                    size={18}
+                    className={active ? "text-white" : "text-slate-400"}
+                  />
                   {label}
                 </Link>
               );
@@ -96,8 +114,22 @@ export const Sidebar = () => {
               className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-300 transition-all hover:bg-white/5 hover:text-white disabled:opacity-50"
             >
               <LogOut size={18} className="text-slate-400" />
-              {isSigningOut ? 'Déconnexion…' : 'Déconnexion'}
+              {isSigningOut ? "Déconnexion…" : "Déconnexion"}
             </button>
+          </div>
+
+          <div className="border-t border-white/10 px-6 py-4 text-center text-xs text-slate-500">
+            <p>
+              Made by{" "}
+              <a
+                href="https://nassim-dev.netlify.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-400 transition-colors hover:text-white"
+              >
+                N.dev
+              </a>
+            </p>
           </div>
         </div>
       </aside>
