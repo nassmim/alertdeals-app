@@ -11,16 +11,26 @@ import {
   sql,
   type SQL,
   type TAlert,
+  type TAlertBrand,
+  type TAlertModel,
   type TLocation,
 } from '@alertdeals/db';
 import { EAlertMode } from '@alertdeals/shared';
 
-type AlertWithLocation = TAlert & { location: TLocation | null };
+// Depuis la PR multi-select, les marques/modèles d'une alerte vivent dans
+// des tables de jointure (`alertBrands`, `alertModels`) et non plus en
+// colonnes directes sur `alerts`. Le caller doit donc charger ces relations
+// avec `db.query.alerts.findMany({ with: { brands: true, models: true } })`.
+type AlertWithRelations = TAlert & {
+  location: TLocation | null;
+  brands: TAlertBrand[];
+  models: TAlertModel[];
+};
 
 export type TMatchedAdRow = { adId: string; alertId: string };
 
 export async function findMatchedAdIdsForAccount(
-  alertsForAccount: AlertWithLocation[],
+  alertsForAccount: AlertWithRelations[],
 ): Promise<TMatchedAdRow[]> {
   if (alertsForAccount.length === 0) return [];
 
@@ -30,8 +40,14 @@ export async function findMatchedAdIdsForAccount(
   for (const alert of alertsForAccount) {
     const conditions: SQL[] = [];
 
-    if (alert.brandId != null) conditions.push(eq(ads.brandId, alert.brandId));
-    if (alert.modelId != null) conditions.push(eq(ads.modelId, alert.modelId));
+    // Marques/modèles : l'utilisateur peut en sélectionner plusieurs.
+    // Si la liste est vide → pas de contrainte (alerte tous-modèles confondus),
+    // sinon `inArray` matche tout ad dont la marque/modèle est dans la sélection.
+    const brandIds = alert.brands.map((b) => b.brandId);
+    const modelIds = alert.models.map((m) => m.modelId);
+    if (brandIds.length > 0) conditions.push(inArray(ads.brandId, brandIds));
+    if (modelIds.length > 0) conditions.push(inArray(ads.modelId, modelIds));
+
     if (alert.modelYearMin != null) conditions.push(gte(ads.modelYear, alert.modelYearMin));
     if (alert.modelYearMax != null) conditions.push(lte(ads.modelYear, alert.modelYearMax));
     if (alert.mileageMin != null) conditions.push(gte(ads.mileage, alert.mileageMin));
