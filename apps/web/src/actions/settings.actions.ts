@@ -26,7 +26,7 @@ export async function updateWhatsappSettings(data: unknown): Promise<ActionResul
 
     const db = await createDrizzleSupabaseClient();
 
-    const [updated] = await db.rls(async (tx) =>
+    const [updated] = await db.rls((tx) =>
       tx
         .update(accounts)
         .set({
