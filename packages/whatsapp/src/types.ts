@@ -1,5 +1,9 @@
 import { WASocket } from '@whiskeysockets/baileys';
 
+// Re-export pour que les consommateurs (worker, scripts) puissent typer leurs
+// sockets sans dépendre directement de Baileys.
+export type { WASocket };
+
 // État Baileys encrypté tel que stocké en DB. Sérialisé en JSON dans la
 // colonne `credentials` de la table `whatsapp_sessions`.
 export type StoredAuthState = {

@@ -9,7 +9,7 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
+    "typecheck": "echo 'no standalone typecheck — Baileys types OOM tsc; coverage via @alertdeals/worker'",
     "lint": "echo 'no lint configured'"
   },
   "dependencies": {

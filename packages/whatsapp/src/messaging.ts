@@ -23,13 +23,13 @@ export const sendWhatsAppMessage = async (
 
     if (!isGroup) {
       const results = await socket.onWhatsApp(jid);
-      const exists = results?.[0]?.exists;
-      if (!exists) {
+      const result = results?.[0];
+      if (!result?.exists) {
         return { success: false, errorCode: EWhatsAppErrorCode.RECIPIENT_PHONE_INVALID };
       }
       // Le JID normalisé renvoyé par WhatsApp peut différer (ex. ajout du
       // pays) — on utilise toujours celui-là pour l'envoi.
-      await socket.sendMessage(results[0].jid, { text: message });
+      await socket.sendMessage(result.jid, { text: message });
       return { success: true };
     }
 
