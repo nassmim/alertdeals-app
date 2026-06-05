@@ -29,6 +29,8 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
 
   const activeAlerts = await db.query.alerts.findMany({
     where: eq(alertsTable.status, EAlertStatus.ACTIVE),
+    // brands/models are required for filtering — they live in M:N tables (alert_brands / alert_models)
+    // since the form went multi-select. Fetching them here keeps the matcher's logic pure.
     with: { location: true, brands: true, models: true },
   });
 

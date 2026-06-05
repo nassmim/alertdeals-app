@@ -1,7 +1,7 @@
 -- Lookup table seeds for AlertDeals.
--- Ported from auto-prospect (commit ref: see git history) — only the 11 lookup tables
--- needed by the Lobstr ingestion pipeline. Application data (accounts, ads, etc.)
--- is intentionally NOT seeded.
+-- Ported from auto-prospect (commit ref: see git history) — the 11 lookup tables
+-- needed by the Lobstr ingestion pipeline plus the subscription plans table.
+-- Application data (accounts, ads, etc.) is intentionally NOT seeded.
 --
 -- Loaded automatically by `supabase db reset`.
 
@@ -38759,6 +38759,14 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng") VALUES
 	(35509, '80370', 'ST ACHEUL', 50.1907, 2.16302),
 	(35510, '80540', 'ST AUBIN MONTENOY', 49.8424, 1.99687),
 	(35511, '80430', 'ST AUBIN RIVIERE', 49.8666, 1.77978);
+
+--
+-- Subscription plans. Stripe price IDs come from the shared test account.
+--
+
+INSERT INTO "public"."plans" ("name", "stripe_price_id", "price_eur", "interval", "description", "sort_order") VALUES
+	('Pro Mensuel', 'price_1TdtEtE2rOg332FNrWq2szkH', 2900,  'month', 'Accès complet à AlertDeals', 0),
+	('Pro Annuel',  'price_1TdtGLE2rOg332FNTyjXiPhE', 29000, 'year',  'Économie de 58€/an',         1);
 
   --
 -- Reset all sequences to match actual data
