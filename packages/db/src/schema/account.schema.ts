@@ -7,7 +7,6 @@ export const accounts = pgTable(
   {
     id: uuid().primaryKey(),
     email: varchar({ length: 320 }).notNull(),
-    hasSubscription: boolean('has_subscription').default(false).notNull(),
     confirmedByAdmin: boolean('confirmed_by_admin').default(false).notNull(),
     isFirstConnexion: boolean('is_first_connexion').default(true).notNull(),
     whatsappPhoneNumber: varchar('whatsapp_phone_number', { length: 64 }),

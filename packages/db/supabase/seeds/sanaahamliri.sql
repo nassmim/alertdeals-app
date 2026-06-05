@@ -4,7 +4,7 @@ SET session_replication_role = replica;
 -- PostgreSQL database dump
 --
 
--- \restrict Sltd4detc5JPRMmSG79HpaTpTHQLPw01WrgGowpOCHaKnoPLWjSTLB9JWL3WplO
+-- \restrict 4bwsxXdHXnBaFt3jqjMGE3Xd40fwbx8QzB9vcwuexSCT7VISDsqiNReRffqjblI
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 17.6
@@ -26,15 +26,11 @@ SET row_security = off;
 --
 
 INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created_at", "ip_address") VALUES
-	('00000000-0000-0000-0000-000000000000', '9d63564d-6bc0-4473-b6d2-090d47eecd26', '{"action":"user_signedup","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2026-05-22 23:32:23.217839+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'cc909f27-021b-43c7-a98b-e7ca3fe23f3a', '{"action":"login","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-05-22 23:32:23.273069+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'd9e134a8-3325-4fc9-b7e6-9763add86eaf', '{"action":"user_recovery_requested","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"user"}', '2026-05-22 23:32:23.572451+00', ''),
-	('00000000-0000-0000-0000-000000000000', '5ac06faa-91ee-4e82-aaf5-e01cc93414c1', '{"action":"login","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-05-22 23:33:02.754076+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'd4e7364f-4b25-499d-8c63-b00eaa701204', '{"action":"login","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider_type":"magiclink"}}', '2026-05-22 23:33:03.425775+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'f229d4e9-594f-463b-8558-236ea013befc', '{"action":"token_refreshed","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-23 01:33:11.836522+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'a930d050-4b00-4341-a31b-5e593ae88acf', '{"action":"token_revoked","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-23 01:33:11.915801+00', ''),
-	('00000000-0000-0000-0000-000000000000', '82f75bf3-3046-48e0-bf4c-90bbe7948f8d', '{"action":"token_refreshed","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-23 01:33:12.36553+00', ''),
-	('00000000-0000-0000-0000-000000000000', '6669ccfd-213c-4823-bdc8-5ac2dde56778', '{"action":"token_refreshed","actor_id":"9f4c6921-f22b-4b55-b916-94f58d1a65d3","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"token"}', '2026-05-23 01:33:12.970851+00', '');
+	('00000000-0000-0000-0000-000000000000', '61fe6595-43b8-4a07-99fc-fa78758440c5', '{"action":"user_signedup","actor_id":"33ea61cc-e7f6-42d8-a70f-006041e6c8ea","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2026-06-04 11:24:44.76858+00', ''),
+	('00000000-0000-0000-0000-000000000000', '2a1be0de-335a-4fdd-a5fa-ef73ff2a992d', '{"action":"login","actor_id":"33ea61cc-e7f6-42d8-a70f-006041e6c8ea","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-06-04 11:24:44.833088+00', ''),
+	('00000000-0000-0000-0000-000000000000', '43ed4c96-85ff-4abb-bb39-bb2b27164b86', '{"action":"user_recovery_requested","actor_id":"33ea61cc-e7f6-42d8-a70f-006041e6c8ea","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"user"}', '2026-06-04 11:24:45.095017+00', ''),
+	('00000000-0000-0000-0000-000000000000', '4aa2a41c-7c57-4729-a5e3-ad5cc4071d2d', '{"action":"login","actor_id":"33ea61cc-e7f6-42d8-a70f-006041e6c8ea","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-06-04 11:27:40.346334+00', ''),
+	('00000000-0000-0000-0000-000000000000', '3ef7ee71-557b-48e4-a7bf-07eeb711553c', '{"action":"login","actor_id":"33ea61cc-e7f6-42d8-a70f-006041e6c8ea","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider_type":"magiclink"}}', '2026-06-04 11:27:40.898254+00', '');
 
 
 --
@@ -42,7 +38,7 @@ INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created
 --
 
 INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous") VALUES
-	('00000000-0000-0000-0000-000000000000', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', 'authenticated', 'authenticated', 'hamlirisanaa@gmail.com', '$2a$10$50p5PwieZtrsKrq1qT2Ciu2brOVXU70mMH.xxrLbbdoPc5z1/9S8W', '2026-05-22 23:32:23.226862+00', NULL, '', NULL, '', '2026-05-22 23:32:23.575981+00', '', '', NULL, '2026-05-22 23:33:03.427598+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "9f4c6921-f22b-4b55-b916-94f58d1a65d3", "email": "hamlirisanaa@gmail.com", "email_verified": true, "phone_verified": false}', NULL, '2026-05-22 23:32:23.129869+00', '2026-05-23 01:33:12.004441+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
+	('00000000-0000-0000-0000-000000000000', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'authenticated', 'authenticated', 'hamlirisanaa@gmail.com', '$2a$10$S81sE8eApEdXghzkiz971OuimpKdV2IW7nFdeFv7Rf.5Rmje3D6P.', '2026-06-04 11:24:44.776754+00', NULL, '', NULL, '', '2026-06-04 11:24:45.101049+00', '', '', NULL, '2026-06-04 11:27:40.900687+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "33ea61cc-e7f6-42d8-a70f-006041e6c8ea", "email": "hamlirisanaa@gmail.com", "email_verified": true, "phone_verified": false}', NULL, '2026-06-04 11:24:44.670227+00', '2026-06-04 11:27:40.905079+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
 
 
 --
@@ -50,7 +46,7 @@ INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encryp
 --
 
 INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "provider", "last_sign_in_at", "created_at", "updated_at", "id") VALUES
-	('9f4c6921-f22b-4b55-b916-94f58d1a65d3', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '{"sub": "9f4c6921-f22b-4b55-b916-94f58d1a65d3", "email": "hamlirisanaa@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2026-05-22 23:32:23.195311+00', '2026-05-22 23:32:23.195402+00', '2026-05-22 23:32:23.195402+00', '612b6fdb-1d08-441e-a37a-253d0223723e');
+	('33ea61cc-e7f6-42d8-a70f-006041e6c8ea', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', '{"sub": "33ea61cc-e7f6-42d8-a70f-006041e6c8ea", "email": "hamlirisanaa@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2026-06-04 11:24:44.754937+00', '2026-06-04 11:24:44.755017+00', '2026-06-04 11:24:44.755017+00', 'cc2fd251-9d31-4245-9f6a-953b6134d106');
 
 
 --
@@ -70,8 +66,8 @@ INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "pro
 --
 
 INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "authentication_method", "id") VALUES
-	('977d2944-5a0b-4572-aaa4-a0c2978f1c76', '2026-05-22 23:32:23.319256+00', '2026-05-22 23:32:23.319256+00', 'password', 'f322c5d0-9dfb-4a33-9676-282de38ab076'),
-	('b8072064-4570-4f53-a9c6-972050018112', '2026-05-22 23:33:03.435203+00', '2026-05-22 23:33:03.435203+00', 'magiclink', '7c6f7f07-56df-4ea8-9d12-37267137223c');
+	('c3b9ecaf-51cb-4558-9be8-c7384f036448', '2026-06-04 11:24:44.896435+00', '2026-06-04 11:24:44.896435+00', 'password', '7db8ba8a-e294-4261-9e33-c02476554237'),
+	('a31ff71e-0245-4eea-abc4-d307ad7f6834', '2026-06-04 11:27:40.906702+00', '2026-06-04 11:27:40.906702+00', 'magiclink', '0568baf6-8bde-4e99-a09f-8f8a832e3d48');
 
 
 --
@@ -138,8 +134,8 @@ INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "
 -- Data for Name: accounts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."accounts" ("id", "email", "has_subscription", "confirmed_by_admin", "is_first_connexion", "created_at", "whatsapp_phone_number", "whatsapp_is_group") VALUES
-	('9f4c6921-f22b-4b55-b916-94f58d1a65d3', 'hamlirisanaa@gmail.com', true, true, true, '2026-05-22 23:32:23.124994+00', NULL, false);
+INSERT INTO "public"."accounts" ("id", "email", "confirmed_by_admin", "is_first_connexion", "created_at", "whatsapp_phone_number", "whatsapp_is_group") VALUES
+	('33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'hamlirisanaa@gmail.com', true, true, '2026-06-04 11:24:44.668673+00', NULL, false);
 
 
 --
@@ -11515,6 +11511,7 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng", "region
 	(11138, '33430', 'BAZAS', 44.4409, -0.217719, NULL),
 	(11139, '33640', 'BEAUTIRAN', 44.7035, -0.460441, NULL),
 	(11140, '33340', 'BEGADAN', 45.3685, -0.89633, NULL),
+	(11141, '33130', 'BEGLES', 44.803, -0.548518, NULL),
 	(11142, '33410', 'BEGUEY', 44.6494, -0.326008, NULL),
 	(11143, '33830', 'BELIN BELIET', 44.4959, -0.798853, NULL),
 	(11144, '33760', 'BELLEBAT', 44.7367, -0.222552, NULL),
@@ -11537,6 +11534,7 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng", "region
 	(11161, '33210', 'BOMMES', 44.5546, -0.345409, NULL),
 	(11162, '33370', 'BONNETAN', 44.8207, -0.409084, NULL),
 	(11163, '33910', 'BONZAC', 45.0089, -0.223759, NULL),
+	(11164, '33000', 'BORDEAUX', 44.8629, -0.583607, NULL),
 	(11165, '33100', 'BORDEAUX', 44.8629, -0.583607, NULL),
 	(11166, '33200', 'BORDEAUX', 44.8629, -0.583607, NULL),
 	(11167, '33300', 'BORDEAUX', 44.8629, -0.583607, NULL),
@@ -11546,6 +11544,7 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng", "region
 	(11171, '33190', 'BOURDELLES', 44.5595, 0.00742945, NULL),
 	(11172, '33710', 'BOURG', 45.0396, -0.548437, NULL),
 	(11173, '33113', 'BOURIDEYS', 44.3614, -0.476921, NULL),
+	(11174, '33110', 'LE BOUSCAT', 44.865, -0.60332, NULL),
 	(11175, '33480', 'BRACH', 45.0409, -0.946832, NULL),
 	(11176, '33420', 'BRANNE', 44.8299, -0.181031, NULL),
 	(11177, '33124', 'BRANNENS', 44.5215, -0.156795, NULL),
@@ -11591,6 +11590,7 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng", "region
 	(11217, '33430', 'CAZATS', 44.4728, -0.201556, NULL),
 	(11218, '33790', 'CAZAUGITAT', 44.7125, 0.00996139, NULL),
 	(11219, '33360', 'CENAC', 44.7849, -0.457252, NULL),
+	(11220, '33150', 'CENON', 44.8553, -0.522304, NULL),
 	(11221, '33720', 'CERONS', 44.6268, -0.340409, NULL),
 	(11222, '37320', 'ESVRES', 47.2905, 0.790164, NULL),
 	(11223, '33760', 'CESSAC', 44.7411, -0.18696, NULL),
@@ -11664,6 +11664,7 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng", "region
 	(11291, '33540', 'GORNAC', 44.6636, -0.183203, NULL),
 	(11292, '33840', 'GOUALADE', 44.3182, -0.125179, NULL),
 	(11293, '33660', 'GOURS', 44.9999, 0.0231707, NULL),
+	(11294, '33170', 'GRADIGNAN', 44.7681, -0.616307, NULL),
 	(11295, '33590', 'GRAYAN ET L HOPITAL', 45.4324, -1.10568, NULL),
 	(11296, '33420', 'GREZILLAC', 44.8147, -0.215205, NULL),
 	(11297, '33690', 'GRIGNOLS', 44.4085, -0.0280757, NULL),
@@ -11709,6 +11710,7 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng", "region
 	(11337, '33950', 'LEGE CAP FERRET', 44.7452, -1.17361, NULL),
 	(11338, '33970', 'LEGE CAP FERRET', 44.7452, -1.17361, NULL),
 	(11339, '33210', 'LEOGEATS', 44.5053, -0.36482, NULL),
+	(11340, '33850', 'LEOGNAN', 44.7236, -0.617187, NULL),
 	(11341, '33840', 'LERM ET MUSSET', 44.3354, -0.157918, NULL),
 	(11342, '33340', 'LESPARRE MEDOC', 45.2796, -0.923505, NULL),
 	(11343, '33550', 'LESTIAC SUR GARONNE', 44.6929, -0.381567, NULL),
@@ -11749,6 +11751,7 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng", "region
 	(11378, '33540', 'MAURIAC', 44.7448, -0.0243825, NULL),
 	(11379, '33210', 'MAZERES', 44.5023, -0.250972, NULL),
 	(11380, '33390', 'MAZION', 45.1705, -0.605842, NULL),
+	(11381, '33700', 'MERIGNAC', 44.8313, -0.681965, NULL),
 	(11382, '33350', 'MERIGNAS', 44.7871, -0.0843202, NULL),
 	(11383, '33540', 'MESTERRIEUX', 44.6453, -0.0138477, NULL),
 	(11384, '33380', 'MIOS', 44.6105, -0.891339, NULL),
@@ -12041,6 +12044,7 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng", "region
 	(11671, '39250', 'PLENISETTE', 46.8036, 6.01596, NULL),
 	(11672, '33240', 'PERISSAC', 45.0256, -0.31355, NULL),
 	(11673, '39120', 'PLEURE', 46.9157, 5.46335, NULL),
+	(11674, '33600', 'PESSAC', 44.786, -0.68099, NULL),
 	(11675, '39700', 'PLUMONT', 47.1118, 5.71921, NULL),
 	(11676, '33890', 'PESSAC SUR DORDOGNE', 44.8181, 0.0927608, NULL),
 	(11677, '39570', 'POIDS DE FIOLE', 46.5982, 5.62344, NULL),
@@ -12048,6 +12052,7 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng", "region
 	(11679, '39290', 'POINTRE', 47.2214, 5.49303, NULL),
 	(11680, '33240', 'PEUJARD', 45.0472, -0.431266, NULL),
 	(11681, '39800', 'POLIGNY', 46.8204, 5.72453, NULL),
+	(11682, '33290', 'LE PIAN MEDOC', 44.9555, -0.673715, NULL),
 	(11683, '39130', 'PONT DE POITTE', 46.5724, 5.68743, NULL),
 	(11684, '33490', 'LE PIAN SUR GARONNE', 44.5818, -0.216822, NULL),
 	(11685, '39110', 'PONT D HERY', 46.8794, 5.90185, NULL),
@@ -12218,6 +12223,7 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng", "region
 	(11850, '20290', 'OLMO', 42.5018, 9.41388, NULL),
 	(11851, '39120', 'ST LOUP', 46.9954, 5.3122, NULL),
 	(11852, '33330', 'ST ETIENNE DE LISSE', 44.882, -0.0924326, NULL),
+	(11853, '33560', 'STE EULALIE', 44.9027, -0.480046, NULL),
 	(11854, '20236', 'OMESSA', 42.387, 9.19457, NULL),
 	(11855, '33190', 'ST EXUPERY', 44.6336, -0.100869, NULL),
 	(11856, '33540', 'ST FELIX DE FONCAUDE', 44.6522, -0.106898, NULL),
@@ -12667,10 +12673,12 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng", "region
 	(12300, '40290', 'MISSON', 43.5872, -0.960805, NULL),
 	(12301, '33540', 'ST SULPICE DE POMMIERS', 44.676, -0.112491, NULL),
 	(12302, '40660', 'MOLIETS ET MAA', 43.8626, -1.35894, NULL),
+	(12303, '33450', 'ST SULPICE ET CAMEYRAC', 44.9053, -0.380337, NULL),
 	(12304, '33113', 'ST SYMPHORIEN', 44.4261, -0.550485, NULL),
 	(12305, '40700', 'MOMUY', 43.617, -0.645845, NULL),
 	(12306, '33350', 'STE TERRE', 44.8328, -0.120807, NULL),
 	(12307, '33710', 'ST TROJAN', 45.0895, -0.578233, NULL),
+	(12308, '33440', 'ST VINCENT DE PAUL', 44.9704, -0.481518, NULL),
 	(12309, '33420', 'ST VINCENT DE PERTIGNAS', 44.8007, -0.113086, NULL),
 	(12310, '33920', 'ST VIVIEN DE BLAYE', 45.1051, -0.506315, NULL),
 	(12311, '33590', 'ST VIVIEN DE MEDOC', 45.4524, -1.02088, NULL),
@@ -12689,6 +12697,7 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng", "region
 	(12324, '37130', 'LIGNIERES DE TOURAINE', 47.2952, 0.414694, NULL),
 	(12325, '33710', 'SAMONAC', 45.0709, -0.571495, NULL),
 	(12326, '37500', 'LIGRE', 47.1114, 0.271022, NULL),
+	(12327, '33650', 'SAUCATS', 44.6476, -0.637733, NULL),
 	(12328, '33920', 'SAUGON', 45.1864, -0.500648, NULL),
 	(12329, '37240', 'LIGUEIL', 47.0394, 0.806873, NULL),
 	(12330, '37530', 'LIMERAY', 47.4602, 1.03417, NULL),
@@ -12762,6 +12771,8 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng", "region
 	(12398, '33710', 'VILLENEUVE', 45.0811, -0.639739, NULL),
 	(12399, '33720', 'VIRELADE', 44.6565, -0.398075, NULL),
 	(12400, '33240', 'VIRSAC', 45.0256, -0.436793, NULL),
+	(12401, '33370', 'YVRAC', 44.8817, -0.470451, NULL),
+	(12402, '33380', 'MARCHEPRIME', 44.7033, -0.85567, NULL),
 	(12403, '34290', 'ABEILHAN', 43.46, 3.30264, NULL),
 	(12404, '34230', 'ADISSAN', 43.5358, 3.42544, NULL),
 	(12405, '34300', 'AGDE', 43.3084, 3.4838, NULL),
@@ -35870,22 +35881,7 @@ INSERT INTO "public"."locations" ("id", "zipcode", "name", "lat", "lng", "region
 	(35508, '88230', 'PLAINFAING', 48.143, 7.04067, NULL),
 	(35509, '80370', 'ST ACHEUL', 50.1907, 2.16302, NULL),
 	(35510, '80540', 'ST AUBIN MONTENOY', 49.8424, 1.99687, NULL),
-	(35511, '80430', 'ST AUBIN RIVIERE', 49.8666, 1.77978, NULL),
-	(11682, '33290', 'LE PIAN MEDOC', 44.9555, -0.673715, 'Aquitaine'),
-	(12303, '33450', 'ST SULPICE ET CAMEYRAC', 44.9053, -0.380337, 'Aquitaine'),
-	(11164, '33000', 'BORDEAUX', 44.8629, -0.583607, 'Aquitaine'),
-	(12402, '33380', 'MARCHEPRIME', 44.7033, -0.85567, 'Aquitaine'),
-	(11674, '33600', 'PESSAC', 44.786, -0.68099, 'Aquitaine'),
-	(11381, '33700', 'MERIGNAC', 44.8313, -0.681965, 'Aquitaine'),
-	(12401, '33370', 'YVRAC', 44.8817, -0.470451, 'Aquitaine'),
-	(12327, '33650', 'SAUCATS', 44.6476, -0.637733, 'Aquitaine'),
-	(11220, '33150', 'CENON', 44.8553, -0.522304, 'Aquitaine'),
-	(11174, '33110', 'LE BOUSCAT', 44.865, -0.60332, 'Aquitaine'),
-	(11141, '33130', 'BEGLES', 44.803, -0.548518, 'Aquitaine'),
-	(11853, '33560', 'STE EULALIE', 44.9027, -0.480046, 'Aquitaine'),
-	(12308, '33440', 'ST VINCENT DE PAUL', 44.9704, -0.481518, 'Aquitaine'),
-	(11340, '33850', 'LEOGNAN', 44.7236, -0.617187, 'Aquitaine'),
-	(11294, '33170', 'GRADIGNAN', 44.7681, -0.616307, 'Aquitaine');
+	(35511, '80430', 'ST AUBIN RIVIERE', 49.8666, 1.77978, NULL);
 
 
 --
@@ -36649,7 +36645,6 @@ INSERT INTO "public"."vehicle_models" ("id", "brand_id", "name", "lbc_value", "l
 	(741, 17, 'B5', 'B5', 'B5'),
 	(742, 17, 'B6', 'B6', 'B6'),
 	(743, 17, 'B7', 'B7', 'B7'),
-	(3017, 6, 'V', NULL, 'V'),
 	(744, 17, 'B8', 'B8', 'B8'),
 	(745, 17, 'B9', 'B9', 'B9'),
 	(746, 17, 'C1', 'C1', 'C1'),
@@ -38921,15 +38916,7 @@ INSERT INTO "public"."vehicle_models" ("id", "brand_id", "name", "lbc_value", "l
 	(3012, 157, '7X', '7X', '7X'),
 	(3013, 157, 'X', 'X', 'X'),
 	(3014, 157, 'Autre', 'Autre', 'Autre'),
-	(3015, 158, 'Autre', 'Autre', 'Autre'),
-	(3025, 6, 'Autres', NULL, 'Autres'),
-	(3022, 10, 'T-cross', NULL, 'T-cross'),
-	(3018, 154, 'Xc40', NULL, 'Xc40'),
-	(3020, 71, 'I30', NULL, 'I30'),
-	(3023, 4, 'Autres', NULL, 'Autres'),
-	(3024, 3, 'Autres', NULL, 'Autres'),
-	(3016, 82, 'Autres', NULL, 'Autres'),
-	(3019, 87, 'Autres', NULL, 'Autres');
+	(3015, 158, 'Autre', 'Autre', 'Autre');
 
 
 --
@@ -38966,854 +38953,48 @@ INSERT INTO "public"."vehicle_states" ("id", "name", "lbc_value", "lobstr_value"
 --
 
 INSERT INTO "public"."ads" ("id", "type_id", "subtype_id", "driving_licence_id", "gear_box_id", "vehicle_seats_id", "vehicle_state_id", "location_id", "brand_id", "model_id", "market_position_id", "fuel_id", "url", "original_ad_id", "title", "description", "picture", "pictures", "price", "has_been_reposted", "has_been_boosted", "is_urgent", "model_year", "initial_publication_date", "last_publication_date", "mileage", "created_at", "price_has_dropped", "price_min", "price_max", "margin_amount_min", "margin_amount_max", "margin_percentage_min", "margin_percentage_max", "is_low_price", "phone_number", "owner_name", "entry_year", "has_phone", "equipments", "other_specifications", "technical_inspection_year", "good_deal_name", "din_power") VALUES
-	('729e0ee4-3cc1-4426-b051-dacbfdd07062', 1, 1, 1, 1, 5, 4, 11381, 9, 522, 3, 1, 'https://www.leboncoin.fr/ad/voitures/3197371417', '3197371417', 'RENAULT Clio IV 1.2 16v Limited', 'Renault Clio IV phase 2, 1.2 75cv LIMITED, gris platine, 4 cv, 5 portes
-Première mise en circulation le 23/11/2017 
-
-Véhicule première main, non fumeur, entretenu en concession Renault
-Tableau complet de suivi d''entretiens avec factures
-
-Derniers entretiens : 
-- 15/01/26 : Disques et plaquettes AV, bougies d''allumage, liquide de freins
-- 31/12/24 : Courroie de distribution, courroie d''accessoires, liquide de refroidissement 
-- 18/11/23 : Batterie neuve
-
-Seul défaut esthétique : bas de caisse légèrement enfoncé côté passager avant (2ème photo) 
-
-5 places
-
-OPTIONS ET ÉQUIPEMENTS :
-Audio - Télécommunications :
-- Commandes du système audio au volant
-- Ecran tactile
-- Fonction MP3
-- Kit mains-libres Bluetooth
-- Prise Jack + USB
-
-Conduite :
-- Aide au démarrage en côte
-- Limiteur de vitesse
-- Régulateur de vitesse
-
-Extérieur :
-- Essuie-glace arrière
-- Feux de freinage d''urgence
-- Feux de jour à LED
-- Jantes Alu
-
-Intérieur :
-- Sellerie Limited 
-- Banquette rabattable 1/3 - 2/3
-- Climatisation manuelle
-- Ordinateur de bord
-- Vitres AV électriques
-
-Sécurité :
-- Roue de secours
-- ABS
-- Airbag conducteur
-- Aide au démarrage en pente
-- ESP
-- Détecteur de sous-gonflage indirect
-- Fixations ISOFIX
-
-Autres équipements et informations :
-Direction assistée, Fermeture électrique, Verrouillage centralisé des portes, Compteur digital, Bouton démarrage, Système audio base reflex, lampe de coffre, lunette AR dégivrante, miroir de courtoisie passager, prise 12V', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/9a/fb/e0/9afbe0bf2ce7b62f4db2786aede2ca271cb7cfe2.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/9a/fb/e0/9afbe0bf2ce7b62f4db2786aede2ca271cb7cfe2.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/47/0e/1a/470e1af7ec7c2ea3c77097b4e7e01e96930857fd.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/a3/36/fe/a336fe624f7474a60561e02e146632bc83a8ce60.jpg?rule=ad-large"}', 7790, false, false, false, 2017, '2026-05-13', '2026-05-13', 99750, '2026-05-23', false, 7130, 7880, -660, 90, -0.084724, 0.011553274, false, NULL, 'Pascal', 2017, false, NULL, 'Véhicule non fumeur, Factures disponibles, Réparations utiles déjà faites, État du contrôle technique valide, Première main', 2028, NULL, 75),
-	('f776fd07-babe-4436-8b6c-101cb600b6e3', 1, 4, 1, 2, 5, 4, 11674, 43, 2468, 3, 1, 'https://www.leboncoin.fr/ad/voitures/3187326907', '3187326907', 'DACIA Duster', 'DACIA DUSTER TCE 150 EDC 4X2  Essence
-Couleur gris urbain
-Mise en circulation 08/07/2022
-62000 KMS
-Boite automatique
-Attelage
-Marche pied
-Roue de secours neuve
-4 caméras', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/67/4a/46/674a46877d3757cb6502e33b88d3c7b047f3d286.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/67/4a/46/674a46877d3757cb6502e33b88d3c7b047f3d286.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/29/d1/81/29d181de68d7143ba1041e67f5afffd043f55e7b.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/04/eb/1d/04eb1d36f72b9f7a01f5706253ad77ab58f400ea.jpg?rule=ad-large"}', 18500, true, false, true, 2022, '2026-04-27', '2026-05-13', 62000, '2026-05-23', true, 16940, 18730, -1560, 230, -0.08432432, 0.012432433, false, NULL, 'NANIE', 2022, false, 'Allumage automatique des phares, Attelage de remorque, Bluetooth, Caméra de recul, Climatisation, Détecteur d''angle mort, Phares anti-brouillard, Phares LED / Xenon', 'Carnet d''entretien disponible, Véhicule non fumeur, Factures disponibles, Réparations utiles déjà faites, État du contrôle technique valide, Première main', 2028, NULL, 150),
-	('9607ecf8-211d-419d-8510-7eb439ee8c5f', 1, 4, 1, 1, 5, 4, 11682, 3, 109, 3, 1, 'https://www.leboncoin.fr/ad/voitures/3197368399', '3197368399', 'Citroën C3 Aircross Shine 1.2 PureTech 110 – 61 000 km – Très bon état', 'Je vends ma Citroën C3 Aircross Shine 1.2 PureTech 110 ch de 2019 avec 61 621 km.
-
-Très bon état général, véhicule agréable à conduire et économique, idéal aussi bien pour la ville que pour les trajets familiaux.
-
-Belle configuration avec Pack Color orange (barres de toit, rétroviseurs et inserts orange) qui lui donne un look moderne et original.
-
-Équipements :
-
-Climatisation automatique
-Caméra de recul
-Radar de recul
-Régulateur / limiteur de vitesse
-Alerte franchissement de ligne
-Rétroviseurs rabattables électriquement
-Vitres arrière électriques
-Écran tactile Bluetooth / USB
-Pare-soleil intégrés arrière
-Jantes alliage
-
-Motorisation :
-
-1.2 PureTech 110 ch essence
-Boîte manuelle 6 vitesses
-5 places
-
-Entretien suivi.
-Courroie de distribution remplacée il y a environ 1 an (facture disponible), point très rassurant sur cette motorisation.
-
-Contrôle technique OK.
-
-Véhicule visible sur rendez-vous.
-N’hésitez pas à me contacter pour plus d’informations', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/8b/57/3a/8b573a45d1fd6692a0c30e0ddbb12343312e3f43.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/8b/57/3a/8b573a45d1fd6692a0c30e0ddbb12343312e3f43.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/9e/2c/93/9e2c936c58512c86f9c3e942f3a82fdc44546a34.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/18/8b/02/188b02b96176aee9e33fce0aaa326a894d8a02b0.jpg?rule=ad-large"}', 9000, false, false, false, 2019, '2026-05-13', '2026-05-13', 61621, '2026-05-23', false, 8500, 9390, -500, 390, -0.055555556, 0.043333333, false, NULL, 'JA', 2019, false, 'Aide au stationnement, Aide au stationnement avec Caméra 360, Alerte de franchissement involontaire de ligne (AFIL), Allumage automatique des phares, Apple CarPlay / Android Auto, Barres de toit intégrées, Bluetooth, Caméra de recul, Chargeurs USB, Climatisation, Essuie-glaces automatiques, Jantes en alliage, Ordinateur de bord, Phares anti-brouillard, Régulateur de vitesse, Rétroviseurs rabattables électriquement, Siège arrière rabattable, Système de navigation, Vitres électriques arrières, Volant réglable en hauteur', 'Réparations utiles déjà faites', 2028, NULL, 110),
-	('8cf734ef-651f-435f-bb11-23adb8b74708', 1, 4, 1, 2, 5, 4, 11853, 87, 3019, NULL, 2, 'https://www.leboncoin.fr/ad/voitures/3197346153', '3197346153', 'Range rover évoque mark vi td4 150 se dinamic', 'Bonjour je met en vente cette magnifique voiture avec 54000km, Boîte automatique, Rien à prévoir,  tout est à jour, Vidange faite, 4 pneus neufs, Disques et plaquettes neufs et elle est très propre et très belle couleur', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/1f/a1/7e/1fa17e7e8e377ebe844db72c7bd0565b9caaac02.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/1f/a1/7e/1fa17e7e8e377ebe844db72c7bd0565b9caaac02.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/8c/07/a2/8c07a24585aac9f3c445e685ba94bdd5a1d29d49.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/c8/d2/67/c8d2673ce4521a1a9914ae2bcab180c58beb9ca7.jpg?rule=ad-large"}', 19500, false, false, false, 2018, '2026-05-13', '2026-05-13', 54000, '2026-05-23', false, NULL, NULL, NULL, NULL, NULL, NULL, false, '+33663311183', 'La paix', 2018, true, '4 roues motrices, Aide au stationnement, Alarme antivol, Alerte de franchissement involontaire de ligne (AFIL), Allumage automatique des phares, Bluetooth, Caméra de recul, Chargeurs USB, Climatisation, Essuie-glaces automatiques, Jantes en alliage, Ordinateur de bord, Pare-brise chauffant, Phares anti-brouillard, Phares LED / Xenon, Reconnaissance des panneaux de signalisation, Régulateur de vitesse, Siège arrière rabattable, Sièges chauffants, Sièges en cuir, Sièges électriques, Toit ouvrant / Toit panoramique, Vitres surteintées à l''arrière, Vitres électriques arrières, Volant chauffant, Volant réglable en hauteur', 'Véhicule non fumeur, Factures disponibles, Réparations utiles déjà faites', NULL, NULL, 150),
-	('a45bcccc-f38f-4bd1-b3d6-bc1734a56c62', 1, 1, 1, 1, 5, 4, 12308, 3, 3019, 6, 1, 'https://www.leboncoin.fr/ad/voitures/3197342259', '3197342259', 'Citroën C4 Cactus 2017 – Bonne affaire à saisir – 3000', 'Je mets en vente ma Citroën C4 Cactus 1.2 PureTech faute de temps pour m’occuper des réparations.
-Le véhicule est propre, agréable à conduire, économique et avec un super look 👍
-Très bon potentiel pour quelqu’un qui s’y connaît un peu en mécanique ou un professionnel.
-
-✅ Carrosserie propre
-✅ Intérieur en bon état
-✅ Véhicule roulant
-✅ Consomme peu
-✅ Prix très intéressant vu la cote du véhicule
-
-🔧 Diagnostic effectué chez un garagiste (photo à l’appui) :
-Environ 800 € de réparations à prévoir selon les renseignements obtenus.
-
-💰 Vendu dans l’état : 3000 €
-Une fois réparée, la voiture vaut bien plus.
-
-📸 Diagnostic en photo dans l’annonce.
-N’hésitez pas à me demander plus de photos si vous êtes intéressé.
-
-⚡ Premier arrivé, premier servi !
-⚠️ Prix non négociable.
-Pas sérieux s’abstenir.', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/52/e3/20/52e320c7efbdace4b30d8f0e299ebd231248863e.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/52/e3/20/52e320c7efbdace4b30d8f0e299ebd231248863e.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/37/5a/a0/375aa0275e304f66aca4291582ff74b106db3a17.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/a7/ba/fb/a7bafbce06e4d9d49896ed982cedc6f425e812a2.jpg?rule=ad-large"}', 3000, false, false, false, 2017, '2026-05-13', '2026-05-13', 155177, '2026-05-23', false, 5100, 5630, 2100, 2630, 0.7, 0.87666667, true, '+33774800306', 'Marie-Laure', 2017, true, NULL, NULL, NULL, 'Très bonne affaire', 110),
-	('de4bc0e6-dfd6-4bf8-9bca-6d6bb7687f8f', 1, 4, 1, 1, 5, 4, 12401, 8, 445, 3, 2, 'https://www.leboncoin.fr/ad/voitures/3196989572', '3196989572', '3008 II 1.5 bluehdi 130 ALLURE', 'Peugeot 3008 II de 2018, un SUV diesel puissant et économique.
-- Marque : Peugeot
-- Modèle : 3008
-- Année : 2018
-- Kilométrage : 146 500 km
-- Motorisation : 1.5 BlueHDi 130 ch
-- Carburant : Diesel
-- Finition : Allure
-- Boîte de vitesses : Manuelle
-- Puissance fiscale : 6 CV
-- Nombre de portes : 5
-- Nombre de sièges : 5
-- Couleur : Gris
-- Contrôle technique : Valable jusqu''en 04/2028
-N''hésitez pas à me contacter pour plus d''informations ou pour convenir d''un essai.', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/a9/af/3e/a9af3e9d64ae875884dea79cb7ab67b0fe895abf.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/a9/af/3e/a9af3e9d64ae875884dea79cb7ab67b0fe895abf.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/95/d4/90/95d490ca3b061df36ed304d70c0c8a7553d5381c.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/21/ba/65/21ba65f76183fdc81e6d1868d6c3c737983647bf.jpg?rule=ad-large"}', 12400, false, false, false, 2018, '2026-05-13', '2026-05-13', 146500, '2026-05-23', false, 11450, 12660, -950, 260, -0.076612905, 0.020967742, false, NULL, 'Olivier', 2018, false, 'Aide au stationnement, Attelage de remorque, Jantes en alliage, Régulateur de vitesse', 'Carnet d''entretien disponible', 2028, NULL, 130),
-	('6b6a7b0b-4f40-480d-a6e5-b4b771396560', 1, 14, 1, 2, 6, 4, 12401, 6, 3017, NULL, 2, 'https://www.leboncoin.fr/ad/voitures/3189598997', '3189598997', 'Mercedes Classe V 250– 6 places – véhicule français', 'Je mets en vente mon Mercedes Classe V , doté d’un intérieur cuir marron, de sièges pivotants et d’une table centrale pliable pouvant servir d’accoudoir. Véritable configuration salon, offrant un confort remarquable et un espace généreux.
-
-Points forts :
-- 6 places modulables
-- Boîte automatique
-- Portes latérales à ouverture à distance
-- Coffre électrique 2 niveaux, ouverture à distance
-- Attelage
-- Très grand volume intérieur
-- Table centrale pliable / accoudoir
-- petit réfrigérateur entre les deux sièges avant 
-- Confort premium Mercedes
-
-Entretien :
-- 157 600 km
-- Disques + plaquettes neufs
-- Entretien complet réalisé
-- Aucun frais à prévoir
-Idéal pour famille et pour partir en vacances sereinement sans problème de place 
-Pas sérieux s’abstenir svp.', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/21/61/e1/2161e1f78f81876171b223e2c37874f0539846e7.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/21/61/e1/2161e1f78f81876171b223e2c37874f0539846e7.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/1d/13/98/1d1398b47158b810a6812efae749662b344af887.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/c2/0f/f0/c20ff0029cda22716a2f766b43bfbee6f41a4f19.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/56/6e/63/566e63ff49b7893a476014ffba586a1cfb7af2a6.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/83/1b/30/831b30807e5eca8766966e4c7391b9771442e48c.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/a7/f3/93/a7f3939a4abb64b8cb56bb83890234099000ae5f.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/99/4a/8a/994a8a6da451576391202c8dd8457a6eefb79bec.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/79/33/c4/7933c4b642ba26bd6cec3fc15517bf0c6e968b4d.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/58/f1/7d/58f17d086c3592ffcc100f283f47736854d014a5.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/c3/3d/24/c33d246afebf3a1c2d308f9f5afa1fd270d631b9.jpg?rule=ad-large"}', 36000, true, false, false, 2016, '2026-05-01', '2026-05-17', 157600, '2026-05-23', true, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Maj man', 2016, false, 'Aide au stationnement avec Caméra 360, Alerte de franchissement involontaire de ligne (AFIL), Attelage de remorque, Barres de toit intégrées, Caméra de recul, Chargeurs USB, Climatisation, Coffre à ouverture électrique, Détecteur d''angle mort, Essuie-glaces automatiques, Pare-brise chauffant, Phares adaptatifs, Phares anti-brouillard, Phares directionnels, Phares LED / Xenon, Planificateur intelligent de trajet, Reconnaissance des panneaux de signalisation, Roue de secours, Régulateur de vitesse, Rétroviseurs dégivrants, Rétroviseurs rabattables électriquement, Siège réglable en hauteur, Sièges arrières coulissants, Sièges chauffants, Sièges en cuir, Système audio haut de gamme, Système de navigation, Système de surveillance pression pneus (TPMS), Vitres surteintées à l''arrière, Volant chauffant, Volant réglable en hauteur, Volant réglable en profondeur', 'Factures disponibles, Carnet d''entretien disponible, Véhicule non fumeur, Réparations utiles déjà faites', 2027, NULL, 190),
-	('53ee894c-6252-4068-b9e2-178a5107cdd2', 1, 2, 1, 2, 5, 4, 11164, 82, 3019, 3, NULL, 'https://www.leboncoin.fr/ad/voitures/3161889063', '3161889063', 'KIA Ceed SW hybride rechargeable 1.6 GDI 141cv', 'Je vends ma Kia Ceed SW hybride rechargeable 
-2eme main 
-
-Garantie KIA jusqu’en juillet 2029 ou 150000km 
-
-Hybride rechargeable (60km d’autonomie)
-
-Entretien en concession 100% KIA
-Prochains entretien en novembre 2026 ou 125000km 
-Pneus avant continental neufs 
-CT ok 
-
-Très fiable et très peu coûteuse en entretien , carburant et assurance. 
-
-Options: 
-Feux led, feux et essui glaces automatiques, grand écran GPS, Apple Android CarPlay, KiaConnect (Statut véhicule à distance), Clim automatique, jantes alu, radar et caméra de recul, régulateur de vitesse adaptatif, alerte franchissement involontaire, … 
-
-Prix: 15800€ 
-
-** vente de particulier à particulier** 
-** PAS DE PROFESSIONNEL ** 
-
-Visible sur Le Bouscat ou Le Haillan', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/ee/89/a6/ee89a69a04b54ee2d4d9f9b7f715731f0ae7f02c.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/ee/89/a6/ee89a69a04b54ee2d4d9f9b7f715731f0ae7f02c.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/4a/55/07/4a550719bad045ff973ed94ba4793a1aca3405bd.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/ba/00/26/ba00266c48c3c9d2f8ee7267326aa015487373b5.jpg?rule=ad-large"}', 15800, false, false, false, 2022, '2026-05-13', '2026-05-13', 120000, '2026-05-23', false, 14350, 15860, -1450, 60, -0.091772154, 0.0037974683, false, NULL, 'MB', 2022, false, 'Aide au stationnement, Allumage automatique des phares, Apple CarPlay / Android Auto, Bluetooth, Caméra de recul, Chargeurs USB, Climatisation, Essuie-glaces automatiques, Jantes en alliage, Ordinateur de bord, Phares adaptatifs, Phares LED / Xenon, Radio numérique DAB, Régulateur de vitesse, Rétroviseurs rabattables électriquement, Siège arrière rabattable, Siège réglable en hauteur, Système d''accès sans clé, Système de navigation, Système de surveillance pression pneus (TPMS), Vitres électriques arrières, Volant réglable en hauteur, Volant réglable en profondeur', 'Carnet d''entretien disponible, Véhicule non fumeur, Factures disponibles, Réparations utiles déjà faites, État du contrôle technique valide, Sous garantie constructeur', 2028, NULL, 105),
-	('f256ae8d-860a-41e1-aa42-e4cb6a8b7e5a', 1, 4, 1, 2, 5, 4, 11164, 1, 17, 4, 1, 'https://www.leboncoin.fr/ad/voitures/3161361974', '3161361974', 'Vend Audi Q2 1.4 TFSI COD 150 DESIGN LUXE noir 8cv, 5 portes', 'Vend Audi Q2 1.4 TFSI COD 150 DESIGN LUXE noir 8cv, 5 portes.
-Noir intérieur noir avec "passepoil" gris 
-Véhicule en parfait état
-Toujours entretenu chez audi plaquettes et pneus avant neufs 
-Options principales : 
-Caméra de recul 
-virtual cockpit 
-sièges chauffants 
-Audi sound système (10 haut-parleurs)
- keyless (avec les deux clés) 
-volant méplat (sport) avec palettes au volant 
-phares full led 
-bluetooth 
-coffre électrique
- phare automatique
- essuie-glace automatiques
- rétroviseurs électriques et chauffants
- radar avant et arrière de détection d''obstacle
- clim automatique 
-isofix
- régulateur de vitesse adaptatif 
-prise usb (x2)
-detecteur de pression des pneus 
-vitres électrique
-réseau wifi
-
-Pas de démarchage commercial svp', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/ab/4c/7b/ab4c7b3e3cabdd8cbab3de2dbdad34788d9fa643.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/ab/4c/7b/ab4c7b3e3cabdd8cbab3de2dbdad34788d9fa643.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/14/c4/03/14c4037cbc23be3d645176dc1158088c8fe908d6.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/24/3a/93/243a93bb33015248f267317818b9f1c2d84b86a8.jpg?rule=ad-large"}', 17300, false, false, false, 2017, '2026-05-13', '2026-05-13', 110000, '2026-05-23', false, 17380, 19210, 80, 1910, 0.0046242774, 0.110404626, true, '+33630586642', 'af', 2017, true, 'Aide au stationnement, Alarme antivol, Allumage automatique des phares, Apple CarPlay / Android Auto, Bluetooth, Caméra de recul, Chargeurs USB, Climatisation, Coffre à ouverture électrique, Jantes en alliage, Ordinateur de bord, Phares adaptatifs, Phares anti-brouillard, Régulateur de vitesse, Régulateur de vitesse adaptatif, Rétroviseurs dégivrants, Rétroviseurs rabattables électriquement, Siège arrière rabattable, Siège réglable en hauteur, Sièges chauffants, Sièges en cuir, Système audio haut de gamme, Système d''accès sans clé', 'Carnet d''entretien disponible, Véhicule non fumeur, Factures disponibles, État du contrôle technique valide, Réparations utiles déjà faites', NULL, 'Bonne affaire', 150),
-	('f9dc494b-4676-4536-a509-229ff0e5e0fa', 1, 4, 1, 2, 5, 4, 11294, 87, 3019, 3, 2, 'https://www.leboncoin.fr/ad/voitures/3197214066', '3197214066', 'Land rover discovery sport 2.0 td4 150 awd hse', 'DESCRIPTION
-Land Rover Discovery Sport MARK III TD4 150CH HSE AWD 8CV
-Automatique  tout-terrain, gris corris, couleur intérieure beige
-
-ENTRETIEN
-Vendu et entretenu par Autoréal Group Mérignac 33
-Première mise en circulation le 26/06/2018
-Deuxième main
-Kilométrage 105 330km
-Historique entretien Land Rover internet + carnet
-Historique des factures fourni dont :
-Dernier entretien : 13/02/2026
-Remplacements des plaquettes de frein : 17/07/2024
-Remplacements des pneumatiques : 04/07/2024
-Remplacement de la batterie : 09/02/2023
-Distribution : chaîne
-
-OPTIONS ET EQUIPEMENTS :
-Extérieur :
-. allumage automatique des feux
-. vitres électriques
-. phares xénon
-. caméra de recul
-. filtre à particules
-
-Intérieur et confort :
-. bluetooth
-. volant cuir
-. système audio MeridianTM 380W 10 haut-parleurs et caisson
-. GPS
-. intérieur cuir
-. sièges arrière banquette coulissante
-
-Sécurité :
-. détecteur de pluie
-. direction assistée
-. fermeture centralisée
-. ABS
-. airbags frontaux
-. anti-patinage
-. ESP
-. phares antibrouillard
-. répartiteur électronique de freinage
-. fixation ISOFIX
-. régulateur de vitesse
-. limiteur de vitesse
-. 4 roues motrices
-
-Autres équipements et informations :
-. nombre de rapports : 9 vitesses
-. émission CO2 : 139 g/km
-. nombres de cylindres : 4 cylindres
-. puissance réelle : 150 ch
-. disposition des cylindres : ligne
-. puissance kilowatt : 110 kw
-. empattement 2741 cm
-. garde au sol 21cm
-. volume maximal du coffre 1698cm3
-, consommation cycle mixte (constatée) 6,9L/100
-. prise 12V
-. accoudoir central arrière
-. palettes au volant
-. airbag genoux conducteur
-. contrôle de descente
-. airbag côté passager
-. système de navigation
-. trappe à ski
-. écran tactile
-. lecteur carte SD
-. 3 appui-tête arrière
-. 1 x port AUX situé dans la console centrale
-. 1 x prise 12V dans le coffre
-. 2 ports USB permettant la recharge pour la 2ème rangée (à la place de la prise 12V AR)
-. 2 x prises 12V AV (1 x près des porte-gobelets  1 x console centrale) + 1 x prise 12V AR
-. accoudoir central AV coulissant
-. air conditionné automatique double zone avec filtration de l''air
-. alarme périmétrique
-. alarme volumétrique
-. alerte de franchissement de ligne involontaire
-. arches de roues et bas de caisse latéraux anthracite
-. assise et dossier des sièges avant en cuir grené avec réglages électriques 8/8 (sans mémoire)
-. assise et dossiers des sièges arrière en cuir grené avec réglages manuels 6/6
-. assistance au démarrage en côte (HSA)
-. badge et hayon de capot "DlSCOVERY" Brunel
-. badge de hayon "SPORT" argent
-, ouverture motorisée du hayon
-. cache de l''airbag de capot en coloris Brunel
-. colonne de direction à réglages manuels
-. contrôle de freinage d''urgence (EBA)
-. contrôle de freinage en courbe (CBC)
-. contrôle de stabilité de l''attelage (FSA et TSC)
-. contrôle du frein moteur (EDC)
-. contrôle dynamique de stabilité (DSC)
-. coques de rétroviseurs couleur carrosserie
-. couvre-bagage souple
-. déclenchement des feux de détresse en cas de freinage d''urgence
-. desserrage progressif des freins en descente (GRC)
-. détecteur d''obstacle AR
-. détecteur d''obstacle AV
-. éclairage des miroirs de courtoisie derrière les pare-soleil
-. écrous antivol
-. entourage antibrouillard Narvik Black
-. finition inférieure des boucliers (cache anneau de remorquage) : White Silver
-. finition Satin Brushed Aluminium (barres latérales de console centrale)
-. freinage d''urgence autonome
-. frein de parking électrique (EPB)
-. freins à disques ventilés à l''AV et AR
-. InControl Toucha avec écran tactile 8"
-. kit de réparation de pneus
-. roue de secours normale ajoutée sur HSE
-. lumière d''ambiance intérieure (bleue)
-. ouïes de ventilation surélevées pour la 2ème rangée de sièges
-. poignées de portes couleur carrosserie
-. rétroviseur intérieur photosensible
-. rétroviseurs extérieurs chauffants
-. réglables et rabattables électriquement
-. avec lampe d''approche
-. système de contrôle de la pression des pneus AV AR (TPMS)
- .système de feux de route automatiques (système anti-éblouissement)', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/ba/42/9b/ba429b999ab446676f0ef98068daf6c633bb1d43.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/ba/42/9b/ba429b999ab446676f0ef98068daf6c633bb1d43.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/b6/1d/58/b61d5881c08f053c7e7f4123b54eb6bbc25eb5b8.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/fd/0b/fd/fd0bfdc1cbf5af2d43d70f390599c4032eb223c6.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/61/4f/04/614f046204149c974864d5f765c1b0a20024117d.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/f7/30/36/f73036ae459ab330a7355fb88a43f77e61ad212c.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/d4/ab/65/d4ab6511a4c617c74f632c62f71a2d137c8c11e0.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/ed/14/7c/ed147c4a602dbc1f9d47288e59238f7b526b9daf.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/2b/d6/9a/2bd69a602c2f84f317810fe22424983d3dffdde3.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/0f/ee/4b/0fee4b2952cdd4d0a7ee5ae0420cd333343acc2d.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/c3/8d/c6/c38dc6a7b104ed70c20137ced2673f6698c431d6.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/a9/8c/4d/a98c4d134f6e89e8e7aaa7a6e39c0c09ce648948.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/b8/f9/2a/b8f92a2a0e21163305f987de695031206e678f03.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/4e/53/e9/4e53e9e638a990f71e71ac4612feb376359fc5f5.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/1c/90/e8/1c90e8716e09c83bc49dde3adbda93abcb444fdd.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/3d/e5/52/3de552d706c0aa3dccf9a0d71dfb9d9b1ea021d3.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/f1/b6/74/f1b674602c953ae1bb2b0ef7d3d3de43d1102944.jpg?rule=ad-large"}', 17500, false, false, false, 2018, '2026-05-13', '2026-05-13', 105330, '2026-05-23', false, 16350, 18070, -1150, 570, -0.065714285, 0.032571428, false, NULL, 'avergnat', 2018, false, '4 roues motrices, Aide au stationnement, Alarme antivol, Alerte de franchissement involontaire de ligne (AFIL), Allumage automatique des phares, Bluetooth, Caméra de recul, Chargeur sans fil pour smartphone, Chargeurs USB, Climatisation, Coffre à ouverture électrique, Essuie-glaces automatiques, Jantes en alliage, Ordinateur de bord, Phares adaptatifs, Phares anti-brouillard, Phares LED / Xenon, Radio numérique DAB, Roue de secours, Régulateur de vitesse, Régulateur de vitesse adaptatif, Rétroviseurs dégivrants, Rétroviseurs rabattables électriquement, Siège arrière rabattable, Siège réglable en hauteur, Sièges arrières coulissants, Sièges chauffants, Sièges en cuir, Sièges électriques, Système audio haut de gamme, Système d''accès sans clé, Système de navigation, Système de surveillance pression pneus (TPMS), Vitres électriques arrières, Volant réglable en hauteur, Volant réglable en profondeur', 'Carnet d''entretien disponible, Factures disponibles', 2026, NULL, 150),
-	('84067f00-edf8-44b7-bbd9-f00367ee0a3e', 1, 1, 1, 2, 5, 4, 11164, 10, 590, 3, 1, 'https://www.leboncoin.fr/ad/voitures/3197153344', '3197153344', 'Polo VI R-Line 1.0 TSI 115 Ch (Toit Ouvrant)', 'À vendre une VOLKSWAGEN POLO R-LINE de 2020, mise en circulation en mai 2020, avec seulement 62 000 km au compteur. Cette voiture est en très bon état et équipée d''une motorisation 1.0 TSI 115 ch avec boîte automatique DSG7. Elle fonctionne à l''essence et possède 5 portes.
-
-Extérieur et Chassis
-
-Rétroviseurs extérieurs réglage électrique
-Feux de route à LED
-Phares à allumage automatique
-Rétroviseurs extérieurs chauffants
-Ampoules de phares LED
-Freins régénérateurs
-Feux arrières à LED
-Rétroviseurs rabattables électriquement
-Antibrouillards avant
-Radar de recul
-Rétroviseurs électriques
-Rétroviseurs rabattables
-Toit ouvrant électrique
-Toit ouvrant panoramique manuel
-
-Intérieur
-
-Volant alu & cuir
-Système audio écran tactile, carte digitale
-Palettes au volant
-Ordinateur de bord
-Air conditionné auto
-Tapis de sol
-Ouverture du coffre à distance
-Système de navigation
-Taille écran navigation 8 pouces
-Accoudoir central avant
-Système de navigation info trafic
-Limiteur de vitesse
-Rétroviseur jour/nuit
-Volant multi-fonction
-Bluetooth inclut musique en streaming, connexion téléphone
-Bluetooth
-6 haut-parleurs
-Régulateur de vitesse
-Air conditionné 2 zones
-Réglage du volant en hauteur, en profondeur
-Taille écran multi-fonctions 8 pouces
-4 vitres électriques
-Fermeture électrique
-Kit téléphone main libre
-
-Sécurité
-
-6 airbags
-ESP
-Airbags rideaux
-Antipatinage
-Système détection de collision
-Indicateur de sous-gonflage des pneus
-Assistance au freinage d''urgence
-ABS
-Airbags latéraux
-Kit anticrevaison
-Essuie glace capteur de pluie
-Aide au démarrage en côte
-Essuie-glaces automatiques
-Feux automatiques
-
-Autre
-
-Caméra de recul ‘Rear view’ avec visualisation de la zone située à l’arrière du véhicule sur l’écran de la radio ou de la radionavigation
-Commande vocale
-Keyless Access
-Non fumeur
-Roue de secours
-Sélection d’un profil de conduite
-Système Start & Stop
-Toit ouvrant électrique panoramique ouvrant/coulissant en verre
-Vitres arrière et lunette arrière surteintées
-
-Le prix de vente est fixé à 16990€. Cette offre est équitable et l''annonce est récente. Si vous êtes intéressé par cette VOLKSWAGEN POLO R-LINE, n''hésitez pas à me contacter pour plus d''informations ou pour organiser une visite.', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/5e/26/82/5e2682079c4c2883267f0bb8d48025cbb5b28b0c.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/5e/26/82/5e2682079c4c2883267f0bb8d48025cbb5b28b0c.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/57/a0/5e/57a05ec8945b4af525f5e301039889614f167b11.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/49/d0/4b/49d04b7ba8635d8b83a90162d63a4fb1676640e4.jpg?rule=ad-large"}', 16990, false, false, false, 2020, '2026-05-13', '2026-05-13', 62000, '2026-05-23', false, 15550, 17180, -1440, 190, -0.08475574, 0.011183049, false, NULL, 'Tnifr', 2020, false, 'Aide au stationnement', 'Carnet d''entretien disponible, Véhicule non fumeur, Factures disponibles, État du contrôle technique valide', 2028, NULL, 115),
-	('5491f0b9-2f64-4e9a-b2a9-76dbffc70bdf', 1, 4, 1, 1, 5, 4, 11340, 4, 3019, 3, 2, 'https://www.leboncoin.fr/ad/voitures/3197127144', '3197127144', 'Fiat 500X diesel', 'Fiat 500X. Moteur 120 multi jet. Finition lounge.
- Entretien fait régulièrement selon préconisation constructeur .
-Pneus avant neufs.
-Disques et plaquettes avant neuves.
-Courroie de distribution changée .', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/06/2e/0b/062e0bbb8b129087e5a4529a3c82c1bcb68a8b72.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/06/2e/0b/062e0bbb8b129087e5a4529a3c82c1bcb68a8b72.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/80/de/f6/80def6fc4ef8f0bb840c89553a7010a5cad357f6.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/c9/d6/3a/c9d63a806ee0fdaf23f267a4d857cd18b3615a9e.jpg?rule=ad-large"}', 9600, false, false, false, 2018, '2026-05-13', '2026-05-13', 134700, '2026-05-23', false, 9340, 10320, -260, 720, -0.027083334, 0.075, true, NULL, 'am33', 2018, false, 'Alerte de franchissement involontaire de ligne (AFIL), Allumage automatique des phares, Apple CarPlay / Android Auto, Bluetooth, Chargeurs USB, Climatisation, Enregistreur de conduite (Dashcam), Essuie-glaces automatiques, Jantes en alliage, Phares anti-brouillard, Phares directionnels, Régulateur de vitesse adaptatif, Rétroviseurs rabattables électriquement, Siège arrière rabattable, Siège réglable en hauteur, Système d''accès sans clé, Système de navigation, Système de surveillance (Mode Sentinelle), Système de surveillance pression pneus (TPMS), Vitres surteintées à l''arrière, Vitres électriques arrières, Volant réglable en hauteur, Volant réglable en profondeur', 'Carnet d''entretien disponible, Véhicule non fumeur, Factures disponibles, Réparations utiles déjà faites, État du contrôle technique valide', NULL, NULL, 88),
-	('9d1c1b72-1dab-4c54-a8a2-34b9fd21cfc2', 1, 1, 1, 2, 5, 4, 12303, 9, 549, 2, 2, 'https://www.leboncoin.fr/ad/voitures/3124891803', '3124891803', 'Talismans', 'Je vends ma Renault Talisman, une berline diesel de 2019 avec 69 377 km au compteur.
-- Marque : Renault
-- Modèle : Talisman
-- Année : 2019
-- Kilométrage : 69 377 km
-- Carburant : Diesel
-- Boîte de vitesses : Automatique
-- Puissance fiscale : 8 CV
-- Puissance DIN : 160 ch
-- Nombre de portes : 4
-- Nombre de sièges : 5
-- Couleur : Noir
-- Crit''Air : 2
-N''hésitez pas à me contacter pour plus d''informations', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/03/77/28/0377282fb95d98c5f60a17a211c909a537eae687.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/03/77/28/0377282fb95d98c5f60a17a211c909a537eae687.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/de/84/fd/de84fde06be6729aa8fbeeb71d865c3ec118ce1e.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/be/ba/3c/beba3c71614f4f56bd82efcbc7ca0da651a411ab.jpg?rule=ad-large"}', 17990, false, false, false, 2019, '2026-05-13', '2026-05-13', 69377, '2026-05-23', true, 16000, 17690, -1990, -300, -0.11061701, -0.01667593, false, NULL, 'Alain', 2019, false, NULL, NULL, NULL, NULL, 160),
-	('a3633c8e-1ddc-4969-844a-79d44c54d14d', 1, 4, 1, 2, 5, 4, 11141, 6, 3019, 3, 2, 'https://www.leboncoin.fr/ad/voitures/3197103525', '3197103525', 'Glc 220d 4 matic executive', 'uniquement de part a particulier
-refuse tout revendeur professionnel
-
-Glc 220d blanc
-Auto bilan ok
-118000 km
-Attelage électrique jamais servi
-Jante alu
-Très bon état', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/26/9e/18/269e1886437b8064c404bb643488f01fbef2d519.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/26/9e/18/269e1886437b8064c404bb643488f01fbef2d519.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/48/ab/b0/48abb08cab72910fd8921a1a501781782ff8dc33.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/dd/07/36/dd07369dd365de3fc977c4110b43603d438d5727.jpg?rule=ad-large"}', 26500, false, false, false, 2018, '2026-05-13', '2026-05-13', 118000, '2026-05-23', false, 25530, 28210, -970, 1710, -0.036603775, 0.0645283, false, '+33680580296', 'capsport', 2018, true, '4 roues motrices, Aide au stationnement, Allumage automatique des phares, Attelage de remorque, Caméra de recul, Chargeur sans fil pour smartphone, Climatisation, Coffre à ouverture électrique, Essuie-glaces automatiques, Jantes en alliage, Ordinateur de bord, Pare-brise chauffant, Régulateur de vitesse, Rétroviseurs dégivrants, Rétroviseurs rabattables électriquement, Siège arrière rabattable, Sièges électriques, Système audio haut de gamme, Système d''accès sans clé, Système de navigation, Système de surveillance pression pneus (TPMS), Vitres électriques arrières', 'Factures disponibles', NULL, NULL, 170),
-	('3f46c903-30eb-40c1-b3de-a3f3aa347c7e', 1, 4, 1, 1, 5, 4, 11164, 10, 3022, 3, 1, 'https://www.leboncoin.fr/ad/voitures/3197084501', '3197084501', 'Volkswagen t-cross carat virtual cockpit sieges chauffants 1.0 tsi 115ch', 'Volkswagen T-Cross 1.0 TSI 115ch Carat, Blanc Pur, 6cv, 5 portes, mise en circulation le 07-02-2020, garantie 12 mois (12 mois pièces et main d''oeuvre).
-5 places, longueur : 4,11 mètres, poids en charge
-1740 Kg,
-Boite de vitesse : manuelle
-
-OPTIONS ET EQUIPEMENTS:
-Audio - Télécommunications
-- 6 Haut parleurs
-- Appel d''Urgence Localisé
-- Ecran tactile
-- Fonction MP3
-- GPS Cartographique
-- Interface Media
-- Kit mains-libres Bluetooth
-- Lecteur carte SD
-- Prise USB
-- Radio
-- Radio numérique DAB
-- Services connectés
-- TMC
-- Virtual cockpit
-
-Conduite:
-- Aide au démarrage en côte
-- Arrêt et redémarrage auto. du moteur
-- Capteur de luminosité
-- Capteur de pluie
-- Démarrage sans clé
-- Régulateur de vitesse adaptatif
-
-Extérieur :
-- Barres de toit
-- Becquet arrière
-- Boucliers AV et AR couleur caisse
-- Buses de lave-glace chauffantes
-- Calandre chromée
-- Ceinture de vitrage chromée
-- Eclairage statique d''intersection
-- Essuie-glace arrière
-- Jantes Alu
-- Phares avant LED
-- Poignées ton carrosserie
-- Radar de stationnement AR
-- Radar de stationnement AV
-- Rétroviseurs dégivrants
-- Rétroviseurs rabattables électriquement
-- Rétroviseurs électriques
-
-Intérieur :
-- Accoudoir central AV
-- Bacs de portes arrière
-- Bacs de portes avant
-- Banquette 1/3-2/3
-- Banquette AR rabattable
-- Banquette arrière 3 places
-- Banquette coulissante
-- Boite à gants fermée
-- Boite à gants éclairée et réfrigérable
-- Clim automatique bi-zones
-- Eclairage d''ambiance
-- Ecran multifonction couleur
-- Filtre à Pollen
-- Fixation Isofix siège passager avant
-- Fixations Isofix aux places arrières
-- Frein à main en cuir
-- Lunette arrière surteintée
-- Miroir de courtoisie conducteur
-- Miroir de courtoisie passager
-- Ordinateur de bord
-- Poches d''aumonières
-- Pommeau de levier vitesse en cuir
-- Porte-gobelets avant
-- Rangement sous siège passager avant
-- Rétroviseur intérieur électrochrome
-- Siège conducteur avec réglage lombaire
-- Siège conducteur chauffant
-- Siège conducteur réglable en hauteur
-- Siège passager avec réglage lombaire
-- Siège passager chauffant
-- Siège passager rabattable
-- Siège passager réglable en hauteur
-- Température extérieure
-- Verrouillage centralisé des portes
-- Verrouillage centralisé à distance
-- Vitres arrière surteintées
-- Vitres arrière électriques
-- Vitres avant électriques
-- Volant cuir
-- Volant multifonction
-
-Sécurité :
-- ABS
-- AFIL
-- Aide au freinage d''urgence
-- Airbag conducteur
-- Airbag passager déconnectable
-- Airbags latéraux avant
-- Airbags rideaux
-- Airbags rideaux AR
-- Antipatinage
-- Assistance de maintien de trajectoire
-- Aide au freinage d''urgence
-- Airbag conducteur
-- Airbag passager déconnectable
-- Airbags latéraux avant
-- Airbags rideaux
-- Airbags rideaux AR
-- Antipatinage
-- Assistance de maintien de trajectoire
-- Ceintures avant ajustables en hauteur
-- Contrôle de couple en courbe
-- Détecteur de sous-gonflage
-- EBD
-- ESP
-- Fonction appel d''urgence
-- Freinage automatique d''urgence
-- Phares antibrouillard
-- Système de contrôle des angles morts
-- Système de détection de somnolence
-- Système de prévention des collisions
-- Système de sécurité post-collisions
-
-Autres équipements et informations :
-- Blanc Pur
-- Gris Urano
-
-Pneus arrière neufs changés il y a peu.
-
-Le contrôle technique sera fait avant la vente :)
-
-Pour plus d''informations, merci de m''écrire.
-
-PARTICULIERS uniquement merci :)
-Négociable dans la limite du raisonnable
-
-Ps : 2/3 légères rayures par l''usage au quotidien, rien de bien méchant', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/9c/77/0a/9c770aaf40d5fd33f7bbaa480a038e3657e87da1.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/9c/77/0a/9c770aaf40d5fd33f7bbaa480a038e3657e87da1.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/3e/24/8b/3e248b5da8f825ec41cd4cbf7d765763a7e345c3.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/49/7b/e5/497be5c78cbc854087d4c068709f4c1bec15e18f.jpg?rule=ad-large"}', 16500, false, false, false, 2020, '2026-05-13', '2026-05-13', 60000, '2026-05-23', false, 15110, 16700, -1390, 200, -0.084242426, 0.012121212, false, NULL, 'Daniel', 2020, false, 'Aide au stationnement, Alerte de franchissement involontaire de ligne (AFIL), Allumage automatique des phares, Apple CarPlay / Android Auto, Barres de toit intégrées, Bluetooth, Caméra de recul, Chargeurs USB, Climatisation, Détecteur d''angle mort, Essuie-glaces automatiques, Jantes en alliage, Ordinateur de bord, Phares adaptatifs, Phares anti-brouillard, Phares LED / Xenon, Radio numérique DAB, Roue de secours, Régulateur de vitesse, Régulateur de vitesse adaptatif, Siège arrière rabattable, Siège réglable en hauteur, Sièges chauffants, Système de navigation, Système de surveillance pression pneus (TPMS), Vitres surteintées à l''arrière, Vitres électriques arrières, Volant réglable en hauteur, Volant réglable en profondeur', 'Carnet d''entretien disponible, Véhicule non fumeur, Factures disponibles, Réparations utiles déjà faites', 2027, NULL, 115),
-	('04610ddd-c69c-4f27-ba82-b60344584003', 1, 1, 1, 2, 5, 4, 12402, 8, 1468, 3, 2, 'https://www.leboncoin.fr/ad/voitures/3197082849', '3197082849', 'Peugeot 308', 'Je vends ma Peugeot 308 de 2019 avec 184 000 km au compteur.
-- Marque : Peugeot
-- Modèle : 308
-- Année : 2019
-- Kilométrage : 184 000 km
-- Carburant : Diesel
-- Boîte de vitesses : Automatique
-- Puissance fiscale : 6 CV
-- Puissance moteur : 130 Ch
-- Nombre de portes : 5
-- Nombre de sièges : 5
-- Couleur : Blanc
-Option CarPlay ,rétro rabattable électriquement ,régulateur de vitesse , essuie glace automatique , feu automatique …
-N''hésitez pas à me contacter pour plus d''informations ou pour convenir d''un essai.', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/4f/2d/9d/4f2d9dc268f47e70a244b96b68c7f95255b3c11d.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/4f/2d/9d/4f2d9dc268f47e70a244b96b68c7f95255b3c11d.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/a3/89/e8/a389e8541873972841f2c17e3bcc026e20a2080a.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/b0/aa/b3/b0aab3832be55cd5db1800acc3e6ed158b791c1a.jpg?rule=ad-large"}', 8500, false, false, false, 2019, '2026-05-13', '2026-05-13', 184000, '2026-05-23', false, 8260, 9120, -240, 620, -0.028235294, 0.07294118, true, '+33676889954', 'Theo', 2019, true, 'Aide au stationnement, Allumage automatique des phares, Apple CarPlay / Android Auto, Bluetooth, Climatisation, Essuie-glaces automatiques, Jantes en alliage, Ordinateur de bord, Phares anti-brouillard, Phares LED / Xenon, Régulateur de vitesse, Rétroviseurs dégivrants, Rétroviseurs rabattables électriquement, Siège arrière rabattable, Siège réglable en hauteur, Système de navigation, Système de surveillance pression pneus (TPMS), Vitres surteintées à l''arrière, Vitres électriques arrières, Volant réglable en hauteur, Volant réglable en profondeur', 'Factures disponibles', NULL, NULL, 130),
-	('cc30fab9-cd65-4717-aceb-16c2b73b4891', 1, 4, 1, 2, 5, 4, 11164, 9, 517, 4, 3, 'https://www.leboncoin.fr/ad/voitures/3197011622', '3197011622', 'Renault Arkana E-tech', '❌ Agence s’abstenir merci
-
-Renault Arkana 1.6 E‑Tech 145 – Hybride – 2022  
-Très bon état – Suivi Renault complet – Contrôle technique vierge
-
-🔎 Infos clés
-- 130 000 km • Automatique • Crit’Air 1  
-- CT OK jusqu’en 04/2028 (vierge)  
-- 5 portes • Noir  
-
-💥 Atouts
-- Boîte de vitesses et moteur électrique remplacés récemment → tranquillité totale  
-- 2 pneus avant neufs 
-- Entretien 100% Renault 
-- Hybride 145 ch : économique, silencieux, idéal ville/autoroute  
-- Contrôle technique vierge → véhicule sain  
-- Style sportif : jantes 17’’ diamantées, vitres surteintées, Full LED
-
-⭐ Équipements
-Caméra de recul • Aide au parking AV/AR • Régulateur • Alerte franchissement • Full LED • Écran 7’’ CarPlay/Android Auto • Clim auto • Jantes 17’’ • Vitres surteintées • Rétros rabattables • Isofix
-
-📞 Contact
-Disponible immédiatement pour visite ou essai.', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/c5/08/cb/c508cbe16261a58aa8e6b07da7e2ed668046c150.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/c5/08/cb/c508cbe16261a58aa8e6b07da7e2ed668046c150.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/42/19/6a/42196ad4aa37c555454d4ce1034ec58e3cef2c01.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/64/c0/f8/64c0f83b5a0ac625e51d94e2a8f5ec37aaec46cd.jpg?rule=ad-large"}', 13590, false, false, false, 2022, '2026-05-13', '2026-05-13', 132000, '2026-05-23', false, 13670, 15100, 80, 1510, 0.0058866814, 0.11111111, true, '+33668981391', 'Ofi', 2022, true, NULL, 'Carnet d''entretien disponible', 2028, 'Bonne affaire', 145),
-	('ca0409f6-1b02-4b3f-9a26-2a1ba548f7d4', 1, 1, 1, 1, 5, 4, 11164, 1, 863, 4, 2, 'https://www.leboncoin.fr/ad/voitures/3197010509', '3197010509', 'Audi a3 2l tdi', 'AUDI A3 150ch 2L TDI SPORTBACK ambiante luxe 196000 km, Diesel ·
-
-*** LIRE L''ANNONCE et LE RAPPORT HISTORIQUE***
-
-Modèle
-
-A3 Ambiante luxe
-
-Année modèle
-
-2015
-
-Kilométrage
-
-196000 km
-
-Énergie
-
-Diesel
-
-Boîte de 6 vitesses
-
-Manuelle
-
-Nombre de portes
-
-5
-
-Nombre de place(s)
-
-5
-
-***Historique du véhicule Autoviza ®***
-
-***Contrôle de l’existence du véhicule***
-
-***Relevés kilométriques***
-
-***Nombre de propriétaires***
-
-Garantie 3 mois ( vente de particulier à particulier)
-
-***KIT DISTRIBUTION FAIT EN 01/2023***
-***EMBRAYAGE NEUF 2024***
-***RADIATEUR DE CLIM NEUF ET RECHARGE FAITE 2025***
-***4 PNEUS TRÈS BON ÉTAT***
-***PEINTURE NEUVE***
-***ÉTAT INTÉRIEUR EXTÉRIEUR TRÈS PROPRE***
-
-Options & équipements :
-
-Extérieur et Châssis:
-
-- Jantes alu 18"
-
-- Projecteur LED
-
-- Pack Ambiente luxe
-
-Intérieur:
-
-- Boite manuelle
-
-- Radar recul
-
-- Sellerie semi-cuir
-
-- Régulateur et limiteur de vitesse
-
-- GPS France / Europe
-
-- Vitres électriques
-
-- Frein de parking automatique
-
-- Climatisation bi-zone
-
-- Kit téléphone main libre Bluetooth
-
-- Volant cuir
-
-Sécurité
-
-- ABS/ESP
-
-- contrôle de pression des pneus
-
-- essuie-glaces automatiques
-
-- feux automatiques
-
-- fixations ISOFIX
-
-- projecteurs antibrouillard
-
-- système Start & Stop
-
-Le CT sera fait pour la vente
-
-Prix : 10 000 € à débattre 
-
-Je n''ai pas toutes les factures depuis la 1ère mise en circulation, l''entretien est fait par le garage qui suit le véhicule depuis que je l''ai. Donc certains entretiens avec ou sans factures car je n''avais pas prévu de revendre le véhicule.
-Facture embrayage neuf de 1600 €', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/fd/30/17/fd301753076399fa29dce733e3c2d79f12407c32.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/fd/30/17/fd301753076399fa29dce733e3c2d79f12407c32.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/43/3c/16/433c16ef4213b38124d6dd096b9a5a1c545d12d9.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/3f/66/86/3f6686b1729f5a1c7674b16b7cd0e6ced68ca45e.jpg?rule=ad-large"}', 10000, false, false, false, 2015, '2026-05-13', '2026-05-13', 196000, '2026-05-23', false, 10470, 11570, 470, 1570, 0.047, 0.157, true, '+33659201106', 'mickael', 2015, true, 'Allumage automatique des phares, Barres de toit intégrées, Bluetooth, Chargeurs USB, Climatisation, Essuie-glaces automatiques, Jantes en alliage, Ordinateur de bord, Phares anti-brouillard, Roue de secours, Régulateur de vitesse, Rétroviseurs dégivrants, Rétroviseurs rabattables électriquement, Siège arrière rabattable, Système audio haut de gamme, Système de navigation, Système de surveillance pression pneus (TPMS), Vitres électriques arrières, Volant réglable en hauteur, Volant réglable en profondeur', 'État du contrôle technique valide', 2026, 'Bonne affaire', 150),
-	('4f3cd6db-919a-494c-bd75-393179621b5c', 1, 1, 1, 1, 4, 4, 11164, 4, 1488, 3, 3, 'https://www.leboncoin.fr/ad/voitures/3197003124', '3197003124', 'Fiat 500 Dolcevita', 'Informations du véhicule:
-Modèle : Fiat 500 Dolcevita
-Année : 2022
-Première mise en circulation : 08/02/2022
-Kilométrage : 51 103 km
-Carburant : Essence
-Boîte de vitesse : Manuelle
-Puissance fiscale : 4 CV
-Couleur : Blanc
-Nombre de portes : 3
-Nombre de places : 4
-Hybride
-
-Équipements / Options:
-Climatisation
-Écran multimédia
-Bluetooth
-car play
-Direction assistée
-Vitres électriques
-Jantes alliage
-Design Dolcevita chic et moderne
-Limiteur de vitesse 
-Régulateur
-Toit panoramique
-Mode city
-
-État du véhicule :
-Véhicule entretenu et propre
-Petit accrochage sur le bas de caisse côté gauche (voir photo)
-Intérieur en bon état
-Aucun voyant moteur', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/03/ec/4f/03ec4f3586ce8c6b98a3daaa071ac886b3ba1e3a.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/03/ec/4f/03ec4f3586ce8c6b98a3daaa071ac886b3ba1e3a.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/79/76/e4/7976e4e2056cc3099149368599e068f43be53df8.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/a7/92/39/a792393e44d30e300bed9540370719964776756f.jpg?rule=ad-large"}', 10500, false, false, false, 2022, '2026-05-13', '2026-05-13', 52228, '2026-05-23', false, 9800, 10830, -700, 330, -0.06666667, 0.03142857, false, NULL, 'Maryloubfn', 2022, false, 'Apple CarPlay / Android Auto', 'État du contrôle technique valide', 2028, NULL, 70),
-	('85693577-3014-4516-a65f-55621b0f618c', 1, 1, 1, 2, 5, 4, 11164, 71, 3020, NULL, 1, 'https://www.leboncoin.fr/ad/voitures/3196928317', '3196928317', 'Hyundai i30 N Line 120cv 1.0 TGDi', 'Je mets en vente ma Hyundai i30 en finition N-Line.
-Kilométrage : 70 000 km évolutif 
-Énergie : Essence + Micro-hybridation 48V (Crit’Air 1)
-Transmission : Automatique 7 rapports (DCT-7)
-État : Véhicule très bien entretenu, non-fumeur. 
-Équipements et Options
-Design extérieur N-Line :
-Kit carrosserie spécifique (pare-chocs avant/arrière sport, diffuseur)
-Jantes alliage 17" N-Line bi-ton
-Projecteurs Full LED et feux de jour à LED
-Calandre en cascade spécifique N-Line
-Intérieur et Confort :
-Sièges sport N-Line avec maintien latéral renforcé
-Volant sport en cuir perforé et levier de vitesse N-Line
-Système multimédia avec écran tactile
-Apple CarPlay / Android Auto
-Climatisation automatique bi-zone
-Caméra de recul et radars de stationnement avant/arrière
-Démarrage et accès sans clé 
-Sécurité et Aide à la conduite :
-Aide au maintien dans la voie 
-Freinage d''urgence autonome
-Régulateur et limiteur de vitesse
-Sélecteur de mode de conduite (Eco, Normal, Sport)
-Entretien
-Carnet d''entretien à jour (réseaux Hyundai).
-Double des clés fourni.
-
-Pas de démarchage, merci. 
-
-Visible sur Bordeaux et alentours.', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/ef/80/88/ef80884dbee4a7e39a949e5577f08352a0169b4c.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/ef/80/88/ef80884dbee4a7e39a949e5577f08352a0169b4c.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/c4/d4/fa/c4d4fa637e154593ec6bbf81294d747ce1d84d48.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/f2/bf/93/f2bf93186c0f1ca30f017a4a8e82b7cb58be7cad.jpg?rule=ad-large"}', 16490, false, false, false, 2021, '2026-05-13', '2026-05-13', 70000, '2026-05-23', false, 14560, 16090, -1930, -400, -0.117040634, -0.024257125, false, NULL, 'Emard', 2021, false, 'Aide au stationnement, Alarme antivol, Alerte de franchissement involontaire de ligne (AFIL), Allumage automatique des phares, Apple CarPlay / Android Auto, Bluetooth, Caméra de recul, Chargeur sans fil pour smartphone, Chargeurs USB, Climatisation, Conduite semi-autonome, Détecteur d''angle mort, Essuie-glaces automatiques, Jantes en alliage, Ordinateur de bord, Phares directionnels, Phares LED / Xenon, Radio numérique DAB, Reconnaissance des panneaux de signalisation, Rétroviseurs rabattables électriquement, Siège arrière rabattable, Siège réglable en hauteur, Sièges chauffants, Sièges en cuir, Sièges massants, Sièges ventilés, Sièges électriques, Système audio haut de gamme, Système de surveillance pression pneus (TPMS), Toit ouvrant / Toit panoramique, Vitres surteintées à l''arrière, Vitres électriques arrières, Volant chauffant, Volant réglable en hauteur, Volant réglable en profondeur', 'Carnet d''entretien disponible, Véhicule non fumeur, Factures disponibles', NULL, NULL, 120),
-	('97a45a12-505e-4462-b857-0904f2344cc9', 1, 4, 1, 1, 5, 4, 11174, 154, 3018, 2, 1, 'https://www.leboncoin.fr/ad/voitures/3196921874', '3196921874', 'VOLVO XC40 T2 129 ch Momentum', 'avril 2021
-
-Km : 64 000km
-Prix TTC : 22 490 €
-
-5 places / couleur intérieur : Noir
-
-OPTIONS ET ÉQUIPEMENTS :
-
-Extérieur :
-- Caméra de recul
-- Radar de stationnement AV et AR avec signal sonore et visuel
-- Trappe de carburant intelligente sans bouchon
-- Rétroviseurs extérieurs rabattables électriquement
-
-Intérieur :
-- Volant chauffant
-- Sièges AV chauffants (3 niveaux)
-- Limiteur et régulateur de vitesse
-- Vitres AV et AR électriques à impulsion
-
-Audio - Télécommunications :
-- Apple CarPlay / Google Android Auto avec 2e prise USB
-- Connexion Bluetooth
-- Pack Navigation
-
-Conduite :
-- Allumage automatique des feux
-- Assistance au démarrage en côte
-- Détecteur de pluie
-- Mode de conduite personnalisable', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/ba/8e/4c/ba8e4cb7a7ca26745b79360c3fd6ff1993966db8.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/ba/8e/4c/ba8e4cb7a7ca26745b79360c3fd6ff1993966db8.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/47/2f/fc/472ffcaae64e227086013e4d0493427cac89eaa3.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/9e/52/92/9e52924d8a78552537a700bdf872ae3517970303.jpg?rule=ad-large"}', 22490, false, false, false, 2021, '2026-05-13', '2026-05-13', 64000, '2026-05-23', false, 19650, 21720, -2840, -770, -0.12627834, -0.03423744, false, NULL, 'Sand', 2021, false, NULL, NULL, NULL, NULL, 129),
-	('b9b7f778-f1fd-4b76-9f9a-8de042f9fd31', 1, 1, 1, 2, 5, 4, 12327, 131, 2617, 3, 1, 'https://www.leboncoin.fr/ad/voitures/3196919100', '3196919100', 'Seat Leon', 'Seat Leon Cupra 2015
-Très bon état, entretien suivi, véhicule fiable et agréable à conduire.
-Intérieur propre, conduite sportive et confortable.
-
-Me contacter pour plus d’informations
-Pas d’échange 
-Prix négociable dans le raisonnable', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/a9/7e/5c/a97e5c8ccd1ba9331e26d470181a4968a3940261.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/a9/7e/5c/a97e5c8ccd1ba9331e26d470181a4968a3940261.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/e2/aa/75/e2aa75b588dae73d3d41db7ffe1378d60285c19a.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/8a/7a/6c/8a7a6cba5422504e3f967bb62ddd2967aa820421.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/91/72/3c/91723cfdf81e5d967f84e80e927efb49ce22d169.jpg?rule=ad-large"}', 18000, false, false, false, 2015, '2026-05-13', '2026-05-13', 150000, '2026-05-23', false, 16410, 18130, -1590, 130, -0.08833333, 0.007222222, false, '+33622533475', 'brice', 2015, true, NULL, 'Carnet d''entretien disponible, Véhicule non fumeur, Factures disponibles, État du contrôle technique valide', NULL, NULL, 280),
-	('85faa9a8-e6c6-416f-9d88-b1f702d30377', 1, 2, 1, 2, 5, 4, 11220, 6, 319, 6, 2, 'https://www.leboncoin.fr/ad/voitures/3196918097', '3196918097', 'Mercedes glc 220d Amg Line', 'Mercedes GLC 220d- BVA 9 rapports noir , 11 cv, 4 portes, première mise en circulation le 06/09/2019
-AMG LINE
-5 places
-
-OPTIONS ET EQUIPEMENTS :
-Extérieur :
-- allumage automatique des feux
-- rétroviseurs électriques
-- toit ouvrant panoramique -intérieur noir 
-- vitres électriques sur tinter 
-- jantes alliage 19 Amg 
--marche pied 
--main libre 
-Intérieur et confort :
-- cockpit
-- écran tactile CarPlay 
-- ordinateur de bord
-- sièges électriques
-- volant multifonctions
-- siège chauffants 
-- volant cuir
-- climatisation automatique
-- GPS.                                                           
--  burmester enceinte
-Sécurité :
-- fermeture centralisée
-- radar avant arrière de détection d''obstacles
-- caméra avant arrière 360
-Autres informations :
-- puissance réelle : 194 ch
-- nombre de rapports :9vitesse
-- palettes au volant 
-- Carnet d''entretien Full Mercedes
-- hayon électrique
-- Pack AMG intérieur / extérieur
-- volant réglable
-- siege en cuir
-- no fumeur 
-Prix négociable', 'https://img.leboncoin.fr/api/v1/lbcpb1/images/42/2a/e3/422ae3b91e7e180a0cb5d1a82602277551b9bd77.jpg?rule=ad-large', '{https://img.leboncoin.fr/api/v1/lbcpb1/images/42/2a/e3/422ae3b91e7e180a0cb5d1a82602277551b9bd77.jpg?rule=ad-large," https://img.leboncoin.fr/api/v1/lbcpb1/images/76/92/ee/7692eea067c7d1523a1d55f543fec4ba4e029a11.jpg?rule=ad-large"," https://img.leboncoin.fr/api/v1/lbcpb1/images/b4/e5/78/b4e578e7bcdc0f2974e60e99ca9e89921b128ecb.jpg?rule=ad-large"}', 29500, false, false, false, 2019, '2026-05-13', '2026-05-13', 149000, '2026-05-23', false, 21730, 24020, -7770, -5480, -0.26338983, -0.18576272, false, NULL, 'Voiture', 2019, false, '4 roues motrices, Aide au stationnement, Aide au stationnement avec Caméra 360, Allumage automatique des phares, Apple CarPlay / Android Auto, Barres de toit intégrées, Bluetooth, Caméra de recul, Chargeur sans fil pour smartphone, Chargeurs USB, Climatisation, Coffre à ouverture électrique, Essuie-glaces automatiques, Jantes en alliage, Ordinateur de bord, Phares adaptatifs, Phares anti-brouillard, Phares directionnels, Phares LED / Xenon, Planificateur intelligent de trajet, Radio numérique DAB, Reconnaissance des panneaux de signalisation, Régulateur de vitesse, Régulateur de vitesse adaptatif, Rétroviseurs dégivrants, Rétroviseurs rabattables électriquement, Siège arrière rabattable, Siège réglable en hauteur, Sièges chauffants, Sièges en cuir, Sièges sport, Sièges électriques, Suspension sport / adaptative, Système audio haut de gamme, Système d''accès sans clé, Système de navigation, Système de surveillance pression pneus (TPMS), Toit ouvrant / Toit panoramique, Vitres surteintées à l''arrière, Vitres électriques arrières, Volant réglable en hauteur, Volant réglable en profondeur', 'Carnet d''entretien disponible, Véhicule non fumeur, Factures disponibles, Réparations utiles déjà faites', NULL, NULL, 194);
+	('37e4695a-6c05-47de-89d7-2e55332bc4a6', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-1', 'seed-ad-1', 'Annonce seed #1 — Renault Clio', NULL, NULL, NULL, 9500, false, false, false, NULL, '2026-06-02', '2026-06-04', NULL, '2026-06-04', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL),
+	('c7f5c1aa-7a71-44f8-aed7-f9b5b05fe8a8', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-2', 'seed-ad-2', 'Annonce seed #2 — Renault Clio', NULL, NULL, NULL, 11000, false, false, false, NULL, '2026-06-02', '2026-06-04', NULL, '2026-06-04', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL),
+	('a72d0df5-84d1-43e2-bf6f-d8dabda65b3a', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-3', 'seed-ad-3', 'Annonce seed #3 — Renault Clio', NULL, NULL, NULL, 12500, false, false, false, NULL, '2026-06-02', '2026-06-04', NULL, '2026-06-04', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL),
+	('d8c02d40-8dc0-44f6-885e-50a5110dbd34', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-4', 'seed-ad-4', 'Annonce seed #4 — Renault Clio', NULL, NULL, NULL, 14000, false, false, false, NULL, '2026-06-02', '2026-06-04', NULL, '2026-06-04', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL),
+	('8ad7b7b6-c181-4902-b60e-f33a33e77db7', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-5', 'seed-ad-5', 'Annonce seed #5 — Renault Clio', NULL, NULL, NULL, 15500, false, false, false, NULL, '2026-06-02', '2026-06-04', NULL, '2026-06-04', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL);
 
 
 --
 -- Data for Name: alerts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."alerts" ("id", "account_id", "name", "status", "brand_id", "model_id", "location_id", "radius_in_km", "model_year_min", "model_year_max", "mileage_min", "mileage_max", "price_min", "mode", "price_max", "margin_min_percentage", "notification_channels", "created_at") VALUES
-	('4803156c-a829-4ef2-98a7-de4eda07a687', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', 'teste matching ads', 'active', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'price_max', 29998, NULL, '{"email": true, "phone": false, "whatsapp": false}', '2026-05-22 23:33:29.310764+00');
+INSERT INTO "public"."alerts" ("id", "account_id", "name", "status", "location_id", "radius_in_km", "model_year_min", "model_year_max", "mileage_min", "mileage_max", "price_min", "mode", "price_max", "margin_min_percentage", "notification_channels", "created_at") VALUES
+	('cb093258-b036-4333-8b48-3cc1d11cb2fa', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'Peugeot 308', 'active', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'price_max', 29999, NULL, '{"email": true, "phone": false, "whatsapp": false}', '2026-06-04 11:52:19.442675+00'),
+	('545a6f0e-c637-4dc5-b5cb-a33d4edd9236', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'Audi RS6', 'active', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'price_max', 29999, NULL, '{"email": true, "phone": true, "whatsapp": true}', '2026-06-04 11:53:19.737285+00');
+
+
+--
+-- Data for Name: alert_brands; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."alert_brands" ("id", "alert_id", "brand_id") VALUES
+	('b188c70e-c7f5-47b7-b662-2d4463681b3c', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 11),
+	('e4fb72c0-7f0f-48cb-bbc0-42a4a641f699', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 12),
+	('0ac5c032-a9af-4c18-9899-66a2ae10c917', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 13),
+	('e5d8f269-dddf-4390-8275-0890a21456c5', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 18),
+	('ad719fb3-a9c9-450f-b09e-92f003fab541', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 2),
+	('6a97d463-77f6-4858-a470-054bb0508cb1', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 38),
+	('a9ae90ee-da84-41e8-b11f-a89ada27829c', '545a6f0e-c637-4dc5-b5cb-a33d4edd9236', 1);
+
+
+--
+-- Data for Name: alert_models; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: billing_customers; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."billing_customers" ("account_id", "stripe_customer_id") VALUES
+	('33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'cus_UdrADdRgALEGrF');
 
 
 --
@@ -39821,28 +39002,28 @@ INSERT INTO "public"."alerts" ("id", "account_id", "name", "status", "brand_id",
 --
 
 INSERT INTO "public"."matched_ads" ("id", "account_id", "alert_id", "ad_id", "matched_at") VALUES
-	('3fe0ebf4-9a00-4a22-af44-d384e09d3ac3', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '729e0ee4-3cc1-4426-b051-dacbfdd07062', '2026-05-23 01:39:49.809674+00'),
-	('031fa140-ef5e-4938-b00e-59795a2b5b77', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'f776fd07-babe-4436-8b6c-101cb600b6e3', '2026-05-23 01:39:49.809674+00'),
-	('829b447a-5c33-4ee3-bf67-f5cabc473099', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '9607ecf8-211d-419d-8510-7eb439ee8c5f', '2026-05-23 01:39:49.809674+00'),
-	('676a0ae5-fc99-43c8-ae1a-afa78ef951cd', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '8cf734ef-651f-435f-bb11-23adb8b74708', '2026-05-23 01:39:49.809674+00'),
-	('b60b6fa4-e157-4d68-8ba1-f70c3797c310', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'a45bcccc-f38f-4bd1-b3d6-bc1734a56c62', '2026-05-23 01:39:49.809674+00'),
-	('ebb72c51-ad91-449f-ad00-d7e0eaa719b2', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'de4bc0e6-dfd6-4bf8-9bca-6d6bb7687f8f', '2026-05-23 01:39:49.809674+00'),
-	('81fe3b4e-0ed8-4b4c-abd2-14d048155f04', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '53ee894c-6252-4068-b9e2-178a5107cdd2', '2026-05-23 01:39:49.809674+00'),
-	('c79e6fbf-61b8-45a9-92a2-b9cc059e48e9', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'f256ae8d-860a-41e1-aa42-e4cb6a8b7e5a', '2026-05-23 01:39:49.809674+00'),
-	('ff379292-1c02-448f-9c1a-91f347d8b771', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'f9dc494b-4676-4536-a509-229ff0e5e0fa', '2026-05-23 01:39:49.809674+00'),
-	('acf96bfc-c97b-4627-ae84-705fead761f2', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '84067f00-edf8-44b7-bbd9-f00367ee0a3e', '2026-05-23 01:39:49.809674+00'),
-	('6186bd93-3bb4-4282-a54d-21bde41879b9', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '5491f0b9-2f64-4e9a-b2a9-76dbffc70bdf', '2026-05-23 01:39:49.809674+00'),
-	('c7f7cf50-965f-48e9-808d-ff7171bd8571', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '9d1c1b72-1dab-4c54-a8a2-34b9fd21cfc2', '2026-05-23 01:39:49.809674+00'),
-	('5e5d55d6-f45e-4348-bc5b-a59b042250ea', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'a3633c8e-1ddc-4969-844a-79d44c54d14d', '2026-05-23 01:39:49.809674+00'),
-	('cffb4736-a158-4058-b6d4-f40d67c359c9', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '3f46c903-30eb-40c1-b3de-a3f3aa347c7e', '2026-05-23 01:39:49.809674+00'),
-	('e92cf032-e9ae-4633-9415-043585c818ee', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '04610ddd-c69c-4f27-ba82-b60344584003', '2026-05-23 01:39:49.809674+00'),
-	('340d78f7-2461-42bd-9633-b45a15b3d178', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'cc30fab9-cd65-4717-aceb-16c2b73b4891', '2026-05-23 01:39:49.809674+00'),
-	('5a9e06e3-a16f-4c9f-947e-3d99e5f9fc03', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'ca0409f6-1b02-4b3f-9a26-2a1ba548f7d4', '2026-05-23 01:39:49.809674+00'),
-	('db76114e-e779-4574-82fa-4fd2f1882c54', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '4f3cd6db-919a-494c-bd75-393179621b5c', '2026-05-23 01:39:49.809674+00'),
-	('52f5ed4d-6cee-4efb-8214-ca9d395beecf', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '85693577-3014-4516-a65f-55621b0f618c', '2026-05-23 01:39:49.809674+00'),
-	('d4bb1772-f88b-42f8-b893-a8de262f3bd6', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '97a45a12-505e-4462-b857-0904f2344cc9', '2026-05-23 01:39:49.809674+00'),
-	('04e25e52-7316-4214-8e88-229bbf09b1db', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', 'b9b7f778-f1fd-4b76-9f9a-8de042f9fd31', '2026-05-23 01:39:49.809674+00'),
-	('72f61c24-9149-4bc8-ae1d-147184f16042', '9f4c6921-f22b-4b55-b916-94f58d1a65d3', '4803156c-a829-4ef2-98a7-de4eda07a687', '85faa9a8-e6c6-416f-9d88-b1f702d30377', '2026-05-23 01:39:49.809674+00');
+	('fc223fb7-2f5b-491b-bb92-69dd8208e6a8', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', '37e4695a-6c05-47de-89d7-2e55332bc4a6', '2026-06-04 12:02:54.181413+00'),
+	('cf31e8ba-bd21-4013-96e4-e735fd2da05b', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 'c7f5c1aa-7a71-44f8-aed7-f9b5b05fe8a8', '2026-06-04 12:02:54.181413+00'),
+	('3fc4777d-820c-4651-a885-758a369d442d', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 'a72d0df5-84d1-43e2-bf6f-d8dabda65b3a', '2026-06-04 12:02:54.181413+00'),
+	('66a12d34-7883-4c78-bce1-c4056a843928', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 'd8c02d40-8dc0-44f6-885e-50a5110dbd34', '2026-06-04 12:02:54.181413+00'),
+	('1e6775a7-cd49-4335-9c4d-9c2d44e7b0b4', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', '8ad7b7b6-c181-4902-b60e-f33a33e77db7', '2026-06-04 12:02:54.181413+00');
+
+
+--
+-- Data for Name: plans; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."plans" ("id", "name", "stripe_price_id", "price_eur", "interval", "description", "is_active", "sort_order") VALUES
+	(1, 'Pro Mensuel', 'price_1TdtEtE2rOg332FNrWq2szkH', 2900, 'month', 'Accès complet à AlertDeals', true, 0),
+	(2, 'Pro Annuel', 'price_1TdtGLE2rOg332FNTyjXiPhE', 29000, 'year', 'Économie de 58€/an', true, 1);
+
+
+--
+-- Data for Name: subscriptions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."subscriptions" ("id", "account_id", "stripe_subscription_id", "stripe_price_id", "status", "current_period_end", "created_at") VALUES
+	('4e501c1b-7e06-4e3c-a116-d3960d34ebfe', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'sub_1TeZSTE2rOg332FNlaCJSCHf', 'price_1TdtEtE2rOg332FNrWq2szkH', 'active', '2026-07-04 11:29:07+00', '2026-06-04 11:29:09.819156+00');
 
 
 --
@@ -39909,7 +39090,7 @@ INSERT INTO "public"."matched_ads" ("id", "account_id", "alert_id", "ad_id", "ma
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
 --
 
-SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 3, true);
+SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 2, true);
 
 
 --
@@ -39969,10 +39150,17 @@ SELECT pg_catalog.setval('"public"."market_positions_id_seq"', 7, false);
 
 
 --
+-- Name: plans_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."plans_id_seq"', 3, false);
+
+
+--
 -- Name: vehicle_models_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."vehicle_models_id_seq"', 3025, true);
+SELECT pg_catalog.setval('"public"."vehicle_models_id_seq"', 3016, false);
 
 
 --
@@ -40000,181 +39188,6 @@ SELECT pg_catalog.setval('"supabase_functions"."hooks_id_seq"', 1, false);
 -- PostgreSQL database dump complete
 --
 
--- \unrestrict Sltd4detc5JPRMmSG79HpaTpTHQLPw01WrgGowpOCHaKnoPLWjSTLB9JWL3WplO
+-- \unrestrict 4bwsxXdHXnBaFt3jqjMGE3Xd40fwbx8QzB9vcwuexSCT7VISDsqiNReRffqjblI
 
 RESET ALL;
-
--- ════════════════════════════════════════════════════════════════════
--- App data perso de Sanaa (compte + alertes + ads + matched_ads).
--- Ajouté APRÈS le RESET ALL pour que les triggers (notamment
--- on_auth_user_created_account) soient bien actifs : l'insert sur
--- auth.users crée automatiquement la row public.accounts.
--- ════════════════════════════════════════════════════════════════════
-
--- ─────────────────────────────────────────────────────────────────────
--- 1. Auth user + account
--- ─────────────────────────────────────────────────────────────────────
--- Le mot de passe ci-dessous est un hash bcrypt de "Password123!"
--- (réutilisé depuis le seed auto-prospect — pour login local uniquement).
--- GoTrue (Supabase Auth) lit auth.users avec un scan Go strict : si les
--- colonnes de tokens sont NULL au lieu de '', le lookup plante avec
--- "Database error finding user". On force '' partout par sécurité.
-INSERT INTO "auth"."users" (
-  "instance_id", "id", "aud", "role",
-  "email", "encrypted_password", "email_confirmed_at",
-  "raw_app_meta_data", "raw_user_meta_data",
-  "created_at", "updated_at",
-  "is_super_admin", "is_sso_user", "is_anonymous",
-  "confirmation_token", "recovery_token",
-  "email_change_token_new", "email_change",
-  "email_change_token_current", "phone_change", "phone_change_token",
-  "reauthentication_token"
-) VALUES (
-  '00000000-0000-0000-0000-000000000000',
-  '11111111-1111-1111-1111-111111111111',
-  'authenticated', 'authenticated',
-  'hamlirisanaa@gmail.com',
-  '$2a$10$einJ.u6ztuGIDlD820U.ruR4tQQZv3AwAPjKBAjWiq/6jrzjeEOq2',
-  NOW(),
-  '{"provider": "email", "providers": ["email"]}',
-  '{}',
-  NOW(), NOW(),
-  false, false, false,
-  '', '',
-  '', '',
-  '', '', '',
-  ''
-)
-ON CONFLICT (id) DO NOTHING;
-
--- Identity : sans ça le login email/password ne marche pas.
-INSERT INTO "auth"."identities" (
-  "id", "provider_id", "user_id", "identity_data",
-  "provider", "last_sign_in_at", "created_at", "updated_at"
-) VALUES (
-  '11111111-1111-1111-1111-111111111111',
-  '11111111-1111-1111-1111-111111111111',
-  '11111111-1111-1111-1111-111111111111',
-  '{"sub": "11111111-1111-1111-1111-111111111111", "email": "hamlirisanaa@gmail.com", "email_verified": true}',
-  'email',
-  NOW(), NOW(), NOW()
-)
-ON CONFLICT (id) DO NOTHING;
-
--- Le trigger a créé l'account avec confirmed_by_admin=false (défaut).
--- On débloque pour pouvoir utiliser l'app sans validation admin manuelle.
-UPDATE "public"."accounts"
-SET "confirmed_by_admin" = true,
-    "has_subscription" = true,
-    "is_first_connexion" = false
-WHERE id = '11111111-1111-1111-1111-111111111111';
-
--- ─────────────────────────────────────────────────────────────────────
--- 2. Alertes (2 alertes actives, modes différents pour tester le filtre)
--- ─────────────────────────────────────────────────────────────────────
-INSERT INTO "public"."alerts" (
-  "id", "account_id", "name", "status",
-  "model_year_min", "mileage_max", "price_min",
-  "mode", "price_max", "margin_min_percentage",
-  "notification_channels"
-) VALUES
-  (
-    '22222222-2222-2222-2222-222222222222',
-    '11111111-1111-1111-1111-111111111111',
-    'Peugeot 208 sous 8000€',
-    'active',
-    2015, 150000, 1000,
-    'price_max', 8000, NULL,
-    '{"email": true, "phone": false, "whatsapp": false}'
-  ),
-  (
-    '33333333-3333-3333-3333-333333333333',
-    '11111111-1111-1111-1111-111111111111',
-    'BMW avec marge >= 15%',
-    'active',
-    2010, NULL, NULL,
-    'margin_min', NULL, 15,
-    '{"email": true, "phone": true, "whatsapp": true}'
-  );
-
--- Marques ciblées (Peugeot=8, BMW=2 — IDs du common seed).
-INSERT INTO "public"."alert_brands" ("alert_id", "brand_id") VALUES
-  ('22222222-2222-2222-2222-222222222222', 8),
-  ('33333333-3333-3333-3333-333333333333', 2);
-
--- Modèles ciblés (208=444, 3008=445 — Peugeot uniquement, BMW reste ouverte
--- sur tous les modèles puisqu'aucune ligne ici pour son alerte).
-INSERT INTO "public"."alert_models" ("alert_id", "model_id") VALUES
-  ('22222222-2222-2222-2222-222222222222', 444),
-  ('22222222-2222-2222-2222-222222222222', 445);
-
--- ─────────────────────────────────────────────────────────────────────
--- 3. Annonces (mix marques/modèles/états pour tester tous les filtres)
--- ─────────────────────────────────────────────────────────────────────
--- type_id=1 (Voitures), location_id=1 (1ʳᵉ ville du seed),
--- vehicle_state_id : 1=Endommagé, 4=Bon état.
--- has_phone alterné pour tester le filtre "Avec téléphone".
-INSERT INTO "public"."ads" (
-  "id", "type_id", "location_id", "brand_id", "model_id",
-  "vehicle_state_id", "url", "original_ad_id", "title",
-  "price", "model_year", "mileage",
-  "initial_publication_date", "last_publication_date", "owner_name",
-  "has_phone", "phone_number",
-  "margin_amount_min", "margin_percentage_min"
-) VALUES
-  ('aaaa1111-0000-0000-0000-000000000001', 1, 1, 8, 444, 4,
-   'https://example.com/ad-1', 'lbc-mock-1', 'Peugeot 208 1.2 PureTech',
-   7500, 2018, 80000, '2026-05-01', '2026-05-20', 'Jean Dupont',
-   true, '0612345678', 1200, 0.16),
-  ('aaaa1111-0000-0000-0000-000000000002', 1, 1, 8, 444, 1,
-   'https://example.com/ad-2', 'lbc-mock-2', 'Peugeot 208 endommagée — moteur OK',
-   3500, 2016, 120000, '2026-05-10', '2026-05-22', 'Marie Martin',
-   false, NULL, 2000, 0.36),
-  ('aaaa1111-0000-0000-0000-000000000003', 1, 1, 8, 445, 4,
-   'https://example.com/ad-3', 'lbc-mock-3', 'Peugeot 3008 GT Line',
-   18000, 2019, 60000, '2026-05-15', '2026-05-23', 'Paul Garage',
-   true, '0698765432', 800, 0.04),
-  ('aaaa1111-0000-0000-0000-000000000004', 1, 1, 2, NULL, 4,
-   'https://example.com/ad-4', 'lbc-mock-4', 'BMW Série 3 320d',
-   12000, 2014, 180000, '2026-05-12', '2026-05-21', 'Karim Auto',
-   true, '0611223344', 3500, 0.23),
-  ('aaaa1111-0000-0000-0000-000000000005', 1, 1, 2, NULL, 1,
-   'https://example.com/ad-5', 'lbc-mock-5', 'BMW Série 1 — sinistrée',
-   4000, 2012, 200000, '2026-05-08', '2026-05-19', 'Anonyme',
-   false, NULL, 2500, 0.38),
-  ('aaaa1111-0000-0000-0000-000000000006', 1, 1, 2, NULL, 4,
-   'https://example.com/ad-6', 'lbc-mock-6', 'BMW X1 xDrive 2.0d',
-   16500, 2016, 95000, '2026-05-18', '2026-05-23', 'Lucas Concession',
-   true, '0633445566', 1500, 0.08),
-  -- Ad qui ne matche AUCUNE alerte (Renault hors brand list) — sert à vérifier
-  -- que le filtre par alerte fonctionne (cette ad ne doit jamais sortir).
-  ('aaaa1111-0000-0000-0000-000000000007', 1, 1, 9, NULL, 4,
-   'https://example.com/ad-7', 'lbc-mock-7', 'Renault Clio (non matché)',
-   6500, 2017, 110000, '2026-05-11', '2026-05-20', 'Fatima Auto',
-   true, '0644556677', NULL, NULL);
-
--- ─────────────────────────────────────────────────────────────────────
--- 4. Matched ads (ce que le daily-orchestrator aurait inséré)
--- ─────────────────────────────────────────────────────────────────────
--- 3 ads matchent l'alerte Peugeot, 3 matchent l'alerte BMW.
--- Note la contrainte UNIQUE(account_id, ad_id) : on ne peut PAS lier
--- 2 fois la même ad au même compte, même via 2 alertes différentes.
-INSERT INTO "public"."matched_ads" ("account_id", "alert_id", "ad_id") VALUES
-  ('11111111-1111-1111-1111-111111111111',
-   '22222222-2222-2222-2222-222222222222',
-   'aaaa1111-0000-0000-0000-000000000001'),
-  ('11111111-1111-1111-1111-111111111111',
-   '22222222-2222-2222-2222-222222222222',
-   'aaaa1111-0000-0000-0000-000000000002'),
-  ('11111111-1111-1111-1111-111111111111',
-   '22222222-2222-2222-2222-222222222222',
-   'aaaa1111-0000-0000-0000-000000000003'),
-  ('11111111-1111-1111-1111-111111111111',
-   '33333333-3333-3333-3333-333333333333',
-   'aaaa1111-0000-0000-0000-000000000004'),
-  ('11111111-1111-1111-1111-111111111111',
-   '33333333-3333-3333-3333-333333333333',
-   'aaaa1111-0000-0000-0000-000000000005'),
-  ('11111111-1111-1111-1111-111111111111',
-   '33333333-3333-3333-3333-333333333333',
-   'aaaa1111-0000-0000-0000-000000000006');
