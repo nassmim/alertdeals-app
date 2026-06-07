@@ -32,7 +32,7 @@ import { LocationSearch } from './location-search';
 type Props = {
   brands: TBrand[];
   vehicleModels: TVehicleModel[];
-  isSubscribed: boolean;
+  hasFullAccess: boolean;
   alert?: TAccountAlert;
 };
 
@@ -80,7 +80,7 @@ const CHANNEL_OPTIONS: {
   },
 ];
 
-export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props) {
+export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props) {
   const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const isEditMode = !!alert;
@@ -138,7 +138,7 @@ export function AlertForm({ brands, vehicleModels, isSubscribed, alert }: Props)
     router.push(pages.alerts.list);
   };
 
-  if (!isSubscribed && !isEditMode) {
+  if (!hasFullAccess && !isEditMode) {
     return (
       <Card className="border-amber-500/30 bg-amber-500/10">
         <CardHeader>

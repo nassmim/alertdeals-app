@@ -4,7 +4,7 @@ SET session_replication_role = replica;
 -- PostgreSQL database dump
 --
 
--- \restrict 4bwsxXdHXnBaFt3jqjMGE3Xd40fwbx8QzB9vcwuexSCT7VISDsqiNReRffqjblI
+-- \restrict 95yxPxb7Cfw75Tgku30vzqV6lxhLhwlLzZBHA6P5rgsXlNff5iLCyhBNnAck7gi
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 17.6
@@ -26,11 +26,11 @@ SET row_security = off;
 --
 
 INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created_at", "ip_address") VALUES
-	('00000000-0000-0000-0000-000000000000', '61fe6595-43b8-4a07-99fc-fa78758440c5', '{"action":"user_signedup","actor_id":"33ea61cc-e7f6-42d8-a70f-006041e6c8ea","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2026-06-04 11:24:44.76858+00', ''),
-	('00000000-0000-0000-0000-000000000000', '2a1be0de-335a-4fdd-a5fa-ef73ff2a992d', '{"action":"login","actor_id":"33ea61cc-e7f6-42d8-a70f-006041e6c8ea","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-06-04 11:24:44.833088+00', ''),
-	('00000000-0000-0000-0000-000000000000', '43ed4c96-85ff-4abb-bb39-bb2b27164b86', '{"action":"user_recovery_requested","actor_id":"33ea61cc-e7f6-42d8-a70f-006041e6c8ea","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"user"}', '2026-06-04 11:24:45.095017+00', ''),
-	('00000000-0000-0000-0000-000000000000', '4aa2a41c-7c57-4729-a5e3-ad5cc4071d2d', '{"action":"login","actor_id":"33ea61cc-e7f6-42d8-a70f-006041e6c8ea","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-06-04 11:27:40.346334+00', ''),
-	('00000000-0000-0000-0000-000000000000', '3ef7ee71-557b-48e4-a7bf-07eeb711553c', '{"action":"login","actor_id":"33ea61cc-e7f6-42d8-a70f-006041e6c8ea","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider_type":"magiclink"}}', '2026-06-04 11:27:40.898254+00', '');
+	('00000000-0000-0000-0000-000000000000', '440b7eec-0c7d-48f7-8e0e-09a91747eb3f', '{"action":"user_signedup","actor_id":"450e3cb8-740f-436e-8cda-1cbdbc02e5cf","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2026-06-05 09:02:44.302744+00', ''),
+	('00000000-0000-0000-0000-000000000000', '84950ce4-fe76-4a98-a040-d59052759d9b', '{"action":"login","actor_id":"450e3cb8-740f-436e-8cda-1cbdbc02e5cf","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2026-06-05 09:02:44.337623+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'eb23f715-d5e6-4496-952e-93060f1bc8c9', '{"action":"user_recovery_requested","actor_id":"450e3cb8-740f-436e-8cda-1cbdbc02e5cf","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"user"}', '2026-06-05 09:02:44.626773+00', ''),
+	('00000000-0000-0000-0000-000000000000', '9eb5d2e5-4c9f-4a69-a482-6fb3a40a3e93', '{"action":"login","actor_id":"450e3cb8-740f-436e-8cda-1cbdbc02e5cf","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account"}', '2026-06-05 09:03:18.663925+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'aa05831c-1010-4559-aba9-15f64944c3f4', '{"action":"login","actor_id":"450e3cb8-740f-436e-8cda-1cbdbc02e5cf","actor_username":"hamlirisanaa@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider_type":"magiclink"}}', '2026-06-05 09:03:23.993415+00', '');
 
 
 --
@@ -38,7 +38,7 @@ INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created
 --
 
 INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous") VALUES
-	('00000000-0000-0000-0000-000000000000', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'authenticated', 'authenticated', 'hamlirisanaa@gmail.com', '$2a$10$S81sE8eApEdXghzkiz971OuimpKdV2IW7nFdeFv7Rf.5Rmje3D6P.', '2026-06-04 11:24:44.776754+00', NULL, '', NULL, '', '2026-06-04 11:24:45.101049+00', '', '', NULL, '2026-06-04 11:27:40.900687+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "33ea61cc-e7f6-42d8-a70f-006041e6c8ea", "email": "hamlirisanaa@gmail.com", "email_verified": true, "phone_verified": false}', NULL, '2026-06-04 11:24:44.670227+00', '2026-06-04 11:27:40.905079+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
+	('00000000-0000-0000-0000-000000000000', '450e3cb8-740f-436e-8cda-1cbdbc02e5cf', 'authenticated', 'authenticated', 'hamlirisanaa@gmail.com', '$2a$10$MbAPria7t5V7JlfLl.Jmje9AwMaJ/vhWRiitPMbvKK4.fujPNSC7S', '2026-06-05 09:02:44.307758+00', NULL, '', NULL, '', '2026-06-05 09:02:44.630861+00', '', '', NULL, '2026-06-05 09:03:23.997229+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "450e3cb8-740f-436e-8cda-1cbdbc02e5cf", "email": "hamlirisanaa@gmail.com", "email_verified": true, "phone_verified": false}', NULL, '2026-06-05 09:02:44.205006+00', '2026-06-05 09:03:24.015355+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
 
 
 --
@@ -46,7 +46,7 @@ INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encryp
 --
 
 INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "provider", "last_sign_in_at", "created_at", "updated_at", "id") VALUES
-	('33ea61cc-e7f6-42d8-a70f-006041e6c8ea', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', '{"sub": "33ea61cc-e7f6-42d8-a70f-006041e6c8ea", "email": "hamlirisanaa@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2026-06-04 11:24:44.754937+00', '2026-06-04 11:24:44.755017+00', '2026-06-04 11:24:44.755017+00', 'cc2fd251-9d31-4245-9f6a-953b6134d106');
+	('450e3cb8-740f-436e-8cda-1cbdbc02e5cf', '450e3cb8-740f-436e-8cda-1cbdbc02e5cf', '{"sub": "450e3cb8-740f-436e-8cda-1cbdbc02e5cf", "email": "hamlirisanaa@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2026-06-05 09:02:44.267884+00', '2026-06-05 09:02:44.268063+00', '2026-06-05 09:02:44.268063+00', 'ac918e54-bc64-44f8-9fc6-851bf6fc7431');
 
 
 --
@@ -66,8 +66,8 @@ INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "pro
 --
 
 INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "authentication_method", "id") VALUES
-	('c3b9ecaf-51cb-4558-9be8-c7384f036448', '2026-06-04 11:24:44.896435+00', '2026-06-04 11:24:44.896435+00', 'password', '7db8ba8a-e294-4261-9e33-c02476554237'),
-	('a31ff71e-0245-4eea-abc4-d307ad7f6834', '2026-06-04 11:27:40.906702+00', '2026-06-04 11:27:40.906702+00', 'magiclink', '0568baf6-8bde-4e99-a09f-8f8a832e3d48');
+	('50338291-0363-41d8-93b6-4923e37194c3', '2026-06-05 09:02:44.386165+00', '2026-06-05 09:02:44.386165+00', 'password', '5e586f6a-584f-4c0b-99f5-34cd50cf15a6'),
+	('36d48fc2-4bc3-474b-b32d-15cf1ccc109b', '2026-06-05 09:03:24.019328+00', '2026-06-05 09:03:24.019328+00', 'magiclink', '617b7936-73c3-4706-b2ee-60ae3b741f39');
 
 
 --
@@ -134,8 +134,8 @@ INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "
 -- Data for Name: accounts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."accounts" ("id", "email", "confirmed_by_admin", "is_first_connexion", "created_at", "whatsapp_phone_number", "whatsapp_is_group") VALUES
-	('33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'hamlirisanaa@gmail.com', true, true, '2026-06-04 11:24:44.668673+00', NULL, false);
+INSERT INTO "public"."accounts" ("id", "email", "confirmed_by_admin", "is_first_connexion", "created_at", "whatsapp_phone_number", "whatsapp_is_group", "is_trial", "trial_end_date") VALUES
+	('450e3cb8-740f-436e-8cda-1cbdbc02e5cf', 'hamlirisanaa@gmail.com', true, true, '2026-06-05 09:02:44.202355+00', NULL, false, true, '2026-06-08 09:04:49.625+00');
 
 
 --
@@ -38953,11 +38953,11 @@ INSERT INTO "public"."vehicle_states" ("id", "name", "lbc_value", "lobstr_value"
 --
 
 INSERT INTO "public"."ads" ("id", "type_id", "subtype_id", "driving_licence_id", "gear_box_id", "vehicle_seats_id", "vehicle_state_id", "location_id", "brand_id", "model_id", "market_position_id", "fuel_id", "url", "original_ad_id", "title", "description", "picture", "pictures", "price", "has_been_reposted", "has_been_boosted", "is_urgent", "model_year", "initial_publication_date", "last_publication_date", "mileage", "created_at", "price_has_dropped", "price_min", "price_max", "margin_amount_min", "margin_amount_max", "margin_percentage_min", "margin_percentage_max", "is_low_price", "phone_number", "owner_name", "entry_year", "has_phone", "equipments", "other_specifications", "technical_inspection_year", "good_deal_name", "din_power") VALUES
-	('37e4695a-6c05-47de-89d7-2e55332bc4a6', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-1', 'seed-ad-1', 'Annonce seed #1 — Renault Clio', NULL, NULL, NULL, 9500, false, false, false, NULL, '2026-06-02', '2026-06-04', NULL, '2026-06-04', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL),
-	('c7f5c1aa-7a71-44f8-aed7-f9b5b05fe8a8', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-2', 'seed-ad-2', 'Annonce seed #2 — Renault Clio', NULL, NULL, NULL, 11000, false, false, false, NULL, '2026-06-02', '2026-06-04', NULL, '2026-06-04', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL),
-	('a72d0df5-84d1-43e2-bf6f-d8dabda65b3a', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-3', 'seed-ad-3', 'Annonce seed #3 — Renault Clio', NULL, NULL, NULL, 12500, false, false, false, NULL, '2026-06-02', '2026-06-04', NULL, '2026-06-04', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL),
-	('d8c02d40-8dc0-44f6-885e-50a5110dbd34', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-4', 'seed-ad-4', 'Annonce seed #4 — Renault Clio', NULL, NULL, NULL, 14000, false, false, false, NULL, '2026-06-02', '2026-06-04', NULL, '2026-06-04', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL),
-	('8ad7b7b6-c181-4902-b60e-f33a33e77db7', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-5', 'seed-ad-5', 'Annonce seed #5 — Renault Clio', NULL, NULL, NULL, 15500, false, false, false, NULL, '2026-06-02', '2026-06-04', NULL, '2026-06-04', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL);
+	('114db3a6-15d3-4f82-9231-35a840a63108', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-1', 'seed-ad-1', 'Annonce seed #1 — Renault Clio', NULL, NULL, NULL, 9500, false, false, false, NULL, '2026-06-03', '2026-06-05', NULL, '2026-06-05', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL),
+	('34dc9594-ff00-45b6-930f-ad0d04ada2c3', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-2', 'seed-ad-2', 'Annonce seed #2 — Renault Clio', NULL, NULL, NULL, 11000, false, false, false, NULL, '2026-06-03', '2026-06-05', NULL, '2026-06-05', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL),
+	('46b075ce-6caa-4102-9c8b-8ecca295a5a2', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-3', 'seed-ad-3', 'Annonce seed #3 — Renault Clio', NULL, NULL, NULL, 12500, false, false, false, NULL, '2026-06-03', '2026-06-05', NULL, '2026-06-05', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL),
+	('3c38e4cd-1a4a-45d8-98a0-1609e9a113d3', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-4', 'seed-ad-4', 'Annonce seed #4 — Renault Clio', NULL, NULL, NULL, 14000, false, false, false, NULL, '2026-06-03', '2026-06-05', NULL, '2026-06-05', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL),
+	('aecc5316-a676-4e9a-822c-9a36d5bcbc82', 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 'https://leboncoin.fr/seed-ad-5', 'seed-ad-5', 'Annonce seed #5 — Renault Clio', NULL, NULL, NULL, 15500, false, false, false, NULL, '2026-06-03', '2026-06-05', NULL, '2026-06-05', false, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL, 'Seed Owner', NULL, false, NULL, NULL, NULL, NULL, NULL);
 
 
 --
@@ -38965,8 +38965,7 @@ INSERT INTO "public"."ads" ("id", "type_id", "subtype_id", "driving_licence_id",
 --
 
 INSERT INTO "public"."alerts" ("id", "account_id", "name", "status", "location_id", "radius_in_km", "model_year_min", "model_year_max", "mileage_min", "mileage_max", "price_min", "mode", "price_max", "margin_min_percentage", "notification_channels", "created_at") VALUES
-	('cb093258-b036-4333-8b48-3cc1d11cb2fa', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'Peugeot 308', 'active', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'price_max', 29999, NULL, '{"email": true, "phone": false, "whatsapp": false}', '2026-06-04 11:52:19.442675+00'),
-	('545a6f0e-c637-4dc5-b5cb-a33d4edd9236', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'Audi RS6', 'active', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'price_max', 29999, NULL, '{"email": true, "phone": true, "whatsapp": true}', '2026-06-04 11:53:19.737285+00');
+	('02b64d43-d56c-4a3a-b919-aea028aa7c8b', '450e3cb8-740f-436e-8cda-1cbdbc02e5cf', 'Peugeot Paris', 'active', 28309, NULL, 2018, NULL, NULL, NULL, NULL, 'price_max', 29998, NULL, '{"email": true, "phone": false, "whatsapp": true}', '2026-06-05 09:04:49.589806+00');
 
 
 --
@@ -38974,27 +38973,21 @@ INSERT INTO "public"."alerts" ("id", "account_id", "name", "status", "location_i
 --
 
 INSERT INTO "public"."alert_brands" ("id", "alert_id", "brand_id") VALUES
-	('b188c70e-c7f5-47b7-b662-2d4463681b3c', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 11),
-	('e4fb72c0-7f0f-48cb-bbc0-42a4a641f699', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 12),
-	('0ac5c032-a9af-4c18-9899-66a2ae10c917', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 13),
-	('e5d8f269-dddf-4390-8275-0890a21456c5', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 18),
-	('ad719fb3-a9c9-450f-b09e-92f003fab541', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 2),
-	('6a97d463-77f6-4858-a470-054bb0508cb1', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 38),
-	('a9ae90ee-da84-41e8-b11f-a89ada27829c', '545a6f0e-c637-4dc5-b5cb-a33d4edd9236', 1);
+	('e0b4cc4b-d9c4-4485-ad46-fced4b910e2b', '02b64d43-d56c-4a3a-b919-aea028aa7c8b', 8);
 
 
 --
 -- Data for Name: alert_models; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO "public"."alert_models" ("id", "alert_id", "model_id") VALUES
+	('143b4e21-62dc-4853-a43f-43ece0c057f6', '02b64d43-d56c-4a3a-b919-aea028aa7c8b', 452);
 
 
 --
 -- Data for Name: billing_customers; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."billing_customers" ("account_id", "stripe_customer_id") VALUES
-	('33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'cus_UdrADdRgALEGrF');
 
 
 --
@@ -39002,11 +38995,11 @@ INSERT INTO "public"."billing_customers" ("account_id", "stripe_customer_id") VA
 --
 
 INSERT INTO "public"."matched_ads" ("id", "account_id", "alert_id", "ad_id", "matched_at") VALUES
-	('fc223fb7-2f5b-491b-bb92-69dd8208e6a8', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', '37e4695a-6c05-47de-89d7-2e55332bc4a6', '2026-06-04 12:02:54.181413+00'),
-	('cf31e8ba-bd21-4013-96e4-e735fd2da05b', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 'c7f5c1aa-7a71-44f8-aed7-f9b5b05fe8a8', '2026-06-04 12:02:54.181413+00'),
-	('3fc4777d-820c-4651-a885-758a369d442d', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 'a72d0df5-84d1-43e2-bf6f-d8dabda65b3a', '2026-06-04 12:02:54.181413+00'),
-	('66a12d34-7883-4c78-bce1-c4056a843928', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', 'd8c02d40-8dc0-44f6-885e-50a5110dbd34', '2026-06-04 12:02:54.181413+00'),
-	('1e6775a7-cd49-4335-9c4d-9c2d44e7b0b4', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'cb093258-b036-4333-8b48-3cc1d11cb2fa', '8ad7b7b6-c181-4902-b60e-f33a33e77db7', '2026-06-04 12:02:54.181413+00');
+	('272301ff-01cc-47ac-9b53-ae2ca4ffc5d3', '450e3cb8-740f-436e-8cda-1cbdbc02e5cf', '02b64d43-d56c-4a3a-b919-aea028aa7c8b', '114db3a6-15d3-4f82-9231-35a840a63108', '2026-06-05 09:13:15.947234+00'),
+	('36f1cfb3-c500-46b5-926b-fce84de7d3db', '450e3cb8-740f-436e-8cda-1cbdbc02e5cf', '02b64d43-d56c-4a3a-b919-aea028aa7c8b', '34dc9594-ff00-45b6-930f-ad0d04ada2c3', '2026-06-05 09:13:15.947234+00'),
+	('b6db5901-27a5-4bbf-815b-ea3ce360c705', '450e3cb8-740f-436e-8cda-1cbdbc02e5cf', '02b64d43-d56c-4a3a-b919-aea028aa7c8b', '46b075ce-6caa-4102-9c8b-8ecca295a5a2', '2026-06-05 09:13:15.947234+00'),
+	('14578408-f80e-4a7c-a6c9-c915e5e186df', '450e3cb8-740f-436e-8cda-1cbdbc02e5cf', '02b64d43-d56c-4a3a-b919-aea028aa7c8b', '3c38e4cd-1a4a-45d8-98a0-1609e9a113d3', '2026-06-05 09:13:15.947234+00'),
+	('98ddd22e-838f-4985-b6e7-5e21c6a3226f', '450e3cb8-740f-436e-8cda-1cbdbc02e5cf', '02b64d43-d56c-4a3a-b919-aea028aa7c8b', 'aecc5316-a676-4e9a-822c-9a36d5bcbc82', '2026-06-05 09:13:15.947234+00');
 
 
 --
@@ -39022,8 +39015,6 @@ INSERT INTO "public"."plans" ("id", "name", "stripe_price_id", "price_eur", "int
 -- Data for Name: subscriptions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."subscriptions" ("id", "account_id", "stripe_subscription_id", "stripe_price_id", "status", "current_period_end", "created_at") VALUES
-	('4e501c1b-7e06-4e3c-a116-d3960d34ebfe', '33ea61cc-e7f6-42d8-a70f-006041e6c8ea', 'sub_1TeZSTE2rOg332FNlaCJSCHf', 'price_1TdtEtE2rOg332FNrWq2szkH', 'active', '2026-07-04 11:29:07+00', '2026-06-04 11:29:09.819156+00');
 
 
 --
@@ -39188,6 +39179,6 @@ SELECT pg_catalog.setval('"supabase_functions"."hooks_id_seq"', 1, false);
 -- PostgreSQL database dump complete
 --
 
--- \unrestrict 4bwsxXdHXnBaFt3jqjMGE3Xd40fwbx8QzB9vcwuexSCT7VISDsqiNReRffqjblI
+-- \unrestrict 95yxPxb7Cfw75Tgku30vzqV6lxhLhwlLzZBHA6P5rgsXlNff5iLCyhBNnAck7gi
 
 RESET ALL;

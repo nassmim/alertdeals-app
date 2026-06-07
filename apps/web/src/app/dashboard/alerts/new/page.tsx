@@ -1,15 +1,17 @@
 import { AlertForm } from '@/components/alerts/alert-form';
 import { getUserAccount } from '@/services/account.service';
 import { getBrands, getVehicleModels } from '@/services/ad-reference.service';
-import { hasActiveSubscription } from '@/services/subscription.service';
+import { canCreateAlert } from '@/services/trial.service';
 
 export default async function NewAlertPage() {
   const account = await getUserAccount();
 
-  const [brands, vehicleModels, isSubscribed] = await Promise.all([
+  // hasFullAccess = active subscription OR ongoing trial — drives whether the form
+  // shows the paywall CTA instead of the alert fields.
+  const [brands, vehicleModels, hasFullAccess] = await Promise.all([
     getBrands(),
     getVehicleModels(),
-    hasActiveSubscription(account.id),
+    canCreateAlert(account.id),
   ]);
 
   return (
@@ -18,7 +20,7 @@ export default async function NewAlertPage() {
       <AlertForm
         brands={brands}
         vehicleModels={vehicleModels}
-        isSubscribed={isSubscribed}
+        hasFullAccess={hasFullAccess}
       />
     </div>
   );
