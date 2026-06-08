@@ -1,10 +1,16 @@
 import { DashboardLayoutSkeleton } from '@/components/layout/dashboard-layout-skeleton';
 import { Sidebar } from '@/components/layout/sidebar';
-import { getUserAccount } from '@/services/account.service';
+import { TrialBanner } from '@/components/layout/trial-banner';
+import { getCurrentAccountId, getUserAccount } from '@/services/account.service';
+import { getTrialStatus } from '@/services/trial.service';
 import { Suspense, type ReactNode } from 'react';
 
 async function DashboardLayoutInner({ children }: { children: ReactNode }) {
   await getUserAccount();
+
+  // Resolved server-side so the banner ships pre-rendered (no flicker / no client fetch).
+  const accountId = await getCurrentAccountId();
+  const trialStatus = await getTrialStatus(accountId);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900">
@@ -14,6 +20,7 @@ async function DashboardLayoutInner({ children }: { children: ReactNode }) {
       <Sidebar />
 
       <main className="relative md:pl-64">
+        <TrialBanner status={trialStatus} />
         <div className="mx-auto max-w-5xl px-6 py-8 text-slate-100">{children}</div>
       </main>
     </div>

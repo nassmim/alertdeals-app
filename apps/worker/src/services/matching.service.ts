@@ -1,13 +1,11 @@
 import {
   ads,
   and,
-  eq,
   getDBAdminClient,
   gte,
   inArray,
   locations,
   lte,
-  or,
   sql,
   type SQL,
   type TAlert,

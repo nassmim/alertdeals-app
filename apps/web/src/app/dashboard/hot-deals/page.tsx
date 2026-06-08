@@ -12,7 +12,7 @@ import {
 } from '@/services/ad-reference.service';
 import { getMatchingAdsPage } from '@/services/ad.service';
 import { getAccountAlerts } from '@/services/alert.service';
-import { hasActiveSubscription } from '@/services/subscription.service';
+import { canCreateAlert } from '@/services/trial.service';
 import {
   hotDealsSortSchema,
   parseHotDealsFiltersFromSearchParams,
@@ -34,14 +34,15 @@ const HotDealsPage = async ({ searchParams }: Props) => {
   const filters = parseHotDealsFiltersFromSearchParams(params);
 
   const accountId = await getCurrentAccountId();
-
-  // Tout fetch en parallèle : la query principale (matching ads filtrées) et
-  // les référentiels nécessaires au form de filtres (alertes du compte +
-  // brands/models/states). Les référentiels sont cachés `weeks` donc le coût
-  // réel est négligeable après le premier hit.
-  const [isSubscribed, result, accountAlerts, brands, vehicleModels, vehicleStates] =
+  // hasFullAccess = abonnement actif OU période d'essai en cours. Les users en trial
+  // voient toutes les ads (pas de blur FREE_AD_QUOTA) puisque le trial sert à
+  // démontrer l'expérience payante.
+  // Tout fetch en parallèle : query principale (matching ads filtrées),
+  // statut d'accès, et référentiels du form de filtres (alertes du compte +
+  // brands/models/states). Référentiels cachés `weeks` donc coût négligeable.
+  const [hasFullAccess, result, accountAlerts, brands, vehicleModels, vehicleStates] =
     await Promise.all([
-      hasActiveSubscription(accountId),
+      canCreateAlert(accountId),
       getMatchingAdsPage({ page, sort, filters }),
       getAccountAlerts(),
       getBrands(),
@@ -88,7 +89,7 @@ const HotDealsPage = async ({ searchParams }: Props) => {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {result.ads.map((ad, index) => {
               const isLocked =
-                !isSubscribed && (result.page > 1 || index >= FREE_AD_QUOTA);
+                !hasFullAccess && (result.page > 1 || index >= FREE_AD_QUOTA);
               return <VehicleCard key={ad.id} ad={ad} isLocked={isLocked} />;
             })}
           </div>

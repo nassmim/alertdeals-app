@@ -25,6 +25,12 @@ const ACCOUNT_ERROR_MESSAGES: Record<EAccountErrorCode, string> = {
 const SUBSCRIPTION_ERROR_MESSAGES: Record<ESubscriptionErrorCode, string> = {
   [ESubscriptionErrorCode.SUBSCRIPTION_REQUIRED]:
     'Un abonnement actif est requis pour cette action.',
+  [ESubscriptionErrorCode.CHECKOUT_FAILED]:
+    "Impossible de démarrer le paiement. Réessaie dans quelques instants.",
+  [ESubscriptionErrorCode.BILLING_PORTAL_FAILED]:
+    "Impossible d'ouvrir l'espace de gestion de l'abonnement. Réessaie plus tard.",
+  [ESubscriptionErrorCode.NO_ACTIVE_CUSTOMER]:
+    "Tu n'as pas encore d'abonnement à gérer.",
 };
 
 const ALERT_ERROR_MESSAGES: Record<EAlertErrorCode, string> = {

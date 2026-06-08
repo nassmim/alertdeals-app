@@ -54,8 +54,36 @@
     {
       "idx": 7,
       "version": "7",
-      "when": 1780621871588,
+      "when": 1779752861541,
       "tag": "0007_migration",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1780355254453,
+      "tag": "0008_migration",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1780423516696,
+      "tag": "0009_migration",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1780648695296,
+      "tag": "0010_migration",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1780916100453,
+      "tag": "0011_migration",
       "breakpoints": true
     }
   ]
