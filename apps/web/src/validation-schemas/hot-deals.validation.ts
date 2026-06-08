@@ -8,10 +8,10 @@ export enum EHotDealsSort {
   DATE_ASC = 'date_asc',
   PRICE_ASC = 'price_asc',
   PRICE_DESC = 'price_desc',
-  MARGIN_AMOUNT_DESC = 'margin_amount_desc',
   MARGIN_AMOUNT_ASC = 'margin_amount_asc',
-  MARGIN_PERCENTAGE_DESC = 'margin_percentage_desc',
+  MARGIN_AMOUNT_DESC = 'margin_amount_desc',
   MARGIN_PERCENTAGE_ASC = 'margin_percentage_asc',
+  MARGIN_PERCENTAGE_DESC = 'margin_percentage_desc',
 }
 
 export const DEFAULT_HOT_DEALS_SORT = EHotDealsSort.DATE_DESC;
