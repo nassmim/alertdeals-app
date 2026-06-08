@@ -105,7 +105,7 @@ export function AlertCard({ alert }: Props) {
   );
 
   return (
-    <Card>
+    <Card className="flex h-full flex-col">
       <CardHeader>
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
@@ -147,7 +147,8 @@ export function AlertCard({ alert }: Props) {
         </div>
       </CardHeader>
 
-      <CardContent>
+     
+      <CardContent className="flex-1">
         {(brandNames.length > 0 || modelNames.length > 0) && (
           <div className="mb-3 flex flex-wrap gap-1.5">
             {brandNames.map((name) => (
