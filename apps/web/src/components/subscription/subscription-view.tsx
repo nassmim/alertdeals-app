@@ -60,6 +60,15 @@ export function SubscriptionView({ subscription, plans }: Props) {
   // see exactly which action is in flight when multiple are visible on screen.
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
 
+  // Default to "month" — most users land on the page expecting to see the monthly price first,
+  // and the toggle lets them switch to "year" without changing the page hierarchy.
+  const [selectedInterval, setSelectedInterval] = useState<'month' | 'year'>('month');
+
+  // We render a single "pricing card" with a Mensuel/Annuel toggle when the user isn't subscribed.
+  // Resolving each plan upfront keeps the toggle component free of `.find(...)` calls.
+  const monthlyPlan = plans.find((plan) => plan.interval === 'month');
+  const yearlyPlan = plans.find((plan) => plan.interval === 'year');
+
   const isActive = subscription
     ? ACTIVE_SUBSCRIPTION_STATUSES.includes(subscription.status as TSubscriptionStatus)
     : false;
@@ -166,57 +175,173 @@ export function SubscriptionView({ subscription, plans }: Props) {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {plans.length === 0 && (
-            <p className="text-sm text-slate-400">Aucun plan disponible pour le moment.</p>
-          )}
-          {plans.map((plan) => (
-            <Card key={plan.id} className="border-slate-800 bg-slate-900/50">
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-slate-100">{plan.name}</h3>
-                  {plan.description && (
-                    <p className="text-sm text-slate-400">{plan.description}</p>
-                  )}
-                  <p className="text-3xl font-bold text-slate-100">
-                    {formatAmount(plan.priceEur)}
-                    <span className="text-base font-normal text-slate-400">
-                      {' '}
-                      € / {plan.interval === 'year' ? 'an' : 'mois'}
-                    </span>
-                  </p>
-                  <ul className="space-y-2 text-sm text-slate-300">
-                    <li className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-emerald-400" />
-                      Accès complet à l&apos;application
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-emerald-400" />
-                      Alertes en temps réel
-                    </li>
-                  </ul>
-                  <Button
-                    onClick={() => handleSubscribe(plan.stripePriceId)}
-                    disabled={loadingAction !== null}
-                    className="w-full"
-                  >
-                    {loadingAction === plan.stripePriceId ? (
-                      <span className="flex items-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        Redirection...
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-2">
-                        S&apos;abonner
-                        <ArrowRight className="h-4 w-4" />
-                      </span>
-                    )}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <PricingCardWithToggle
+          monthlyPlan={monthlyPlan}
+          yearlyPlan={yearlyPlan}
+          selectedInterval={selectedInterval}
+          setSelectedInterval={setSelectedInterval}
+          loadingAction={loadingAction}
+          onSubscribe={handleSubscribe}
+        />
+      )}
+    </div>
+  );
+}
+
+function PricingCardWithToggle(props: {
+  monthlyPlan: TPlan | undefined;
+  yearlyPlan: TPlan | undefined;
+  selectedInterval: 'month' | 'year';
+  setSelectedInterval: (interval: 'month' | 'year') => void;
+  loadingAction: string | null;
+  onSubscribe: (priceId: string) => void;
+}) {
+  const {
+    monthlyPlan,
+    yearlyPlan,
+    selectedInterval,
+    setSelectedInterval,
+    loadingAction,
+    onSubscribe,
+  } = props;
+
+  const selectedPlan = selectedInterval === 'month' ? monthlyPlan : yearlyPlan;
+
+  // Yearly "savings" badge — computed only if both intervals are configured.
+  // Compares yearly to (monthly * 12) and shows the % discount, the standard
+  // SaaS trick to nudge users toward annual.
+  const savingsPercent =
+    monthlyPlan && yearlyPlan
+      ? Math.round(
+          ((monthlyPlan.priceEur * 12 - yearlyPlan.priceEur) /
+            (monthlyPlan.priceEur * 12)) *
+            100,
+        )
+      : 0;
+  const hasYearlySavings = savingsPercent > 0;
+
+  // No plans synced yet (Stripe catalog empty or unreachable) — surface a neutral
+  // message instead of an empty card, so QA / boss know it's a config issue not a bug.
+  if (!monthlyPlan && !yearlyPlan) {
+    return <p className="text-sm text-slate-400">Aucun plan disponible pour le moment.</p>;
+  }
+
+  return (
+    <div className="space-y-8">
+      {/* Toggle — only shown when both intervals exist. If only one is configured we
+          skip the toggle entirely rather than render a useless single-option pill. */}
+      {monthlyPlan && yearlyPlan && (
+        <div className="flex justify-center">
+          <div className="inline-flex items-center gap-1 rounded-full border border-slate-700/60 bg-slate-900/80 p-1 shadow-lg shadow-black/20 backdrop-blur">
+            <button
+              type="button"
+              onClick={() => setSelectedInterval('month')}
+              className={`rounded-full px-5 py-2 text-sm font-medium transition-all ${
+                selectedInterval === 'month'
+                  ? 'bg-slate-100 text-slate-900 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              Mensuel
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedInterval('year')}
+              className={`relative rounded-full px-5 py-2 text-sm font-medium transition-all ${
+                selectedInterval === 'year'
+                  ? 'bg-slate-100 text-slate-900 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              Annuel
+              {/* Petit pastille "économie" en haut à droite — ne s'affiche que si
+                  l'annuel est vraiment moins cher */}
+              {hasYearlySavings && (
+                <span className="absolute -right-2 -top-2 rounded-full bg-emerald-500 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-emerald-950 shadow-sm">
+                  −{savingsPercent}%
+                </span>
+              )}
+            </button>
+          </div>
         </div>
+      )}
+
+      {selectedPlan && (
+        <Card className="relative mx-auto max-w-md overflow-hidden border-slate-800 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/40 shadow-2xl shadow-indigo-950/30">
+          {/* Soft glow blob — same trick as the active-subscription card, gives a
+              subtle premium feel without dominating the layout. */}
+          <div className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-indigo-500/10 blur-3xl" />
+
+          <CardContent className="relative p-8">
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-indigo-400" />
+                  <span className="text-xs font-medium uppercase tracking-wider text-indigo-300">
+                    {selectedPlan.name}
+                  </span>
+                </div>
+                {selectedPlan.description && (
+                  <p className="text-sm text-slate-400">{selectedPlan.description}</p>
+                )}
+              </div>
+
+              <div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-5xl font-bold tracking-tight text-slate-100">
+                    {formatAmount(selectedPlan.priceEur)}
+                  </span>
+                  <span className="text-2xl font-semibold text-slate-300">€</span>
+                  <span className="ml-1 text-base font-normal text-slate-400">
+                    / {selectedInterval === 'year' ? 'an' : 'mois'}
+                  </span>
+                </div>
+                {/* For the yearly plan, show the equivalent monthly rate — this is the
+                    standard SaaS pricing cue that signals "annual is cheaper per month". */}
+                {selectedInterval === 'year' && (
+                  <p className="mt-1 text-sm text-slate-400">
+                    soit {formatAmount(Math.round(selectedPlan.priceEur / 12))} € / mois
+                  </p>
+                )}
+              </div>
+
+              <div className="h-px bg-slate-800" />
+
+              <ul className="space-y-3 text-sm text-slate-200">
+                <li className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/15">
+                    <Check className="h-3 w-3 text-emerald-400" />
+                  </span>
+                  Accès complet à l&apos;application
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/15">
+                    <Check className="h-3 w-3 text-emerald-400" />
+                  </span>
+                  Alertes en temps réel
+                </li>
+              </ul>
+
+              <Button
+                onClick={() => onSubscribe(selectedPlan.stripePriceId)}
+                disabled={loadingAction !== null}
+                className="group w-full bg-gradient-to-br from-indigo-500 to-indigo-600 shadow-lg shadow-indigo-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/40"
+              >
+                {loadingAction === selectedPlan.stripePriceId ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Redirection...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    S&apos;abonner
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
