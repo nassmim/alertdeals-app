@@ -8,20 +8,49 @@ const MOCK_PREFIX = '[mock-notification]';
 
 type TNotificationPayload = {
   accountId: string;
+  alertId: string;
   alertName: string;
   newMatchesCount: number;
 };
+
+// URL publique du site En dev
+// `http://localhost:${WEB_PORT}` (5100), en prod l'URL prod d'alertdeals.
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+if (!SITE_URL) {
+  throw new Error('NEXT_PUBLIC_SITE_URL is required to build notification links');
+}
+
+// Route de la page hot-deals + nom du query param qui filtre par alerte.
+// Dupliqué ici parce que le worker ne peut pas importer depuis @alertdeals/web
+const HOT_DEALS_PATH = '/dashboard/hot-deals';
+const HOT_DEALS_ALERT_PARAM = 'alert';
+
+// Construit le lien envoyé dans la notif : pointe sur les hot-deals filtrés
+// par l'alerte concernée, pour que le user atterrisse directement sur les
+// nouvelles annonces qui matchent.
+function buildHotDealsUrl(alertId: string): string {
+  return `${SITE_URL}${HOT_DEALS_PATH}?${HOT_DEALS_ALERT_PARAM}=${alertId}`;
+}
 
 // Sous-ensemble du compte nécessaire pour router la notif WhatsApp (numéro
 // perso ou ID de groupe). Le dispatcher reçoit déjà ces champs depuis le
 // daily-orchestrator qui les charge avec l'alerte.
 type TAccountForNotification = Pick<TAccount, 'whatsappPhoneNumber' | 'whatsappIsGroup'>;
 
-// Compose le texte affiché à l'utilisateur. Accord en français selon le nombre.
-function buildMessage({ alertName, newMatchesCount }: TNotificationPayload): string {
-  const plural = newMatchesCount > 1 ? 'nouvelles annonces' : 'nouvelle annonce';
-  const matchVerb = newMatchesCount > 1 ? 'matchent' : 'matche';
-  return `Tu as ${newMatchesCount} ${plural} qui ${matchVerb} ton alerte "${alertName}".`;
+// Compose le texte affiché à l'utilisateur. Copy validé produit (cf. ticket
+// "envoi message WhatsApp simple") — ne pas changer le wording sans validation.
+// Accord singulier/pluriel géré pour rester naturel à la lecture.
+function buildMessage({ alertId, alertName, newMatchesCount }: TNotificationPayload): string {
+  const isPlural = newMatchesCount > 1;
+  const opportunityWord = isPlural ? 'nouvelles opportunités' : 'nouvelle opportunité';
+  const verbWord = isPlural ? 'viennent' : 'vient';
+  const url = buildHotDealsUrl(alertId);
+  return (
+    `Salut c'est ton compagnon AlertDeals !\n` +
+    `${newMatchesCount} ${opportunityWord} matchant les critères de sélection de ton alerte "${alertName}" ${verbWord} d'arriver ! ` +
+    `Ne perds pas une seconde, ces hot deals ne restent pas longtemps !\n` +
+    `${url}`
+  );
 }
 
 // Email / phone restent mockés — pas de provider branché pour l'instant.
@@ -38,7 +67,7 @@ export function sendPhoneMatchNotification(payload: TNotificationPayload): void 
 }
 
 /**
- * Envoi WhatsApp réel via Baileys. Récupère le socket singleton (lazy connect
+ * Récupère le socket singleton (lazy connect
  * à la première utilisation), construit le JID depuis le numéro/groupe du
  * user, et envoie le message.
  *
@@ -86,6 +115,7 @@ export function dispatchAlertMatchNotifications(args: {
 
   const payload: TNotificationPayload = {
     accountId,
+    alertId: alert.id,
     // `alert.name` est nullable dans le schéma (alerte sans nom autorisée côté form).
     alertName: alert.name ?? 'Alerte sans nom',
     newMatchesCount,
