@@ -1,9 +1,10 @@
 import type { TAccount, TAlert } from '@alertdeals/db';
 import { getWhatsAppJID, sendWhatsAppMessage } from '@alertdeals/whatsapp';
+import { sendAlertMatchEmail } from './email.service.js';
 import { getWhatsAppSocket } from './whatsapp.service.js';
 
-// Préfixe visible dans la console pour repérer les notifs simulées (les
-// canaux email/phone restent mockés).
+// Préfixe visible dans la console pour repérer les notifs simulées (le canal
+// phone reste mocké ; email et WhatsApp sont réels).
 const MOCK_PREFIX = '[mock-notification]';
 
 type TNotificationPayload = {
@@ -32,14 +33,18 @@ function buildHotDealsUrl(alertId: string): string {
   return `${SITE_URL}${HOT_DEALS_PATH}?${HOT_DEALS_ALERT_PARAM}=${alertId}`;
 }
 
-// Sous-ensemble du compte nécessaire pour router la notif WhatsApp (numéro
-// perso ou ID de groupe). Le dispatcher reçoit déjà ces champs depuis le
-// daily-orchestrator qui les charge avec l'alerte.
-type TAccountForNotification = Pick<TAccount, 'whatsappPhoneNumber' | 'whatsappIsGroup'>;
+// Sous-ensemble du compte nécessaire pour router les notifs : `email` (canal
+// email via Resend) + numéro/groupe WhatsApp. `email` est NOT NULL côté DB.
+// Le dispatcher reçoit ces champs depuis le daily-orchestrator qui les charge
+// avec l'alerte.
+type TAccountForNotification = Pick<
+  TAccount,
+  'email' | 'whatsappPhoneNumber' | 'whatsappIsGroup'
+>;
 
-// Compose le texte affiché à l'utilisateur. Copy validé produit (cf. ticket
-// "envoi message WhatsApp simple") — ne pas changer le wording sans validation.
-// Accord singulier/pluriel géré pour rester naturel à la lecture.
+// Compose le texte affiché à l'utilisateur (WhatsApp réel + log mock du canal
+// phone). Copy validé produit (cf. ticket "envoi message WhatsApp simple") —
+// ne pas changer le wording sans validation. Accord singulier/pluriel géré.
 function buildMessage({ alertId, alertName, newMatchesCount }: TNotificationPayload): string {
   const isPlural = newMatchesCount > 1;
   const opportunityWord = isPlural ? 'nouvelles opportunités' : 'nouvelle opportunité';
@@ -53,13 +58,24 @@ function buildMessage({ alertId, alertName, newMatchesCount }: TNotificationPayl
   );
 }
 
-// Email / phone restent mockés — pas de provider branché pour l'instant.
-export function sendEmailMatchNotification(payload: TNotificationPayload): void {
-  console.log(
-    `${MOCK_PREFIX} email → account=${payload.accountId} :: ${buildMessage(payload)}`,
-  );
+/**
+ * Envoi réel via Resend (fire-and-forget — on ne await pas dans le dispatcher
+ * pour ne pas bloquer les autres canaux ou les autres users). Les erreurs sont
+ * loggées dans email.service.
+ */
+export async function sendEmailMatchNotification(
+  payload: TNotificationPayload,
+  email: string,
+): Promise<void> {
+  await sendAlertMatchEmail({
+    to: email,
+    alertId: payload.alertId,
+    alertName: payload.alertName,
+    newMatchesCount: payload.newMatchesCount,
+  });
 }
 
+// Phone reste mocké — pas de provider branché pour ce canal.
 export function sendPhoneMatchNotification(payload: TNotificationPayload): void {
   console.log(
     `${MOCK_PREFIX} phone → account=${payload.accountId} :: ${buildMessage(payload)}`,
@@ -100,8 +116,8 @@ export async function sendWhatsappMatchNotification(
  * Dispatche une notif à l'utilisateur pour chaque canal coché sur son alerte.
  * Appelé une fois par alerte qui a reçu ≥ 1 nouveau match dans la run courante.
  *
- * Reste synchrone : les envois WhatsApp tournent en fire-and-forget pour ne
- * pas bloquer la boucle du daily-orchestrator (un user lent ne doit pas
+ * Reste synchrone : les envois email/WhatsApp tournent en fire-and-forget pour
+ * ne pas bloquer la boucle du daily-orchestrator (un envoi lent ne doit pas
  * retarder les notifs des suivants).
  */
 export function dispatchAlertMatchNotifications(args: {
@@ -122,7 +138,11 @@ export function dispatchAlertMatchNotifications(args: {
   };
 
   const channels = alert.notificationChannels;
-  if (channels.email) sendEmailMatchNotification(payload);
+  if (channels.email) {
+    // Fire-and-forget : on ne await pas pour ne pas bloquer le dispatch des
+    // notifs suivantes. Les erreurs sont loggées dans email.service.
+    void sendEmailMatchNotification(payload, account.email);
+  }
   if (channels.phone) sendPhoneMatchNotification(payload);
 
   // WhatsApp n'est tenté que si le user a renseigné son numéro/groupe dans

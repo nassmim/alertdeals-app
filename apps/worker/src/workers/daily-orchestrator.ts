@@ -31,8 +31,9 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
     where: eq(alertsTable.status, EAlertStatus.ACTIVE),
     // brands/models are required for filtering — they live in M:N tables (alert_brands / alert_models)
     // since the form went multi-select. Fetching them here keeps the matcher's logic pure.
-    // `account` est chargé en plus pour récupérer whatsappPhoneNumber + whatsappIsGroup,
-    // utilisés par notification.service pour router la notif WhatsApp.
+    // `account` est chargé en plus pour récupérer l'email + whatsappPhoneNumber/
+    // whatsappIsGroup, utilisés par notification.service pour router les notifs
+    // email (Resend) et WhatsApp.
     with: { location: true, brands: true, models: true, account: true },
   });
 
@@ -98,7 +99,7 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
       // Dispatch des notifs. On retrouve l'alerte complète depuis
       // `accountAlerts` pour avoir le `name` et `notificationChannels`,
       // et on prend l'account depuis n'importe quelle alerte du groupe
-      // (toutes partagent le même account).
+      // (toutes partagent le même account → mêmes email/WhatsApp).
       const account = accountAlerts[0]?.account;
       if (!account) continue;
       const alertsById = new Map(accountAlerts.map((a) => [a.id, a]));
