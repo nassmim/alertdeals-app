@@ -31,7 +31,9 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
     where: eq(alertsTable.status, EAlertStatus.ACTIVE),
     // brands/models are required for filtering — they live in M:N tables (alert_brands / alert_models)
     // since the form went multi-select. Fetching them here keeps the matcher's logic pure.
-    with: { location: true, brands: true, models: true },
+    // `account` est chargé en plus pour récupérer l'email du destinataire,
+    // utilisé par notification.service pour router la notif email via Resend.
+    with: { location: true, brands: true, models: true, account: true },
   });
 
   if (activeAlerts.length === 0) {
@@ -93,13 +95,17 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
         );
       }
 
-      // Dispatch des notifs (mockées). On retrouve l'alerte complète depuis
-      // `accountAlerts` pour avoir le `name` et `notificationChannels`.
+      // Dispatch des notifs. On retrouve l'alerte complète depuis
+      // `accountAlerts` pour avoir le `name` et `notificationChannels`,
+      // et on prend l'account depuis n'importe quelle alerte du groupe
+      // (toutes partagent le même account → même email).
+      const account = accountAlerts[0]?.account;
+      if (!account) continue;
       const alertsById = new Map(accountAlerts.map((a) => [a.id, a]));
       for (const [alertId, newMatchesCount] of newMatchesByAlert) {
         const alert = alertsById.get(alertId);
         if (!alert) continue;
-        dispatchAlertMatchNotifications({ accountId, alert, newMatchesCount });
+        dispatchAlertMatchNotifications({ accountId, account, alert, newMatchesCount });
         totalNotificationsDispatched += 1;
       }
     } catch (error) {
