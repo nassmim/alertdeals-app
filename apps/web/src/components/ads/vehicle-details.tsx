@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { pages } from '@/config/routes';
 import type { TAdWithFullRelations } from '@/services/ad.service';
 import {
-  Award,
   ArrowLeft,
+  Award,
   Calendar,
   CalendarClock,
   Car,
@@ -20,7 +20,6 @@ import {
   Repeat,
   Rocket,
   Settings,
-  Sparkles,
   Tag,
   TagsIcon,
   TrendingDown,
@@ -48,55 +47,90 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
   year: 'numeric',
 });
 
-// Composant serveur : on reçoit l'ad entièrement hydratée (avec relations).
-// Tout l'affichage se fait côté serveur ; le seul îlot client est le bouton
-// "Analyse avancée" qui doit déclencher un toast.
+// Page détail "fiche d'analyse" : titre en chapeau, galerie à gauche,
+// bloc analyse + CTAs sticky à droite, caractéristiques + équipements +
+// contact en dessous. Inspiré directement de la maquette validée :
+// la colonne droite est le centre de décision (prix / marge / actions),
+// la galerie + spécifications sont du contenu narratif.
 export function VehicleDetails({ ad }: Props) {
   const medianPrice =
     ad.priceMin != null && ad.priceMax != null
       ? (ad.priceMin + ad.priceMax) / 2
       : null;
 
-  const marginAmountRange = formatEuroRange(ad.marginAmountMin, ad.marginAmountMax);
+  const marginAmountRange = formatEuroRange(
+    ad.marginAmountMin,
+    ad.marginAmountMax,
+  );
   const marginPercentRange = formatPercentRange(
     ad.marginPercentageMin,
     ad.marginPercentageMax,
   );
 
+  const priceRange =
+    ad.priceMin != null && ad.priceMax != null && ad.priceMin !== ad.priceMax
+      ? `${eurosFormatter.format(ad.priceMin)} – ${eurosFormatter.format(ad.priceMax)}`
+      : null;
+
   // Galerie : on dédoublonne `picture` (image principale) au cas où elle
-  // figure aussi dans `pictures`. Si `pictures` est vide/null on retombe
-  // sur la seule image principale, voire rien du tout.
+  // figure aussi dans `pictures`. Si tout est null on renvoie [].
   const gallery = buildGallery(ad.picture, ad.pictures);
 
   return (
-    // Fond subtilement dégradé : donne de la profondeur sans peser visuellement.
+    // Fond subtilement dégradé pour donner de la profondeur sans peser
+    // visuellement (cf. décision design).
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/40">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
-        {/* Barre du haut : retour à gauche, action analyse à droite. */}
-        <div className="mb-6 flex items-center justify-between gap-3">
+        {/* Barre du haut : retour aux annonces uniquement. Le CTA "Analyse
+            avancée" est désormais dans la colonne droite, là où l'oeil
+            s'attend à trouver l'action principale. */}
+        <div className="mb-6">
           <Button variant="ghost" size="sm" asChild>
             <Link href={pages.hotDeals}>
               <ArrowLeft className="size-4" />
               Retour aux annonces
             </Link>
           </Button>
-          <AdvancedAnalysisButton />
         </div>
 
         {/*
-          Bloc héro full-width : badges en chapeau, gros titre, méta-info
-          en ligne (lieu, date). Le but est de poser l'identité de l'annonce
-          avant même la galerie — l'utilisateur sait tout de suite quoi
-          regarder.
+          Bloc héro full-width : gros titre puis ligne de badges qui posent
+          le contexte (source d'origine, catégorie, et stratégie de match).
+          Le titre est en `uppercase` + tracking serré comme sur la maquette
+          pour donner un look "fiche véhicule pro".
         */}
         <div className="mb-6 space-y-3 sm:mb-8">
+          <h1 className="text-2xl font-bold uppercase leading-tight tracking-tight sm:text-3xl">
+            {ad.title}
+          </h1>
+
           <div className="flex flex-wrap items-center gap-1.5">
+            {/* Source : alertdeals scrape exclusivement LeBonCoin pour le
+                moment, mais on rend ce badge explicite pour la cohérence
+                avec la maquette (et au cas où d'autres sources arrivent). */}
+            <Badge
+              variant="secondary"
+              className="gap-1 border border-emerald-200/60 bg-emerald-50 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-900/40 dark:bg-emerald-950/40 dark:text-emerald-300"
+            >
+              <ExternalLink className="size-3" />
+              Source : LeBonCoin
+            </Badge>
+
+            {/* Catégorie LBC (type + sous-type). */}
+            {ad.type?.name && (
+              <Badge variant="secondary" className="gap-1">
+                <Car className="size-3" />
+                {ad.type.name}
+              </Badge>
+            )}
+            {ad.subtype?.name && (
+              <Badge variant="secondary">{ad.subtype.name}</Badge>
+            )}
+
             {/*
-              Stratégie : "Vise le prix" (rouge) si l'ad est marquée
-              low-price par le worker, sinon "Vise la marge" (vert) par
-              défaut. Le code couleur doit matcher la sémantique métier :
-              vert = opportunité de marge, rouge = annonce à bas prix
-              (donc à shooter vite).
+              Stratégie : "Vise le prix" si l'ad est marquée low-price par
+              le worker, sinon "Vise la marge" par défaut. Code couleur :
+              vert = opportunité de marge, rouge = annonce à bas prix.
             */}
             {ad.isLowPrice ? (
               <Badge variant="destructive" className="gap-1">
@@ -120,45 +154,28 @@ export function VehicleDetails({ ad }: Props) {
                 Urgent
               </Badge>
             )}
-            {/* Prix en baisse : signalé par LBC quand le vendeur a baissé. */}
             {ad.priceHasDropped && (
-              <Badge variant="secondary" className="gap-1 bg-orange-100 text-orange-800 hover:bg-orange-100 dark:bg-orange-950/40 dark:text-orange-300">
+              <Badge variant="secondary" className="gap-1">
                 <TrendingDown className="size-3" />
                 Prix en baisse
               </Badge>
             )}
-            {/* Annonce sponsorisée (boost LBC). */}
             {ad.hasBeenBoosted && (
-              <Badge variant="secondary" className="gap-1 bg-sky-100 text-sky-800 hover:bg-sky-100 dark:bg-sky-950/40 dark:text-sky-300">
+              <Badge variant="secondary" className="gap-1">
                 <Rocket className="size-3" />
                 Boostée
               </Badge>
             )}
-            {/* Label "bonne affaire" officiel LBC (texte stocké tel quel). */}
             {ad.goodDealName && (
-              <Badge variant="secondary" className="gap-1 bg-amber-100 text-amber-900 hover:bg-amber-100 dark:bg-amber-950/40 dark:text-amber-300">
+              <Badge variant="secondary" className="gap-1">
                 <Award className="size-3" />
                 {ad.goodDealName}
               </Badge>
             )}
           </div>
 
-          <h1 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
-            {ad.title}
-          </h1>
-
-          {/*
-            Méta-infos inline : type/sous-type, lieu, dates de publication.
-            Le type aide à identifier rapidement la catégorie LBC
-            (Voiture / Moto / Utilitaire…).
-          */}
+          {/* Méta-infos discrètes sous les badges : lieu + dates. */}
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-            {(ad.type?.name || ad.subtype?.name) && (
-              <span className="inline-flex items-center gap-1.5">
-                <Car className="size-4" />
-                {[ad.type?.name, ad.subtype?.name].filter(Boolean).join(' · ')}
-              </span>
-            )}
             {ad.location?.name && (
               <span className="inline-flex items-center gap-1.5">
                 <MapPin className="size-4" />
@@ -171,7 +188,6 @@ export function VehicleDetails({ ad }: Props) {
               <CalendarClock className="size-4" />
               Publiée le {dateFormatter.format(new Date(ad.lastPublicationDate))}
             </span>
-            {/* Première publication : utile pour repérer une annonce qui dort. */}
             {ad.initialPublicationDate &&
               ad.initialPublicationDate !== ad.lastPublicationDate && (
                 <span className="inline-flex items-center gap-1.5">
@@ -183,31 +199,33 @@ export function VehicleDetails({ ad }: Props) {
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[1.8fr_1fr]">
-          {/*
-            Colonne gauche : tout le contenu "narratif" (visuel + texte).
-            Volontairement plus large que la colonne droite pour donner
-            de la place à la galerie qui est l'élément qui vend le plus.
-          */}
+        <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+          {/* COLONNE GAUCHE : galerie + description + caractéristiques + équipements + contact */}
           <div className="space-y-6">
             {/*
-              Galerie : on n'utilise pas un <Card> ici pour que l'image
-              principale s'affiche directement à pleine largeur, en
-              rounded-2xl, avec une légère élévation. Plus immersif qu'une
-              image coincée dans une carte avec un padding.
+              Galerie : image principale en grand avec un compteur "1 / N"
+              en overlay haut-droite (façon site marchand). Pas de carrousel
+              interactif pour rester en server component — c'est l'image
+              principale qu'on veut mettre en avant, les autres sont
+              accessibles via les miniatures.
             */}
             {gallery.length > 0 && (
               <div className="space-y-2">
-                <div className="overflow-hidden rounded-2xl border bg-muted shadow-sm">
+                <div className="relative overflow-hidden rounded-2xl border bg-muted shadow-sm">
                   <img
                     src={gallery[0]}
                     alt={ad.title}
                     className="aspect-[16/10] w-full object-cover transition duration-500 hover:scale-[1.02]"
                   />
+                  {gallery.length > 1 && (
+                    <div className="absolute right-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                      1 / {gallery.length}
+                    </div>
+                  )}
                 </div>
                 {gallery.length > 1 && (
-                  <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
-                    {gallery.slice(1).map((src, i) => (
+                  <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8">
+                    {gallery.slice(1, 9).map((src, i) => (
                       <div
                         key={`${src}-${i}`}
                         className="overflow-hidden rounded-lg border bg-muted shadow-sm"
@@ -224,7 +242,7 @@ export function VehicleDetails({ ad }: Props) {
               </div>
             )}
 
-            {/* Description complète, pas tronquée comme sur la carte. */}
+            {/* Description complète, non tronquée. */}
             {ad.description && (
               <Card>
                 <CardHeader>
@@ -239,112 +257,106 @@ export function VehicleDetails({ ad }: Props) {
             )}
 
             {/*
-              Caractéristiques : grille de tuiles plutôt que des rows.
-              Chaque tuile = icône + label + valeur empilés, ce qui donne
-              une "dashboard feel" plus moderne qu'une liste textuelle.
+              Caractéristiques : grille de tuiles "plates" (sans bordure
+              par tuile) — l'icône (en gris) coiffe la valeur (en bold) avec
+              un petit label dessus. Donne un look fiche véhicule comme sur
+              la maquette, plus propre qu'une cascade de bordures.
             */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Caractéristiques</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                  {/*
-                    Marque / modèle / position marché : présents en tuiles
-                    car même si la marque/modèle figurent dans le titre LBC,
-                    on veut les exposer en données structurées (pratique
-                    pour confirmation visuelle rapide + cohérence avec
-                    l'analyse marché).
-                  */}
+                <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3">
                   {ad.brand?.name && (
-                    <SpecTile
+                    <FlatSpec
                       icon={<Tag className="size-4" />}
                       label="Marque"
                       value={ad.brand.name}
                     />
                   )}
                   {ad.vehicleModel?.name && (
-                    <SpecTile
+                    <FlatSpec
                       icon={<TagsIcon className="size-4" />}
                       label="Modèle"
                       value={ad.vehicleModel.name}
                     />
                   )}
-                  {ad.marketPosition?.name && (
-                    <SpecTile
-                      icon={<LineChart className="size-4" />}
-                      label="Position marché"
-                      value={ad.marketPosition.name}
-                    />
-                  )}
                   {ad.modelYear != null && (
-                    <SpecTile
+                    <FlatSpec
                       icon={<Calendar className="size-4" />}
                       label="Année modèle"
                       value={ad.modelYear}
                     />
                   )}
                   {ad.entryYear != null && (
-                    <SpecTile
+                    <FlatSpec
                       icon={<Calendar className="size-4" />}
-                      label="Mise en circulation"
+                      label="1ère immatriculation"
                       value={ad.entryYear}
                     />
                   )}
                   {ad.mileage != null && (
-                    <SpecTile
+                    <FlatSpec
                       icon={<Gauge className="size-4" />}
                       label="Kilométrage"
                       value={`${kmFormatter.format(ad.mileage)} km`}
                     />
                   )}
-                  {ad.gearBox?.name && (
-                    <SpecTile
-                      icon={<Settings className="size-4" />}
-                      label="Boîte"
-                      value={ad.gearBox.name}
-                    />
-                  )}
                   {ad.fuel?.name && (
-                    <SpecTile
+                    <FlatSpec
                       icon={<Fuel className="size-4" />}
                       label="Carburant"
                       value={ad.fuel.name}
                     />
                   )}
+                  {ad.gearBox?.name && (
+                    <FlatSpec
+                      icon={<Settings className="size-4" />}
+                      label="Boîte de vitesse"
+                      value={ad.gearBox.name}
+                    />
+                  )}
                   {ad.dinPower != null && (
-                    <SpecTile
+                    <FlatSpec
                       icon={<Zap className="size-4" />}
-                      label="Puissance"
+                      label="Puissance DIN"
                       value={`${ad.dinPower} ch`}
                     />
                   )}
                   {ad.vehicleState?.name && (
-                    <SpecTile
+                    <FlatSpec
                       icon={<Settings className="size-4" />}
                       label="État"
                       value={ad.vehicleState.name}
                     />
                   )}
                   {ad.vehicleSeats?.name && (
-                    <SpecTile
+                    <FlatSpec
                       icon={<Users className="size-4" />}
                       label="Places"
                       value={ad.vehicleSeats.name}
                     />
                   )}
                   {ad.drivingLicence?.name && (
-                    <SpecTile
+                    <FlatSpec
                       icon={<IdCard className="size-4" />}
                       label="Permis"
                       value={ad.drivingLicence.name}
                     />
                   )}
                   {ad.technicalInspectionYear != null && (
-                    <SpecTile
+                    <FlatSpec
                       icon={<CalendarClock className="size-4" />}
                       label="Contrôle technique"
                       value={ad.technicalInspectionYear}
+                    />
+                  )}
+                  {ad.marketPosition?.name && (
+                    <FlatSpec
+                      icon={<LineChart className="size-4" />}
+                      label="Position marché"
+                      value={ad.marketPosition.name}
                     />
                   )}
                 </div>
@@ -379,98 +391,87 @@ export function VehicleDetails({ ad }: Props) {
                 </CardContent>
               </Card>
             )}
+
+            {/* Contact : déplacé en bas de la colonne gauche pour libérer la
+                colonne droite, dédiée aux actions (analyse + CTAs). */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Contact</CardTitle>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+                <ContactRow icon={<Phone className="size-4" />} label="Téléphone">
+                  {ad.phoneNumber ?? 'Non renseigné'}
+                </ContactRow>
+                {ad.ownerName && (
+                  <ContactRow icon={<Users className="size-4" />} label="Vendeur">
+                    {ad.ownerName}
+                  </ContactRow>
+                )}
+              </CardContent>
+            </Card>
           </div>
 
           {/*
-            Colonne droite : sticky pour que le prix + CTA restent visibles
-            quand l'utilisateur scrolle la galerie et la description. C'est
-            le pattern Leboncoin / AutoScout : le bloc "action" suit l'oeil.
+            COLONNE DROITE : analyse + CTAs, sticky pour rester visibles
+            quand l'utilisateur scrolle la galerie et la description.
+            Card standard du thème (pas de teinte ad hoc) — la mise en
+            avant vient de la ligne "Marge" surlignée en interne.
           */}
-          <div className="space-y-4 lg:sticky lg:top-6 lg:self-start">
-            {/*
-              Carte héro prix + marge : c'est LE bloc qui doit accrocher
-              l'oeil. Léger dégradé emerald pour évoquer le gain potentiel,
-              prix en très gros, marge mise en évidence dans une sous-box.
-            */}
-            <Card className="overflow-hidden border-emerald-200/60 bg-gradient-to-br from-emerald-50 via-background to-background dark:border-emerald-900/40 dark:from-emerald-950/30">
-              <CardContent className="space-y-4 p-6">
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Prix annoncé
-                  </p>
-                  <p className="text-4xl font-bold tracking-tight">
-                    {eurosFormatter.format(ad.price)}
-                  </p>
-                  {medianPrice != null && (
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Marché médian : {eurosFormatter.format(medianPrice)}
-                    </p>
-                  )}
-                  {/*
-                    Fourchette marché : on l'affiche en plus du médian quand
-                    on a min ET max distincts, ça donne le contexte (un
-                    médian sans amplitude ne dit pas si c'est un marché
-                    serré ou très dispersé).
-                  */}
-                  {ad.priceMin != null &&
-                    ad.priceMax != null &&
-                    ad.priceMin !== ad.priceMax && (
-                      <p className="text-xs text-muted-foreground">
-                        Fourchette : {eurosFormatter.format(ad.priceMin)} –{' '}
-                        {eurosFormatter.format(ad.priceMax)}
-                      </p>
-                    )}
-                </div>
-
-                {/*
-                  Bloc marge potentielle : encadré coloré pour qu'on
-                  comprenne instantanément que c'est *le* chiffre qui
-                  justifie de cliquer.
-                */}
-                {(marginAmountRange || marginPercentRange) && (
-                  <div className="rounded-xl border border-emerald-200/60 bg-emerald-50/70 p-4 dark:border-emerald-900/40 dark:bg-emerald-950/30">
-                    <div className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-emerald-700 dark:text-emerald-400">
-                      <Sparkles className="size-3.5" />
-                      Marge potentielle
-                    </div>
-                    {marginAmountRange && (
-                      <p className="mt-1 text-lg font-semibold text-emerald-700 dark:text-emerald-400">
-                        {marginAmountRange}
-                      </p>
-                    )}
-                    {marginPercentRange && (
-                      <p className="text-sm text-emerald-700/80 dark:text-emerald-400/80">
-                        {marginPercentRange}
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                <Button asChild className="w-full" size="lg">
-                  <a href={ad.url} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="size-4" />
-                    Voir sur LeBonCoin
-                  </a>
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Contact & localisation : bloc secondaire, plus discret. */}
+          <div className="space-y-3 lg:sticky lg:top-6 lg:self-start">
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Contact</CardTitle>
+                <CardTitle className="text-lg">Analyse de l'annonce</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm">
-                <Row icon={<Phone className="size-4" />} label="Téléphone">
-                  {ad.phoneNumber ?? 'Non renseigné'}
-                </Row>
-                {ad.ownerName && (
-                  <Row icon={<Users className="size-4" />} label="Vendeur">
-                    {ad.ownerName}
-                  </Row>
+                {/*
+                  Lignes paramètre / valeur, alignées à droite façon fiche
+                  comptable. Les deux lignes "Marge" sont mises en
+                  surbrillance verte parce qu'elles portent la valeur
+                  business — c'est elles qui justifient de cliquer.
+                */}
+                <AnalyseRow
+                  label="Prix annonce"
+                  value={eurosFormatter.format(ad.price)}
+                />
+                {medianPrice != null && (
+                  <AnalyseRow
+                    label="Prix marché médian"
+                    value={eurosFormatter.format(medianPrice)}
+                  />
+                )}
+                {priceRange && (
+                  <AnalyseRow label="Fourchette marché" value={priceRange} />
+                )}
+                {marginAmountRange && (
+                  <AnalyseRow
+                    label="Marge potentielle"
+                    value={marginAmountRange}
+                    highlight
+                  />
+                )}
+                {marginPercentRange && (
+                  <AnalyseRow
+                    label="% de marge"
+                    value={marginPercentRange}
+                    highlight
+                  />
                 )}
               </CardContent>
             </Card>
+
+            {/*
+              CTAs empilés sous la card analyse. Primaire ambre = analyse
+              avancée (placeholder), outline = sortie vers LeBonCoin.
+            */}
+            <div className="space-y-2">
+              <AdvancedAnalysisButton />
+              <Button asChild variant="outline" className="w-full" size="lg">
+                <a href={ad.url} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="size-4" />
+                  Voir sur LeBonCoin
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -478,10 +479,10 @@ export function VehicleDetails({ ad }: Props) {
   );
 }
 
-// Tuile spec : icône + label + valeur empilés.
-// Utilisée dans la grille des caractéristiques pour donner un look
-// "dashboard" plutôt qu'une liste à puces.
-function SpecTile({
+// Tuile spec "plate" : icône en gris, label en muted small, valeur en
+// bold dessous. Pas de bordure ni fond — l'aération vient des gaps de
+// la grille parente. Match la maquette "fiche véhicule".
+function FlatSpec({
   icon,
   label,
   value,
@@ -491,19 +492,51 @@ function SpecTile({
   value: React.ReactNode;
 }) {
   return (
-    <div className="rounded-lg border bg-card p-3 transition hover:border-foreground/20 hover:shadow-sm">
-      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-        {icon}
-        <span>{label}</span>
+    <div className="flex items-start gap-2.5">
+      <span className="mt-0.5 text-muted-foreground">{icon}</span>
+      <div className="min-w-0">
+        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="truncate font-semibold">{value}</p>
       </div>
-      <p className="mt-1 font-medium">{value}</p>
     </div>
   );
 }
 
-// Ligne icône + label + valeur, utilisée dans la card "Contact".
-// Plus compacte qu'une tuile car le contenu y est plus textuel.
-function Row({
+// Ligne de la card "Analyse" : label à gauche (muted), valeur à droite
+// (bold). Quand `highlight` est vrai, on encadre dans une bande verte
+// pour signaler que la valeur porte la décision (marge potentielle).
+function AnalyseRow({
+  label,
+  value,
+  highlight = false,
+}: {
+  label: string;
+  value: React.ReactNode;
+  highlight?: boolean;
+}) {
+  if (highlight) {
+    return (
+      <div className="flex items-center justify-between rounded-md border border-emerald-200/60 bg-emerald-50/70 px-2.5 py-1.5 dark:border-emerald-900/40 dark:bg-emerald-950/30">
+        <span className="font-medium text-emerald-800 dark:text-emerald-300">
+          {label}
+        </span>
+        <span className="font-semibold text-emerald-800 dark:text-emerald-300">
+          {value}
+        </span>
+      </div>
+    );
+  }
+  return (
+    <div className="flex items-center justify-between px-2.5 py-1">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-medium">{value}</span>
+    </div>
+  );
+}
+
+// Bloc icône + label + valeur, version "contact" (label dessus, valeur
+// dessous, plus textuel que les FlatSpec).
+function ContactRow({
   icon,
   label,
   children,
@@ -513,10 +546,12 @@ function Row({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-2">
-      {icon}
-      <span className="text-muted-foreground">{label} :</span>
-      <span>{children}</span>
+    <div className="flex items-start gap-2.5">
+      <span className="mt-0.5 text-muted-foreground">{icon}</span>
+      <div>
+        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="font-medium">{children}</p>
+      </div>
     </div>
   );
 }
@@ -536,18 +571,18 @@ function buildGallery(picture: string | null, pictures: string[] | null): string
 
 function formatEuroRange(min: number | null, max: number | null): string | null {
   if (min == null && max == null) return null;
-  if (min != null && max != null)
-    return `Entre ${eurosFormatter.format(min)} et ${eurosFormatter.format(max)}`;
-  if (min != null) return `≥ ${eurosFormatter.format(min)}`;
-  return `≤ ${eurosFormatter.format(max!)}`;
+  if (min != null && max != null && min !== max)
+    return `${eurosFormatter.format(min)} – ${eurosFormatter.format(max)}`;
+  if (min != null) return eurosFormatter.format(min);
+  return eurosFormatter.format(max!);
 }
 
 function formatPercentRange(min: number | null, max: number | null): string | null {
   if (min == null && max == null) return null;
   // Worker stocke des fractions (0.15 = 15%) — on convertit en % affichable.
   const toPercent = (v: number) => Math.round(v * 100);
-  if (min != null && max != null)
-    return `Entre ${toPercent(min)}% et ${toPercent(max)}%`;
-  if (min != null) return `≥ ${toPercent(min)}%`;
-  return `≤ ${toPercent(max!)}%`;
+  if (min != null && max != null && min !== max)
+    return `${toPercent(min)}% – ${toPercent(max)}%`;
+  if (min != null) return `${toPercent(min)}%`;
+  return `${toPercent(max!)}%`;
 }
