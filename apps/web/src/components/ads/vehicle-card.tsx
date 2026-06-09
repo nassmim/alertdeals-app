@@ -7,6 +7,7 @@ import {
   Calendar,
   CalendarClock,
   Car,
+  Eye,
   ExternalLink,
   Gauge,
   Lock,
@@ -180,12 +181,29 @@ export function VehicleCard({ ad, isLocked = false }: Props) {
 
         {description && <p className="text-sm text-muted-foreground">{description}</p>}
 
-        <Button asChild className="mt-auto">
-          <a href={ad.url} target="_blank" rel="noopener noreferrer">
-            <ExternalLink className="size-4" />
-            Voir sur LeBonCoin
-          </a>
-        </Button>
+        {/*
+          Deux actions au bas de la carte, empilées verticalement :
+          - "Voir détails" (primaire) → page interne avec toutes les infos
+          - "Voir sur LeBonCoin" (outline) → annonce d'origine, nouvel onglet
+          On stack volontairement (pas de flex-row) parce que dans une grille
+          3 colonnes, les cartes sont étroites : côte à côte, "Voir sur
+          LeBonCoin" wrappe sur 2 lignes et "Voir détails" reste sur 1 →
+          hauteurs différentes, alignement décalé. L'empilement est uniforme.
+        */}
+        <div className="mt-auto flex flex-col gap-2">
+          <Button asChild className="w-full">
+            <Link href={pages.hotDealDetails(ad.id)}>
+              <Eye className="size-4" />
+              Voir détails
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="w-full">
+            <a href={ad.url} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="size-4" />
+              Voir sur LeBonCoin
+            </a>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
