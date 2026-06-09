@@ -6,7 +6,6 @@ import type { TAdWithRelations } from '@/services/ad.service';
 import {
   Calendar,
   CalendarClock,
-  Car,
   Eye,
   ExternalLink,
   Gauge,
@@ -16,7 +15,8 @@ import {
   Phone,
   Repeat,
   Settings,
-  Tag,
+  TrendingDown,
+  TrendingUp,
   Zap,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -94,12 +94,32 @@ export function VehicleCard({ ad, isLocked = false }: Props) {
       <CardHeader className="overflow-hidden">
         <div className="flex min-h-7 items-center justify-between gap-2 overflow-hidden">
           <CardTitle className="min-w-0 truncate" title={ad.title}>{ad.title}</CardTitle>
-          {ad.hasBeenReposted && (
-            <Badge variant="secondary" className="gap-1 shrink-0">
-              <Repeat className="size-3" />
-              Republiée
-            </Badge>
-          )}
+          <div className="flex shrink-0 items-center gap-1.5">
+            {/*
+              Base l'annonce
+              vise une vente rapide (prix bas) ou une marge (prix haut de
+              fourchette). On affiche le badge dans tous les cas — la valeur
+              par défaut de `isLowPrice` est `false`, donc une annonce non
+              marquée comme low-price tombe naturellement sur "Vise la marge".
+            */}
+            {ad.isLowPrice ? (
+              <Badge variant="destructive" className="gap-1">
+                <TrendingDown className="size-3" />
+                Vise le prix
+              </Badge>
+            ) : (
+              <Badge className="gap-1">
+                <TrendingUp className="size-3" />
+                Vise la marge
+              </Badge>
+            )}
+            {ad.hasBeenReposted && (
+              <Badge variant="secondary" className="gap-1">
+                <Repeat className="size-3" />
+                Republiée
+              </Badge>
+            )}
+          </div>
         </div>
       </CardHeader>
 
@@ -126,18 +146,7 @@ export function VehicleCard({ ad, isLocked = false }: Props) {
 
         <section className="space-y-1 text-sm">
           <h3 className="font-semibold">Caractéristiques</h3>
-          {ad.brand?.name && (
-            <div className="flex items-center gap-2">
-              <Tag className="size-4" />
-              <span>Marque : {ad.brand.name}</span>
-            </div>
-          )}
-          {ad.vehicleModel?.name && (
-            <div className="flex items-center gap-2">
-              <Car className="size-4" />
-              <span>Modèle : {ad.vehicleModel.name}</span>
-            </div>
-          )}
+          
           {ad.modelYear != null && (
             <div className="flex items-center gap-2">
               <Calendar className="size-4" />
