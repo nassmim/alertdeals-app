@@ -36,6 +36,33 @@ export const HOT_DEALS_SORT_LABELS: Record<EHotDealsSort, string> = {
 };
 
 // ────────────────────────────────────────────────────────────────────────────
+//                                LAYOUT
+// ────────────────────────────────────────────────────────────────────────────
+
+// Mode d'affichage de la liste des hot deals. Sérialisé dans `?layout=` pour
+// que le choix de l'utilisateur survive un refresh / un partage de lien.
+// `GRID` = cartes en grille (2-3 colonnes, layout historique). `ROW` =
+// cartes empilées pleine largeur, façon Pistoneo (densité d'info + comparaison
+// rapide des prix/marges entre annonces).
+export enum EHotDealsLayout {
+  GRID = 'grid',
+  ROW = 'row',
+}
+
+export const DEFAULT_HOT_DEALS_LAYOUT = EHotDealsLayout.GRID;
+
+// Parse / normalise un paramètre `?layout=` venant de l'URL. Même logique
+// que pour `sort` : tout input invalide retombe sur le défaut sans planter.
+export const hotDealsLayoutSchema = z
+  .nativeEnum(EHotDealsLayout)
+  .catch(DEFAULT_HOT_DEALS_LAYOUT);
+
+export const HOT_DEALS_LAYOUT_LABELS: Record<EHotDealsLayout, string> = {
+  [EHotDealsLayout.GRID]: 'Grille',
+  [EHotDealsLayout.ROW]: 'Liste',
+};
+
+// ────────────────────────────────────────────────────────────────────────────
 //                                FILTRES
 // ────────────────────────────────────────────────────────────────────────────
 
