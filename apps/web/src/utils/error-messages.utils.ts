@@ -5,6 +5,7 @@ import {
   EGeneralErrorCode,
   ESettingsErrorCode,
   ESubscriptionErrorCode,
+  EWhatsAppErrorCode,
   EWorkerErrorCode,
   type TErrorCode,
 } from '@alertdeals/shared';
@@ -50,6 +51,19 @@ const WORKER_ERROR_MESSAGES: Record<EWorkerErrorCode, string> = {
     "Le déclenchement automatique a échoué. Réessaie plus tard ou contacte-nous.",
 };
 
+// Erreurs WhatsApp : remontées par le worker mais aussi exposables au user via
+// l'onglet WhatsApp des settings (numéro invalide, session non appairée, etc.).
+const WHATSAPP_ERROR_MESSAGES: Record<EWhatsAppErrorCode, string> = {
+  [EWhatsAppErrorCode.RECIPIENT_PHONE_INVALID]:
+    "Ce numéro n'est pas joignable sur WhatsApp. Vérifie qu'il est correct dans tes réglages.",
+  [EWhatsAppErrorCode.MESSAGE_SEND_FAILED]:
+    "L'envoi du message WhatsApp a échoué. Réessaie plus tard.",
+  [EWhatsAppErrorCode.SESSION_NOT_PAIRED]:
+    "Le service WhatsApp n'est pas encore configuré. Contacte-nous.",
+  [EWhatsAppErrorCode.SESSION_DECRYPT_FAILED]:
+    "Erreur technique côté WhatsApp. Contacte-nous si le problème persiste.",
+};
+
 const AUTH_ERROR_MESSAGES: Record<EAuthErrorCode, string> = {
   [EAuthErrorCode.AUTH_ERROR]:
     'La connexion a échoué. Réessaie ou contacte-nous si le problème persiste.',
@@ -71,6 +85,7 @@ const ERROR_MESSAGES: Record<TErrorCode, string> = {
   ...ALERT_ERROR_MESSAGES,
   ...SETTINGS_ERROR_MESSAGES,
   ...WORKER_ERROR_MESSAGES,
+  ...WHATSAPP_ERROR_MESSAGES,
   ...AUTH_ERROR_MESSAGES,
 };
 

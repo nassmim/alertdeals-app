@@ -34,6 +34,14 @@ export enum EWorkerErrorCode {
 }
 export type TWorkerErrorCode = EWorkerErrorCode;
 
+export enum EWhatsAppErrorCode {
+  RECIPIENT_PHONE_INVALID = 'RECIPIENT_PHONE_INVALID',
+  MESSAGE_SEND_FAILED = 'MESSAGE_SEND_FAILED',
+  SESSION_NOT_PAIRED = 'SESSION_NOT_PAIRED',
+  SESSION_DECRYPT_FAILED = 'SESSION_DECRYPT_FAILED',
+}
+export type TWhatsAppErrorCode = EWhatsAppErrorCode;
+
 export enum EAuthErrorCode {
   AUTH_ERROR = 'AUTH_ERROR',
   LINK_EXPIRED = 'LINK_EXPIRED',
@@ -51,4 +59,5 @@ export type TErrorCode =
   | TAlertErrorCode
   | TSettingsErrorCode
   | TAuthErrorCode
-  | TWorkerErrorCode;
+  | TWorkerErrorCode
+  | TWhatsAppErrorCode;
