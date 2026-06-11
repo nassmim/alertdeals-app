@@ -3,6 +3,7 @@ import {
   EAlertErrorCode,
   EAuthErrorCode,
   EGeneralErrorCode,
+  EPriceAnalysisErrorCode,
   ESettingsErrorCode,
   ESubscriptionErrorCode,
   EWhatsAppErrorCode,
@@ -37,6 +38,13 @@ const ALERT_ERROR_MESSAGES: Record<EAlertErrorCode, string> = {
   [EAlertErrorCode.ALERT_NOT_FOUND]: 'Alerte introuvable.',
   [EAlertErrorCode.ALERT_SAVE_FAILED]:
     "Impossible d'enregistrer l'alerte. Réessaie.",
+};
+
+const PRICE_ANALYSIS_ERROR_MESSAGES: Record<EPriceAnalysisErrorCode, string> = {
+  [EPriceAnalysisErrorCode.AD_NOT_FOUND]:
+    "Cette annonce est introuvable. Actualise la page et réessaie.",
+  [EPriceAnalysisErrorCode.ANALYSIS_FAILED]:
+    "L'analyse tarifaire est momentanément indisponible. Réessaie dans un instant.",
 };
 
 const SETTINGS_ERROR_MESSAGES: Record<ESettingsErrorCode, string> = {
@@ -83,6 +91,7 @@ const ERROR_MESSAGES: Record<TErrorCode, string> = {
   ...ACCOUNT_ERROR_MESSAGES,
   ...SUBSCRIPTION_ERROR_MESSAGES,
   ...ALERT_ERROR_MESSAGES,
+  ...PRICE_ANALYSIS_ERROR_MESSAGES,
   ...SETTINGS_ERROR_MESSAGES,
   ...WORKER_ERROR_MESSAGES,
   ...WHATSAPP_ERROR_MESSAGES,
