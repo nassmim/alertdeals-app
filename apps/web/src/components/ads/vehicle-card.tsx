@@ -9,6 +9,7 @@ import {
   Car,
   ExternalLink,
   Gauge,
+  ImageOff,
   Lock,
   MapPin,
   Phone,
@@ -102,12 +103,16 @@ export function VehicleCard({ ad, isLocked = false }: Props) {
       </CardHeader>
 
       <CardContent className="flex flex-1 flex-col space-y-4">
-        {ad.picture && (
+        {ad.picture ? (
           <img
             src={ad.picture}
             alt={ad.title}
             className="aspect-video w-full rounded-md object-cover"
           />
+        ) : (
+          <div className="flex aspect-video w-full items-center justify-center rounded-md bg-muted text-muted-foreground">
+            <ImageOff className="size-8" />
+          </div>
         )}
 
         <section className="space-y-1 text-sm">
