@@ -223,7 +223,11 @@ function formatEuroRange(min: number | null, max: number | null): string | null 
 
 function formatPercentRange(min: number | null, max: number | null): string | null {
   if (min == null && max == null) return null;
-  if (min != null && max != null) return `Entre ${min}% et ${max}%`;
-  if (min != null) return `≥ ${min}%`;
-  return `≤ ${max}%`;
+  // Le worker stocke la marge sous forme de fraction pas en pourcentage. On convertit donc ici en %
+  // affichable et on arrondit pour éviter des valeurs du type "14.999%".
+  const toPercent = (v: number) => Math.round(v * 100);
+  if (min != null && max != null)
+    return `Entre ${toPercent(min)}% et ${toPercent(max)}%`;
+  if (min != null) return `≥ ${toPercent(min)}%`;
+  return `≤ ${toPercent(max!)}%`;
 }
