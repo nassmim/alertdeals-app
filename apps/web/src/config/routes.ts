@@ -19,6 +19,7 @@ export const pages = {
   // Main app sections
   dashboard: `${DASHBOARD_PREFIX}`,
   hotDeals: `${DASHBOARD_PREFIX}/hot-deals`,
+  hotDealDetails: (adId: string) => `${DASHBOARD_PREFIX}/hot-deals/${adId}`,
   subscription: `${DASHBOARD_PREFIX}/subscription`,
   account: `${DASHBOARD_PREFIX}/account`,
   settings: `${DASHBOARD_PREFIX}/settings`,

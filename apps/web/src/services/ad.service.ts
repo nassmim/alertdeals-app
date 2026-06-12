@@ -46,6 +46,65 @@ export async function getRecentAds() {
 
 export type TAdWithRelations = Awaited<ReturnType<typeof getRecentAds>>[number];
 
+/**
+ * Récupère une annonce spécifique avec TOUTES ses relations, à condition
+ * que le compte courant ait bien un match sur cette annonce (sécurité :
+ * un user ne peut pas voir une ad qui n'est pas dans ses matched_ads,
+ * sinon il pourrait contourner le quota free en tapant des UUIDs).
+ *
+ * Retourne `null` si :
+ *   - l'ad n'existe pas
+ *   - OU le compte courant n'a pas de match sur cette ad
+ *
+ * La page détail utilise ce retour pour appeler `notFound()`.
+ */
+async function getCachedMatchedAdById(accountId: string, adId: string) {
+  'use cache';
+  cacheTag(
+    CACHE_TAGS.matchedAdsByAccount(accountId),
+    CACHE_TAGS.adById(adId),
+  );
+
+  const db = getDBAdminClient();
+
+  // Étape 1 : vérifier que le compte a bien un match sur cette ad.
+  // On ne fait pas confiance à l'URL côté client.
+  const match = await db.query.matchedAds.findFirst({
+    where: and(eq(matchedAds.accountId, accountId), eq(matchedAds.adId, adId)),
+  });
+
+  if (!match) return null;
+
+  // Étape 2 : on rehydrate l'ad avec toutes ses relations utiles pour
+  // l'affichage détaillé (type, sous-type, marque, modèle, état, marché,
+  // boîte, carburant, permis, places, localisation).
+  return db.query.ads.findFirst({
+    where: eq(ads.id, adId),
+    with: {
+      type: true,
+      subtype: true,
+      brand: true,
+      vehicleModel: true,
+      vehicleState: true,
+      location: true,
+      gearBox: true,
+      fuel: true,
+      marketPosition: true,
+      drivingLicence: true,
+      vehicleSeats: true,
+    },
+  });
+}
+
+export async function getMatchedAdById(adId: string) {
+  const accountId = await getCurrentAccountId();
+  return getCachedMatchedAdById(accountId, adId);
+}
+
+export type TAdWithFullRelations = NonNullable<
+  Awaited<ReturnType<typeof getMatchedAdById>>
+>;
+
 export type TMatchingAdsPage =
   | { kind: 'NO_ALERTS' }
   | { kind: 'NO_MATCH' }
