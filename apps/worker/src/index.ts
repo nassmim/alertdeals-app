@@ -4,6 +4,7 @@ import { Server } from 'http';
 import { queues } from './queues/index.js';
 import { connection } from './redis.js';
 import routes from './routes/index.js';
+import { closeWhatsAppSocket, startWhatsAppListener } from './services/whatsapp.service.js';
 import { startAllWorkers } from './workers/index.js';
 
 const app = express();
@@ -44,6 +45,11 @@ app.use('/api', routes);
     workers = await startAllWorkers();
     console.log(`[api] ${workers.length} worker(s) started`);
 
+    // Écoute permanente WhatsApp : capte en temps réel l'ajout du bot dans un
+    // groupe pour auto-détecter le groupId. Best-effort (ne bloque pas le boot
+    // si la session n'est pas encore appairée).
+    startWhatsAppListener();
+
     server = app.listen(PORT, () => {
       console.log(`[api] listening on http://localhost:${PORT}`);
     });
@@ -63,6 +69,9 @@ const gracefulShutdown = async (signal: string) => {
   if (server) {
     server.close(() => console.log('[api] http server closed'));
   }
+
+  // Ferme proprement le socket WhatsApp et stoppe la reconnexion auto.
+  closeWhatsAppSocket();
 
   await Promise.all(
     workers.map(async (worker) => {

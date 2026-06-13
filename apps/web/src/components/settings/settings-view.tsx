@@ -3,6 +3,7 @@
 import { PhoneInstallTab } from '@/components/settings/phone-install-tab';
 import { WhatsappTab } from '@/components/settings/whatsapp-tab';
 import type { TAccountSettings } from '@/services/settings.service';
+import type { TDetectedWhatsappGroup } from '@/services/whatsapp-group.service';
 import { cn } from '@/lib/utils';
 import { MessageCircle, Smartphone } from 'lucide-react';
 import { useState } from 'react';
@@ -11,6 +12,7 @@ type Tab = 'whatsapp' | 'phone-install';
 
 type Props = {
   settings: TAccountSettings;
+  detectedGroups: TDetectedWhatsappGroup[];
 };
 
 const TABS = [
@@ -18,7 +20,7 @@ const TABS = [
   { id: 'phone-install' as const, label: 'Installation téléphone', icon: Smartphone },
 ];
 
-export function SettingsView({ settings }: Props) {
+export function SettingsView({ settings, detectedGroups }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>('whatsapp');
 
   return (
@@ -55,7 +57,9 @@ export function SettingsView({ settings }: Props) {
       </div>
 
       <div>
-        {activeTab === 'whatsapp' && <WhatsappTab settings={settings} />}
+        {activeTab === 'whatsapp' && (
+          <WhatsappTab settings={settings} detectedGroups={detectedGroups} />
+        )}
         {activeTab === 'phone-install' && <PhoneInstallTab />}
       </div>
     </div>

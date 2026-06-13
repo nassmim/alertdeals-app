@@ -296,6 +296,9 @@ export const connectWithCredentials = async (
     if (connection === 'close') {
       const statusCode = (lastDisconnect?.error as Boom)?.output?.statusCode;
 
+      // TODO(diagnostic temporaire) : tracer le code de déconnexion WhatsApp.
+      console.warn('[whatsapp] connection closed, statusCode =', statusCode);
+
       // Auto-reconnect 1× sur restartRequired — c'est normal après une
       // période d'inactivité du socket.
       if (statusCode === DisconnectReason.restartRequired && !isCleanedUp) {
