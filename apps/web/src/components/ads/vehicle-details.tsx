@@ -1,4 +1,4 @@
-import { AdvancedAnalysisButton } from '@/components/ads/advanced-analysis-button';
+import { PriceAnalysisButton } from '@/components/ads/price-analysis/price-analysis-button';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -460,11 +460,11 @@ export function VehicleDetails({ ad }: Props) {
             </Card>
 
             {/*
-              CTAs empilés sous la card analyse. Primaire ambre = analyse
-              avancée (placeholder), outline = sortie vers LeBonCoin.
+              CTAs empilés sous la card analyse. Primaire = analyse tarifaire
+              avancée (ouvre la modale), outline = sortie vers LeBonCoin.
             */}
             <div className="space-y-2">
-              <AdvancedAnalysisButton />
+              <PriceAnalysisButton adId={ad.id} />
               <Button asChild variant="outline" className="w-full" size="lg">
                 <a href={ad.url} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="size-4" />

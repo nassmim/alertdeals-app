@@ -63,9 +63,9 @@ export function PriceAnalysisButton({ adId }: Props) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="secondary" className="w-full">
+        <Button size="lg" className="w-full">
           <Sparkles className="size-4" />
-          Analyse avancée
+          Voir l'analyse détaillée
         </Button>
       </DialogTrigger>
 
