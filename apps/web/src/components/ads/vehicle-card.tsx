@@ -4,7 +4,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { pages } from '@/config/routes';
 import { cn } from '@/lib/utils';
 import type { TAdWithRelations } from '@/services/ad.service';
-import { EHotDealsLayout } from '@/validation-schemas';
 import {
   CalendarClock,
   ExternalLink,
@@ -15,15 +14,13 @@ import {
   MapPin,
   Repeat,
   Settings,
-  TrendingDown,
-  TrendingUp,
   Zap,
 } from 'lucide-react';
 import Link from 'next/link';
+import { DealBadge } from '@/components/ads/deal-badge';
 
 type Props = {
   ad: TAdWithRelations;
-  layout: EHotDealsLayout;
   isLocked?: boolean;
 };
 
@@ -41,13 +38,8 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
   year: 'numeric',
 });
 
-// Carte annonce avec deux variantes de layout :
-// - GRID (défaut historique) : carte verticale dans une grille 2-3 colonnes
-// - ROW (nouvelle) : carte horizontale pleine largeur, façon Pistoneo,
-//   avec image à gauche, contenu au centre, bloc prix + actions à droite.
-//
-// Le `layout` est piloté par l'URL (`?layout=row`) → le parent passe la
-// valeur ici. Locked variant (paywall) supportée pour les deux layouts.
+// Carte annonce en grille (carte verticale dans une grille 2-3 colonnes).
+// Variante "locked" (paywall) pour les annonces au-delà du quota free.
 //
 // Design priorities (validé par le boss) :
 //   1. Le prix + la marge doivent EXPLOSER visuellement (XL bold violet
@@ -57,19 +49,9 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
 //      ligne) plutôt que des lignes texte plates.
 //   3. Le reste (kilométrage, carburant, puissance, lieu) reste en gris
 //      discret pour ne pas concurrencer le bloc prix.
-export function VehicleCard({ ad, layout, isLocked = false }: Props) {
-  if (isLocked) {
-    return layout === EHotDealsLayout.ROW ? (
-      <LockedRow ad={ad} />
-    ) : (
-      <LockedGrid ad={ad} />
-    );
-  }
-  return layout === EHotDealsLayout.ROW ? (
-    <VehicleCardRow ad={ad} />
-  ) : (
-    <VehicleCardGrid ad={ad} />
-  );
+export function VehicleCard({ ad, isLocked = false }: Props) {
+  if (isLocked) return <LockedGrid ad={ad} />;
+  return <VehicleCardGrid ad={ad} />;
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -85,7 +67,7 @@ function VehicleCardGrid({ ad }: { ad: TAdWithRelations }) {
         {/* Image + overlays. La carte n'a plus de CardHeader : on attaque
             direct par l'image pour donner du poids visuel à la photo,
             comme sur les sites de petites annonces pro. */}
-        <CardImage ad={ad} aspect="aspect-video" />
+        <CardImage ad={ad} />
 
         <CardContent className="flex flex-1 flex-col gap-3 p-4">
           {/* Titre tronqué : le détail complet est sur la page interne. */}
@@ -117,60 +99,14 @@ function VehicleCardGrid({ ad }: { ad: TAdWithRelations }) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-//                                  ROW
-// ────────────────────────────────────────────────────────────────────────────
-
-// Variante ligne pleine largeur (Pistoneo-like). Image fixe à gauche,
-// contenu central qui prend l'espace restant, bloc prix + actions à
-// droite. Sur mobile on retombe sur un layout empilé pour rester lisible.
-function VehicleCardRow({ ad }: { ad: TAdWithRelations }) {
-  return (
-    <Card className="overflow-hidden p-0">
-      <div className="flex flex-col sm:flex-row">
-        {/* Image gauche : ratio carré-ish pour densité, largeur fixe sur
-            desktop pour que les cartes soient parfaitement alignées en
-            colonne (côté gauche = même axe vertical entre toutes les
-            annonces, facilite la comparaison à l'œil). */}
-        <div className="sm:w-64 sm:shrink-0">
-          <CardImage ad={ad} aspect="aspect-video sm:aspect-[4/3]" />
-        </div>
-
-        {/* Contenu central + bloc droite. Sur mobile, tout est empilé. */}
-        <CardContent className="flex flex-1 flex-col gap-3 p-4 sm:flex-row sm:gap-6">
-          <div className="flex flex-1 flex-col gap-2.5 min-w-0">
-            <h3
-              className="line-clamp-2 text-lg font-semibold leading-snug"
-              title={ad.title}
-            >
-              {ad.title}
-            </h3>
-            <InlineMeta ad={ad} />
-            <StatePills ad={ad} />
-            <CardFooterMeta ad={ad} className="mt-auto" />
-          </div>
-
-          {/* Colonne droite : prix XL + marge + CTAs. Largeur min pour
-              que le prix ait toujours sa place sans s'écraser. */}
-          <div className="flex flex-col gap-3 sm:w-48 sm:shrink-0 sm:items-end">
-            <PriceBlock ad={ad} align="right" />
-            <CardActions ad={ad} className="sm:w-full" />
-          </div>
-        </CardContent>
-      </div>
-    </Card>
-  );
-}
-
-// ────────────────────────────────────────────────────────────────────────────
 //                          ATOMES PARTAGÉS
 // ────────────────────────────────────────────────────────────────────────────
 
 // Image + overlays (badge source top-left, badge "republiée" top-right
-// si applicable). Le composant accepte un `aspect` Tailwind pour que les
-// deux layouts puissent imposer leur ratio (16/9 en grille, 4/3 en row).
-function CardImage({ ad, aspect }: { ad: TAdWithRelations; aspect: string }) {
+// si applicable). Ratio 16/9 fixe pour aligner toutes les cartes de la grille.
+function CardImage({ ad }: { ad: TAdWithRelations }) {
   return (
-    <div className={cn('relative w-full overflow-hidden bg-muted', aspect)}>
+    <div className="relative aspect-video w-full overflow-hidden bg-muted">
       {ad.picture ? (
         <img
           src={ad.picture}
@@ -213,13 +149,7 @@ function CardImage({ ad, aspect }: { ad: TAdWithRelations; aspect: string }) {
 // Bloc prix + marge. C'est LE bloc qui doit accrocher l'œil — toute la
 // hiérarchie de la carte est construite autour. Prix en `text-primary`
 // (violet du thème) XL bold, marge en emerald juste en dessous.
-function PriceBlock({
-  ad,
-  align = 'left',
-}: {
-  ad: TAdWithRelations;
-  align?: 'left' | 'right';
-}) {
+function PriceBlock({ ad }: { ad: TAdWithRelations }) {
   const marginAmount = formatEuroRange(ad.marginAmountMin, ad.marginAmountMax);
   const marginPercent = formatPercentRange(
     ad.marginPercentageMin,
@@ -227,12 +157,7 @@ function PriceBlock({
   );
 
   return (
-    <div
-      className={cn(
-        'flex flex-col',
-        align === 'right' ? 'sm:items-end sm:text-right' : '',
-      )}
-    >
+    <div className="flex flex-col">
       <div className="text-2xl font-bold leading-tight text-primary sm:text-3xl">
         {eurosFormatter.format(ad.price)}
       </div>
@@ -294,28 +219,19 @@ function InlineMeta({ ad }: { ad: TAdWithRelations }) {
   );
 }
 
-// Pills secondaires : marque, modèle, jours en ligne, stratégie de match
-// (vise le prix vs marge). Tout en `variant="secondary"` pour rester
-// cohérent avec le thème, sauf la stratégie qui a un code couleur
-// sémantique (rouge bas-prix / vert marge).
+// Pills secondaires : qualité d'affaire, marque, modèle, jours en ligne.
+// Tout en `variant="secondary"` pour rester cohérent avec le thème, sauf
+// le badge qualité d'affaire (DealBadge) qui garde son code couleur
+// business (ambre = top deal, vert = bonne affaire), repris d'auto-prospect.
 function StatePills({ ad }: { ad: TAdWithRelations }) {
   const daysOnline = computeDaysOnline(ad.lastPublicationDate);
 
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      {/* Stratégie : code couleur business (vert = opportunité marge,
-          rouge = annonce sous le marché). */}
-      {ad.isLowPrice ? (
-        <Badge variant="destructive" className="gap-1">
-          <TrendingDown className="size-3" />
-          Vise le prix
-        </Badge>
-      ) : (
-        <Badge className="gap-1 bg-emerald-600 text-white hover:bg-emerald-600">
-          <TrendingUp className="size-3" />
-          Vise la marge
-        </Badge>
-      )}
+      {/* Qualité d'affaire : "Très bonne affaire" / "Bonne affaire" selon
+          `goodDealName` (calculé par le worker). Ne s'affiche que si l'annonce
+          est qualifiée comme une affaire. */}
+      <DealBadge goodDealName={ad.goodDealName} variant="compact" />
       {ad.brand?.name && (
         <Badge variant="secondary">{ad.brand.name}</Badge>
       )}
@@ -406,17 +322,6 @@ function LockedGrid({ ad }: { ad: TAdWithRelations }) {
     <Card className="relative h-full overflow-hidden p-0">
       <div className="pointer-events-none select-none blur-sm">
         <VehicleCardGrid ad={ad} />
-      </div>
-      <LockedOverlay />
-    </Card>
-  );
-}
-
-function LockedRow({ ad }: { ad: TAdWithRelations }) {
-  return (
-    <Card className="relative overflow-hidden p-0">
-      <div className="pointer-events-none select-none blur-sm">
-        <VehicleCardRow ad={ad} />
       </div>
       <LockedOverlay />
     </Card>

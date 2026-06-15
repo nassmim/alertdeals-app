@@ -1,6 +1,5 @@
 import { HotDealsEmpty } from '@/components/ads/hot-deals-empty';
 import { HotDealsFilters } from '@/components/ads/hot-deals-filters';
-import { HotDealsLayoutToggle } from '@/components/ads/hot-deals-layout-toggle';
 import { HotDealsPagination } from '@/components/ads/hot-deals-pagination';
 import { HotDealsSortSelect } from '@/components/ads/hot-deals-sort-select';
 import { VehicleCard } from '@/components/ads/vehicle-card';
@@ -15,8 +14,6 @@ import { getMatchingAdsPage } from '@/services/ad.service';
 import { getAccountAlerts } from '@/services/alert.service';
 import { canCreateAlert } from '@/services/trial.service';
 import {
-  EHotDealsLayout,
-  hotDealsLayoutSchema,
   hotDealsSortSchema,
   parseHotDealsFiltersFromSearchParams,
 } from '@/validation-schemas';
@@ -34,8 +31,6 @@ const HotDealsPage = async ({ searchParams }: Props) => {
   // `hotDealsSortSchema.catch(DEFAULT)` retombe sur le tri par défaut si la valeur
   // d'URL est manquante ou invalide, on n'a donc pas besoin de gérer ce cas ici.
   const sort = hotDealsSortSchema.parse(params.sort);
-  // Idem pour le layout : `?layout=grid|row` ou défaut GRID si manquant/invalide.
-  const layout = hotDealsLayoutSchema.parse(params.layout);
   const filters = parseHotDealsFiltersFromSearchParams(params);
 
   const accountId = await getCurrentAccountId();
@@ -63,15 +58,7 @@ const HotDealsPage = async ({ searchParams }: Props) => {
     <div className="px-4 py-8">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold">Hot Deals</h1>
-        {result.kind === 'OK' && (
-          // Toggle de layout + select de tri ensemble à droite : l'user
-          // peut changer la disposition d'affichage et le tri sans
-          // descendre dans la page.
-          <div className="flex flex-wrap items-center gap-3">
-            <HotDealsLayoutToggle value={layout} />
-            <HotDealsSortSelect value={sort} />
-          </div>
-        )}
+        {result.kind === 'OK' && <HotDealsSortSelect value={sort} />}
       </div>
 
       {/* Filtres visibles dès qu'il y a au moins une alerte. Pas la peine de
@@ -99,29 +86,12 @@ const HotDealsPage = async ({ searchParams }: Props) => {
 
       {result.kind === 'OK' && result.ads.length > 0 && (
         <>
-          {/* Container dispatch selon `layout` :
-              - GRID → grille responsive 1/2/3 colonnes (historique)
-              - ROW  → stack vertical pleine largeur, façon Pistoneo
-              Le composant <VehicleCard> reçoit `layout` pour adapter
-              sa silhouette interne (image en haut vs à gauche, etc.). */}
-          <div
-            className={
-              layout === EHotDealsLayout.ROW
-                ? 'flex flex-col gap-3'
-                : 'grid gap-4 sm:grid-cols-2 lg:grid-cols-3'
-            }
-          >
+          {/* Grille responsive 1/2/3 colonnes. */}
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {result.ads.map((ad, index) => {
               const isLocked =
                 !hasFullAccess && (result.page > 1 || index >= FREE_AD_QUOTA);
-              return (
-                <VehicleCard
-                  key={ad.id}
-                  ad={ad}
-                  layout={layout}
-                  isLocked={isLocked}
-                />
-              );
+              return <VehicleCard key={ad.id} ad={ad} isLocked={isLocked} />;
             })}
           </div>
           <HotDealsPagination page={result.page} totalPages={result.totalPages} />

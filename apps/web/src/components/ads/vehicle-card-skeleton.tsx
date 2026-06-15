@@ -4,16 +4,10 @@ export type TVehicleCardSkeletonProps = {
   count?: number;
 };
 
-// Skeleton calé sur la silhouette de la carte GRID refondue :
-// image aspect-video en haut (sans padding), puis bloc contenu avec
-// titre / prix / meta / pills / actions. La carte est `overflow-hidden`
-// avec une bordure pour matcher le rendu réel et éviter le "saut"
-// visuel à l'hydratation.
-//
-// loading.tsx n'a pas accès aux searchParams, on n'affiche donc que la
-// version GRID par défaut. Si l'user était sur `?layout=row`, la
-// transition restera fluide (les cartes prennent moins de temps à
-// arriver que le réseau dans la majorité des cas).
+// Skeleton calé sur la silhouette de la carte refondue : image aspect-video
+// en haut (sans padding), puis bloc contenu avec titre / prix / meta / pills /
+// actions. La carte est `overflow-hidden` avec une bordure pour matcher le
+// rendu réel et éviter le "saut" visuel à l'hydratation.
 export function VehicleCardSkeleton({ count = 1 }: TVehicleCardSkeletonProps) {
   return (
     <>
