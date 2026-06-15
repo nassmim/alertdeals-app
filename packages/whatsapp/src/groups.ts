@@ -46,7 +46,27 @@ export function onWhatsAppGroupAdded(
   socket: WASocket,
   handler: GroupAddedHandler,
 ): void {
+  // TODO(diagnostic temporaire) : confirmer que LE socket de l'écouteur est
+  // bien vivant (qu'on écoute sur la bonne instance, pas un socket mort).
+  socket.ev.on('connection.update', (u) => {
+    if (u.connection) {
+      console.log(
+        `[whatsapp][diag] (socket écouteur) connection=${u.connection} user=${socket.user?.id}`,
+      );
+    }
+  });
+
   socket.ev.on('group-participants.update', async (update) => {
+    // TODO(diagnostic temporaire) : tracer chaque event de participants.
+    console.log('[whatsapp][diag] group-participants.update', {
+      id: update.id,
+      action: update.action,
+      author: update.author,
+      authorPn: update.authorPn,
+      participants: update.participants.map((p) => p.id),
+      ourId: socket.user?.id,
+    });
+
     if (update.action !== 'add') return;
 
     // Numéro du compte central (celui qui est appairé sur ce socket).
@@ -58,6 +78,8 @@ export function onWhatsAppGroupAdded(
     const weWereAdded = update.participants.some(
       (participant) => jidToPhone(participant.id) === ourPhone,
     );
+    // TODO(diagnostic temporaire)
+    console.log('[whatsapp][diag] ourPhone =', ourPhone, '| weWereAdded =', weWereAdded);
     if (!weWereAdded) return;
 
     // Le nom du groupe est une métadonnée séparée ; un échec (groupe privé,
