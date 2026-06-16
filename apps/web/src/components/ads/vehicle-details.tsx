@@ -23,7 +23,6 @@ import {
   Tag,
   TagsIcon,
   TrendingDown,
-  TrendingUp,
   Users,
   Zap,
 } from 'lucide-react';
@@ -53,25 +52,6 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
 // la colonne droite est le centre de décision (prix / marge / actions),
 // la galerie + spécifications sont du contenu narratif.
 export function VehicleDetails({ ad }: Props) {
-  const medianPrice =
-    ad.priceMin != null && ad.priceMax != null
-      ? (ad.priceMin + ad.priceMax) / 2
-      : null;
-
-  const marginAmountRange = formatEuroRange(
-    ad.marginAmountMin,
-    ad.marginAmountMax,
-  );
-  const marginPercentRange = formatPercentRange(
-    ad.marginPercentageMin,
-    ad.marginPercentageMax,
-  );
-
-  const priceRange =
-    ad.priceMin != null && ad.priceMax != null && ad.priceMin !== ad.priceMax
-      ? `${eurosFormatter.format(ad.priceMin)} – ${eurosFormatter.format(ad.priceMax)}`
-      : null;
-
   // Galerie : on dédoublonne `picture` (image principale) au cas où elle
   // figure aussi dans `pictures`. Si tout est null on renvoie [].
   const gallery = buildGallery(ad.picture, ad.pictures);
@@ -127,22 +107,6 @@ export function VehicleDetails({ ad }: Props) {
               <Badge variant="secondary">{ad.subtype.name}</Badge>
             )}
 
-            {/*
-              Stratégie : "Vise le prix" si l'ad est marquée low-price par
-              le worker, sinon "Vise la marge" par défaut. Code couleur :
-              vert = opportunité de marge, rouge = annonce à bas prix.
-            */}
-            {ad.isLowPrice ? (
-              <Badge variant="destructive" className="gap-1">
-                <TrendingDown className="size-3" />
-                Vise le prix
-              </Badge>
-            ) : (
-              <Badge className="gap-1 bg-emerald-600 text-white hover:bg-emerald-600">
-                <TrendingUp className="size-3" />
-                Vise la marge
-              </Badge>
-            )}
             {ad.hasBeenReposted && (
               <Badge variant="secondary" className="gap-1">
                 <Repeat className="size-3" />
@@ -433,29 +397,20 @@ export function VehicleDetails({ ad }: Props) {
                   label="Prix annonce"
                   value={eurosFormatter.format(ad.price)}
                 />
-                {medianPrice != null && (
-                  <AnalyseRow
-                    label="Prix marché médian"
-                    value={eurosFormatter.format(medianPrice)}
-                  />
-                )}
-                {priceRange && (
-                  <AnalyseRow label="Fourchette marché" value={priceRange} />
-                )}
-                {marginAmountRange && (
-                  <AnalyseRow
-                    label="Marge potentielle"
-                    value={marginAmountRange}
-                    highlight
-                  />
-                )}
-                {marginPercentRange && (
-                  <AnalyseRow
-                    label="% de marge"
-                    value={marginPercentRange}
-                    highlight
-                  />
-                )}
+                <AnalyseRow
+                  label="Fourchette marché"
+                  value="price min € / price max €"
+                />
+                <AnalyseRow
+                  label="Marge potentielle"
+                  value="margin_amount_min € / margin_amount_max €"
+                  highlight
+                />
+                <AnalyseRow
+                  label="% de marge"
+                  value="margin_percentage_min % / margin_percentage_max %"
+                  highlight
+                />
               </CardContent>
             </Card>
 
@@ -567,22 +522,4 @@ function buildGallery(picture: string | null, pictures: string[] | null): string
     }
   }
   return all;
-}
-
-function formatEuroRange(min: number | null, max: number | null): string | null {
-  if (min == null && max == null) return null;
-  if (min != null && max != null && min !== max)
-    return `${eurosFormatter.format(min)} – ${eurosFormatter.format(max)}`;
-  if (min != null) return eurosFormatter.format(min);
-  return eurosFormatter.format(max!);
-}
-
-function formatPercentRange(min: number | null, max: number | null): string | null {
-  if (min == null && max == null) return null;
-  // Worker stocke des fractions (0.15 = 15%) — on convertit en % affichable.
-  const toPercent = (v: number) => Math.round(v * 100);
-  if (min != null && max != null && min !== max)
-    return `${toPercent(min)}% – ${toPercent(max)}%`;
-  if (min != null) return `${toPercent(min)}%`;
-  return `${toPercent(max!)}%`;
 }
