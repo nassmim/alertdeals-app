@@ -1,22 +1,18 @@
-import { HotDealsEmpty } from '@/components/ads/hot-deals-empty';
 import { HotDealsFilters } from '@/components/ads/hot-deals-filters';
-import { HotDealsPagination } from '@/components/ads/hot-deals-pagination';
+import { HotDealsResults } from '@/components/ads/hot-deals-results';
 import { HotDealsSortSelect } from '@/components/ads/hot-deals-sort-select';
-import { VehicleCard } from '@/components/ads/vehicle-card';
-import { FREE_AD_QUOTA } from '@/config/premium.config';
-import { getCurrentAccountId } from '@/services/account.service';
 import {
   getBrands,
   getVehicleModels,
   getVehicleStates,
 } from '@/services/ad-reference.service';
-import { getMatchingAdsPage } from '@/services/ad.service';
 import { getAccountAlerts } from '@/services/alert.service';
-import { canCreateAlert } from '@/services/trial.service';
 import {
   hotDealsSortSchema,
   parseHotDealsFiltersFromSearchParams,
 } from '@/validation-schemas';
+import { Loader2 } from 'lucide-react';
+import { Suspense } from 'react';
 
 type Props = {
   // searchParams est volontairement typé large (Record string) parce que les
@@ -33,37 +29,38 @@ const HotDealsPage = async ({ searchParams }: Props) => {
   const sort = hotDealsSortSchema.parse(params.sort);
   const filters = parseHotDealsFiltersFromSearchParams(params);
 
-  const accountId = await getCurrentAccountId();
-  // hasFullAccess = abonnement actif OU période d'essai en cours. Les users en trial
-  // voient toutes les ads (pas de blur FREE_AD_QUOTA) puisque le trial sert à
-  // démontrer l'expérience payante.
-  // Tout fetch en parallèle : query principale (matching ads filtrées),
-  // statut d'accès, et référentiels du form de filtres (alertes du compte +
-  // brands/models/states). Référentiels cachés `weeks` donc coût négligeable.
-  const [hasFullAccess, result, accountAlerts, brands, vehicleModels, vehicleStates] =
-    await Promise.all([
-      canCreateAlert(accountId),
-      getMatchingAdsPage({ page, sort, filters }),
-      getAccountAlerts(),
-      getBrands(),
-      getVehicleModels(),
-      getVehicleStates(),
-    ]);
+  // Référentiels du form de filtres en parallèle (alertes du compte +
+  // brands/models/states). Cachés `weeks` donc coût négligeable. La liste des
+  // ads (dynamique, lente) est fetchée à part, dans <HotDealsResults> sous
+  // Suspense, pour pouvoir afficher un loader pendant son chargement.
+  const [accountAlerts, brands, vehicleModels, vehicleStates] = await Promise.all([
+    getAccountAlerts(),
+    getBrands(),
+    getVehicleModels(),
+    getVehicleStates(),
+  ]);
 
   // L'alerte est passée en version "minimale" au filtre (id + name) ; pas la
   // peine d'envoyer toutes les relations (brands/models/location) au client.
   const alertOptions = accountAlerts.map((a) => ({ id: a.id, name: a.name }));
+  const hasAlerts = alertOptions.length > 0;
+
+  // Clé du boundary Suspense : tout changement de page/tri/filtres la modifie,
+  // ce qui force le remount de <HotDealsResults> → affichage du loader pendant
+  // le re-fetch. Les filtres et le tri restent hors de la boundary, donc montés
+  // et interactifs pendant le chargement.
+  const resultsKey = JSON.stringify({ page, sort, filters });
 
   return (
     <div className="px-4 py-8">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold">Hot Deals</h1>
-        {result.kind === 'OK' && <HotDealsSortSelect value={sort} />}
+        {hasAlerts && <HotDealsSortSelect value={sort} />}
       </div>
 
       {/* Filtres visibles dès qu'il y a au moins une alerte. Pas la peine de
           montrer un form de filtres à un user qui n'a encore rien créé. */}
-      {result.kind !== 'NO_ALERTS' && (
+      {hasAlerts && (
         <div className="mb-6">
           <HotDealsFilters
             initialFilters={filters}
@@ -75,28 +72,17 @@ const HotDealsPage = async ({ searchParams }: Props) => {
         </div>
       )}
 
-      {result.kind === 'NO_ALERTS' && <HotDealsEmpty variant="no-alerts" />}
-      {result.kind === 'NO_MATCH' && <HotDealsEmpty variant="no-match" />}
-
-      {result.kind === 'OK' && result.ads.length === 0 && (
-        <p className="rounded-md border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
-          Aucune annonce ne correspond à tes filtres. Essaie d'en retirer ou clique sur Réinitialiser.
-        </p>
-      )}
-
-      {result.kind === 'OK' && result.ads.length > 0 && (
-        <>
-          {/* Grille responsive 1/2/3 colonnes. */}
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {result.ads.map((ad, index) => {
-              const isLocked =
-                !hasFullAccess && (result.page > 1 || index >= FREE_AD_QUOTA);
-              return <VehicleCard key={ad.id} ad={ad} isLocked={isLocked} />;
-            })}
+      <Suspense
+        key={resultsKey}
+        fallback={
+          <div className="flex items-center justify-center gap-2 py-20 text-sm text-muted-foreground">
+            <Loader2 className="size-5 animate-spin" />
+            Chargement des annonces…
           </div>
-          <HotDealsPagination page={result.page} totalPages={result.totalPages} />
-        </>
-      )}
+        }
+      >
+        <HotDealsResults page={page} sort={sort} filters={filters} />
+      </Suspense>
     </div>
   );
 };
