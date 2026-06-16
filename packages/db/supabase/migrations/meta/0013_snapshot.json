@@ -1,6 +1,6 @@
 {
-  "id": "87a33a2a-3a08-41c1-96e1-18f9eba8e6d4",
-  "prevId": "bf78c317-e2ff-43d6-a41a-a9d2d0a60c83",
+  "id": "abea2dbd-b999-45ff-98e1-3f73f125850b",
+  "prevId": "87a33a2a-3a08-41c1-96e1-18f9eba8e6d4",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -2286,6 +2286,107 @@
             "authenticated"
           ],
           "using": "(select auth.uid()) = \"subscriptions\".\"account_id\""
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.whatsapp_groups": {
+      "name": "whatsapp_groups",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "account_id": {
+          "name": "account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "group_id": {
+          "name": "group_id",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "group_name": {
+          "name": "group_name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "added_by": {
+          "name": "added_by",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "detected_at": {
+          "name": "detected_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "whatsapp_group_account_id_idx": {
+          "name": "whatsapp_group_account_id_idx",
+          "columns": [
+            {
+              "expression": "account_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "whatsapp_group_account_id_fk": {
+          "name": "whatsapp_group_account_id_fk",
+          "tableFrom": "whatsapp_groups",
+          "tableTo": "accounts",
+          "columnsFrom": [
+            "account_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "whatsapp_group_account_id_group_id_key": {
+          "name": "whatsapp_group_account_id_group_id_key",
+          "nullsNotDistinct": false,
+          "columns": [
+            "account_id",
+            "group_id"
+          ]
+        }
+      },
+      "policies": {
+        "enable read and delete for the group owners": {
+          "name": "enable read and delete for the group owners",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "\"whatsapp_groups\".\"account_id\" = (select auth.uid())",
+          "withCheck": "\"whatsapp_groups\".\"account_id\" = (select auth.uid())"
         }
       },
       "checkConstraints": {},
