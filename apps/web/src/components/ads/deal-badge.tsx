@@ -56,7 +56,7 @@ export function DealBadge({
           <span className="absolute inset-0 -z-10 animate-ping rounded-full bg-amber-400/40" />
         )}
         <Icon className="h-3 w-3" strokeWidth={2.5} />
-        <span>{config.shortLabel}</span>
+        <span>{config.label}</span>
       </div>
     );
   }
