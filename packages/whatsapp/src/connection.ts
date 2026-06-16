@@ -9,6 +9,7 @@ import makeWASocket, {
   AuthenticationState,
   BufferJSON,
   DisconnectReason,
+  fetchLatestBaileysVersion,
   initAuthCreds,
   SignalDataTypeMap,
 } from '@whiskeysockets/baileys';
@@ -50,12 +51,29 @@ const silentLogger = {
   error: noop,
 } as unknown as Parameters<typeof makeWASocket>[0]['logger'];
 
-// Workaround d'un rejet 405 côté WhatsApp si on annonce une version trop
-// récente — pin sur une combo testée. Source :
-// https://github.com/WhiskeySockets/Baileys/issues/2370
+// Version WhatsApp Web figée historiquement (workaround d'un rejet 405 si on
+// annonçait une version trop récente — issue WhiskeySockets/Baileys#2370).
+// PROBLÈME : ce pin finit par devenir périmé, et WhatsApp ferme alors la
+// connexion juste après l'ouverture avec un 428 (connectionClosed) en boucle.
+// On la garde donc uniquement en FALLBACK : on tente d'abord la version la
+// plus récente via `fetchLatestBaileysVersion()`, et on retombe sur ce pin si
+// la récupération réseau échoue.
+const WA_PINNED_VERSION = [2, 3000, 1033893291] as [number, number, number];
+
+// Résout la version WhatsApp Web à annoncer : dernière version connue de
+// Baileys si dispo, sinon le pin de secours. Évite les déconnexions 428 dues
+// à une version morte tout en restant robuste si l'appel réseau échoue.
+async function resolveWaVersion(): Promise<[number, number, number]> {
+  try {
+    const { version } = await fetchLatestBaileysVersion();
+    return version;
+  } catch {
+    return WA_PINNED_VERSION;
+  }
+}
+
 const WA_SOCKET_CONFIG = {
   printQRInTerminal: false,
-  version: [2, 3000, 1033893291] as [number, number, number],
   browser: ['AlertDeals', 'Chrome', '145.0.0'] as [string, string, string],
   syncFullHistory: false,
   markOnlineOnConnect: false,
@@ -168,7 +186,8 @@ export const createWhatsAppConnection = async (
   let qrTimeout: NodeJS.Timeout | null = null;
   let isCleanedUp = false;
 
-  const socket = makeWASocket({ ...WA_SOCKET_CONFIG, auth: state });
+  const version = await resolveWaVersion();
+  const socket = makeWASocket({ ...WA_SOCKET_CONFIG, version, auth: state });
 
   socket.ev.on('creds.update', (updated) => updateCreds(updated));
 
@@ -203,7 +222,7 @@ export const createWhatsAppConnection = async (
 
       if (shouldReconnect && !isCleanedUp) {
         setTimeout(() => {
-          const newSocket = makeWASocket({ ...WA_SOCKET_CONFIG, auth: state });
+          const newSocket = makeWASocket({ ...WA_SOCKET_CONFIG, version, auth: state });
           newSocket.ev.on('creds.update', (updated) => updateCreds(updated));
           newSocket.ev.on('connection.update', (newUpdate) => {
             if (newUpdate.connection === 'open') {
@@ -246,7 +265,8 @@ export const connectWithCredentials = async (
 ): Promise<CredentialConnectionResult> => {
   const { state, saveState, updateCreds } = createDBAuthState(storedState);
 
-  const socket = makeWASocket({ ...WA_SOCKET_CONFIG, auth: state });
+  const version = await resolveWaVersion();
+  const socket = makeWASocket({ ...WA_SOCKET_CONFIG, version, auth: state });
   socket.ev.on('creds.update', (updated) => updateCreds(updated));
 
   let connectionResolve: ((value: ConnectionWaitResult) => void) | null = null;
@@ -299,7 +319,7 @@ export const connectWithCredentials = async (
       // Auto-reconnect 1× sur restartRequired — c'est normal après une
       // période d'inactivité du socket.
       if (statusCode === DisconnectReason.restartRequired && !isCleanedUp) {
-        const newSocket = makeWASocket({ ...WA_SOCKET_CONFIG, auth: state });
+        const newSocket = makeWASocket({ ...WA_SOCKET_CONFIG, version, auth: state });
         newSocket.ev.on('creds.update', (updated) => updateCreds(updated));
         newSocket.ev.on('connection.update', (newUpdate) => {
           if (newUpdate.connection === 'open') {
