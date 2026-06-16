@@ -22,9 +22,12 @@ export async function handleDetectedGroup(group: DetectedGroup): Promise<void> {
 
   // Retrouve le compte dont le numéro WhatsApp (chiffres only) == addedBy.
   // `addedBy` est déjà normalisé en chiffres par le package whatsapp.
+  // NB : `'\\D'` (double backslash) est indispensable — dans un template JS,
+  // `'\D'` serait interprété en `'D'` et la regex retirerait la lettre D au
+  // lieu des non-chiffres, cassant le matching (`+212…` resterait avec son `+`).
   const account = await db.query.accounts.findFirst({
     columns: { id: true },
-    where: sql`regexp_replace(${accounts.whatsappPhoneNumber}, '\D', '', 'g') = ${group.addedBy}`,
+    where: sql`regexp_replace(${accounts.whatsappPhoneNumber}, '\\D', '', 'g') = ${group.addedBy}`,
   });
 
   if (!account) {

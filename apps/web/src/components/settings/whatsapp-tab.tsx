@@ -3,7 +3,6 @@
 import { updateWhatsappSettings } from '@/actions/settings.actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -71,38 +70,29 @@ export function WhatsappTab({ settings, detectedGroups }: Props) {
               name="whatsappPhoneNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Numéro / ID WhatsApp</FormLabel>
+                  <FormLabel>Numéro WhatsApp</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ex. +33612345678 ou ID du groupe"
+                      placeholder="Ex. +33612345678"
                       {...field}
                       value={field.value ?? ''}
+                      onChange={(event) => {
+                        field.onChange(event);
+                        // Saisie manuelle = numéro personnel → on repasse en
+                        // mode "non groupe". Le mode groupe ne s'active que via
+                        // le bouton « Utiliser » d'un groupe détecté.
+                        form.setValue('whatsappIsGroup', false, {
+                          shouldDirty: true,
+                        });
+                      }}
                     />
                   </FormControl>
                   <FormDescription>
-                    Renseigne ton numéro personnel. Pour notifier un groupe, ajoute notre
-                    numéro WhatsApp à ton groupe : il apparaîtra automatiquement ci-dessous
+                    Renseigne ton numéro personnel. Pour recevoir les alertes dans un
+                    groupe, ajoute notre numéro WhatsApp à ton groupe : il apparaîtra
+                    ci-dessous, clique alors sur « Utiliser ».
                   </FormDescription>
                   <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="whatsappIsGroup"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center gap-3 space-y-0 rounded-lg border border-border bg-card p-3">
-                  <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                  <div className="space-y-0.5">
-                    <FormLabel className="cursor-pointer">Groupe</FormLabel>
-                    <FormDescription>
-                      Coche si l'identifiant ci-dessus est celui d'un groupe WhatsApp (sinon,
-                      laisse décoché pour un numéro personnel).
-                    </FormDescription>
-                  </div>
                 </FormItem>
               )}
             />

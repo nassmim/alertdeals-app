@@ -31,13 +31,26 @@ function jidToPhone(jid: string | null | undefined): string | null {
   return digits.length > 0 ? digits : null;
 }
 
+// Forme partielle d'un participant de groupe telle que renvoyée par Baileys.
+// On s'appuie sur `phoneNumber` (JID `@s.whatsapp.net`, le vrai numéro) plutôt
+// que sur `id` qui est souvent un `@lid` (identifiant masqué non reliable à un
+// compte).
+type GroupParticipantLike = {
+  id: string;
+  phoneNumber?: string | null;
+  admin?: string | null;
+};
+
 /**
  * Écoute l'ajout de notre numéro central dans un groupe WhatsApp.
  *
- * Baileys émet `group-participants.update` à chaque changement de membres.
- * On ne réagit qu'au cas `action === 'add'` ET quand le numéro ajouté est le
- * nôtre (comparaison via `socket.user.id`). On récupère alors le nom du groupe
- * et on remonte `{ groupId, groupName, addedBy }` au handler fourni.
+ * Quand le bot est ajouté à un groupe, Baileys émet `groups.upsert` avec la
+ * métadonnée du groupe (sujet + participants). Chaque participant expose son
+ * vrai numéro dans `phoneNumber` (le `id` est un LID masqué). On :
+ *   1. vérifie que notre numéro central est bien membre du groupe,
+ *   2. déduit `addedBy` = le numéro de l'owner/créateur du groupe (celui qui
+ *      nous a ajoutés), résolu depuis la liste des participants,
+ *   3. remonte `{ groupId, groupName, addedBy }` au handler fourni.
  *
  * Le handler ne doit pas throw : une erreur de traitement (DB, etc.) ne doit
  * pas casser le socket. On loggue défensivement ici.
@@ -46,69 +59,44 @@ export function onWhatsAppGroupAdded(
   socket: WASocket,
   handler: GroupAddedHandler,
 ): void {
-  // TODO(diagnostic temporaire) : confirmer que LE socket de l'écouteur est
-  // bien vivant (qu'on écoute sur la bonne instance, pas un socket mort).
-  socket.ev.on('connection.update', (u) => {
-    if (u.connection) {
-      console.log(
-        `[whatsapp][diag] (socket écouteur) connection=${u.connection} user=${socket.user?.id}`,
-      );
-    }
-  });
-
-  socket.ev.on('group-participants.update', async (update) => {
-    // TODO(diagnostic temporaire) : tracer chaque event de participants.
-    console.log('[whatsapp][diag] group-participants.update', {
-      id: update.id,
-      action: update.action,
-      author: update.author,
-      authorPn: update.authorPn,
-      participants: update.participants.map((p) => p.id),
-      ourId: socket.user?.id,
-    });
-
-    if (update.action !== 'add') return;
-
+  socket.ev.on('groups.upsert', async (groups) => {
     // Numéro du compte central (celui qui est appairé sur ce socket).
     const ourPhone = jidToPhone(socket.user?.id);
     if (!ourPhone) return;
 
-    // On ne réagit que si c'est BIEN notre numéro qui a été ajouté, pas un
-    // autre participant rejoignant le groupe.
-    const weWereAdded = update.participants.some(
-      (participant) => jidToPhone(participant.id) === ourPhone,
-    );
-    // TODO(diagnostic temporaire)
-    console.log('[whatsapp][diag] ourPhone =', ourPhone, '| weWereAdded =', weWereAdded);
-    if (!weWereAdded) return;
+    for (const group of groups) {
+      const participants = (group.participants ?? []) as GroupParticipantLike[];
+      // Numéro réel de chaque participant (depuis `phoneNumber`, pas le LID).
+      const numbered = participants
+        .map((p) => ({ id: p.id, phone: jidToPhone(p.phoneNumber) }))
+        .filter((p): p is { id: string; phone: string } => p.phone !== null);
 
-    // Le nom du groupe est une métadonnée séparée ; un échec (groupe privé,
-    // rate-limit) ne doit pas empêcher d'enregistrer le groupId.
-    let groupName: string | null = null;
-    try {
-      const metadata = await socket.groupMetadata(update.id);
-      groupName = metadata.subject ?? null;
-    } catch (error) {
-      console.warn(
-        '[whatsapp] groupMetadata failed:',
-        error instanceof Error ? error.message : error,
-      );
-    }
+      // On ne réagit que si notre numéro central est bien membre du groupe
+      // (`groups.upsert` peut aussi fire lors d'une resync de session).
+      const weAreMember = numbered.some((p) => p.phone === ourPhone);
+      if (!weAreMember) continue;
 
-    try {
-      await handler({
-        groupId: update.id,
-        groupName,
-        // `authorPn` (phone number) en priorité : `author` peut être un LID
-        // interne Baileys, pas le vrai numéro. C'est `addedBy` qui sert de clé
-        // de liaison avec le compte, il doit donc être le numéro réel.
-        addedBy: jidToPhone(update.authorPn ?? update.author),
-      });
-    } catch (error) {
-      console.error(
-        '[whatsapp] group-added handler error:',
-        error instanceof Error ? error.message : error,
-      );
+      // `addedBy` = l'owner du groupe (le créateur, qui nous a ajoutés).
+      // `group.owner` est un LID → on retrouve le participant correspondant
+      // pour récupérer son vrai numéro. Fallback : 1er participant non-central.
+      const owner = numbered.find((p) => p.id === group.owner);
+      const addedBy =
+        owner?.phone ??
+        numbered.find((p) => p.phone !== ourPhone)?.phone ??
+        null;
+
+      try {
+        await handler({
+          groupId: group.id,
+          groupName: group.subject ?? null,
+          addedBy,
+        });
+      } catch (error) {
+        console.error(
+          '[whatsapp] group-added handler error:',
+          error instanceof Error ? error.message : error,
+        );
+      }
     }
   });
 }
