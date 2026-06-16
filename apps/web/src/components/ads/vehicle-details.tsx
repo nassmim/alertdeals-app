@@ -1,4 +1,4 @@
-import { AdvancedAnalysisButton } from '@/components/ads/advanced-analysis-button';
+import { PriceAnalysisButton } from '@/components/ads/price-analysis/price-analysis-button';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,7 +23,6 @@ import {
   Tag,
   TagsIcon,
   TrendingDown,
-  TrendingUp,
   Users,
   Zap,
 } from 'lucide-react';
@@ -53,11 +52,8 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
 // la colonne droite est le centre de décision (prix / marge / actions),
 // la galerie + spécifications sont du contenu narratif.
 export function VehicleDetails({ ad }: Props) {
-  const medianPrice =
-    ad.priceMin != null && ad.priceMax != null
-      ? (ad.priceMin + ad.priceMax) / 2
-      : null;
-
+  // Bornes min/max affichées telles quelles : pas de calcul dérivé (médiane,
+  // marge moyenne…), une fourchette min–max ne s'agrège pas.
   const marginAmountRange = formatEuroRange(
     ad.marginAmountMin,
     ad.marginAmountMax,
@@ -69,7 +65,7 @@ export function VehicleDetails({ ad }: Props) {
 
   const priceRange =
     ad.priceMin != null && ad.priceMax != null && ad.priceMin !== ad.priceMax
-      ? `${eurosFormatter.format(ad.priceMin)} – ${eurosFormatter.format(ad.priceMax)}`
+      ? `${eurosFormatter.format(ad.priceMin)} / ${eurosFormatter.format(ad.priceMax)}`
       : null;
 
   // Galerie : on dédoublonne `picture` (image principale) au cas où elle
@@ -127,22 +123,6 @@ export function VehicleDetails({ ad }: Props) {
               <Badge variant="secondary">{ad.subtype.name}</Badge>
             )}
 
-            {/*
-              Stratégie : "Vise le prix" si l'ad est marquée low-price par
-              le worker, sinon "Vise la marge" par défaut. Code couleur :
-              vert = opportunité de marge, rouge = annonce à bas prix.
-            */}
-            {ad.isLowPrice ? (
-              <Badge variant="destructive" className="gap-1">
-                <TrendingDown className="size-3" />
-                Vise le prix
-              </Badge>
-            ) : (
-              <Badge className="gap-1 bg-emerald-600 text-white hover:bg-emerald-600">
-                <TrendingUp className="size-3" />
-                Vise la marge
-              </Badge>
-            )}
             {ad.hasBeenReposted && (
               <Badge variant="secondary" className="gap-1">
                 <Repeat className="size-3" />
@@ -433,12 +413,6 @@ export function VehicleDetails({ ad }: Props) {
                   label="Prix annonce"
                   value={eurosFormatter.format(ad.price)}
                 />
-                {medianPrice != null && (
-                  <AnalyseRow
-                    label="Prix marché médian"
-                    value={eurosFormatter.format(medianPrice)}
-                  />
-                )}
                 {priceRange && (
                   <AnalyseRow label="Fourchette marché" value={priceRange} />
                 )}
@@ -460,11 +434,11 @@ export function VehicleDetails({ ad }: Props) {
             </Card>
 
             {/*
-              CTAs empilés sous la card analyse. Primaire ambre = analyse
-              avancée (placeholder), outline = sortie vers LeBonCoin.
+              CTAs empilés sous la card analyse. Primaire = analyse tarifaire
+              avancée (ouvre la modale), outline = sortie vers LeBonCoin.
             */}
             <div className="space-y-2">
-              <AdvancedAnalysisButton />
+              <PriceAnalysisButton adId={ad.id} />
               <Button asChild variant="outline" className="w-full" size="lg">
                 <a href={ad.url} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="size-4" />
@@ -569,10 +543,12 @@ function buildGallery(picture: string | null, pictures: string[] | null): string
   return all;
 }
 
+// Affiche une fourchette "min / max" en euros. Si une seule borne existe (ou
+// si min === max), on renvoie la valeur unique. Aucune borne → null.
 function formatEuroRange(min: number | null, max: number | null): string | null {
   if (min == null && max == null) return null;
   if (min != null && max != null && min !== max)
-    return `${eurosFormatter.format(min)} – ${eurosFormatter.format(max)}`;
+    return `${eurosFormatter.format(min)} / ${eurosFormatter.format(max)}`;
   if (min != null) return eurosFormatter.format(min);
   return eurosFormatter.format(max!);
 }
@@ -582,7 +558,7 @@ function formatPercentRange(min: number | null, max: number | null): string | nu
   // Worker stocke des fractions (0.15 = 15%) — on convertit en % affichable.
   const toPercent = (v: number) => Math.round(v * 100);
   if (min != null && max != null && min !== max)
-    return `${toPercent(min)}% – ${toPercent(max)}%`;
+    return `${toPercent(min)}% / ${toPercent(max)}%`;
   if (min != null) return `${toPercent(min)}%`;
   return `${toPercent(max!)}%`;
 }

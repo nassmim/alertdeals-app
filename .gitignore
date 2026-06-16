@@ -20,3 +20,9 @@ supabase/.temp/
 packages/db/supabase/snippets/
 
 ClAUDE.md
+
+# MyTracks API sample response (local reference)
+mytracks-analyse-flex-sample.json
+
+# Claude Design output for advanced price analysis (visual reference only)
+analyse-avancee/
