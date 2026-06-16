@@ -86,6 +86,7 @@ const HotDealsPage = async ({ searchParams }: Props) => {
 
       {result.kind === 'OK' && result.ads.length > 0 && (
         <>
+          {/* Grille responsive 1/2/3 colonnes. */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {result.ads.map((ad, index) => {
               const isLocked =
