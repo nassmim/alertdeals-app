@@ -198,6 +198,7 @@ export function HotDealsFilters({
                 selectedIds={draft.brandIds}
                 onChange={handleBrandChange}
                 placeholder="Toutes les marques"
+                countLabel="marques choisies"
               />
             </div>
 
@@ -213,6 +214,7 @@ export function HotDealsFilters({
                     : 'Tous les modèles'
                 }
                 disabled={draft.brandIds.length === 0}
+                countLabel="modèles choisis"
               />
             </div>
 
@@ -225,6 +227,7 @@ export function HotDealsFilters({
                   setDraft((prev) => ({ ...prev, vehicleStateIds: ids }))
                 }
                 placeholder="Tous les états"
+                countLabel="états choisis"
               />
             </div>
 
