@@ -208,6 +208,7 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                         );
                       }}
                       placeholder="Toutes les marques"
+                      countLabel="marques choisies"
                     />
                   </FormControl>
                   <FormMessage />
@@ -232,6 +233,7 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                           ? "Sélectionnez d'abord une marque"
                           : 'Tous les modèles'
                       }
+                      countLabel="modèles choisis"
                     />
                   </FormControl>
                   <FormMessage />
