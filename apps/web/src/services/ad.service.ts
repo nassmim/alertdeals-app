@@ -35,6 +35,10 @@ async function getCachedRecentAds() {
       brand: true,
       vehicleModel: true,
       gearBox: true,
+      // `fuel` est utilisé dans la carte (specs inline : "Électrique",
+      // "Essence"…), on l'hydrate dès la liste pour ne pas devoir
+      // refetch côté carte.
+      fuel: true,
       location: true,
     },
   });
@@ -235,6 +239,9 @@ async function getCachedMatchingAdsPage(
       brand: true,
       vehicleModel: true,
       gearBox: true,
+      // Aligné sur `getCachedRecentAds` : la carte affiche le carburant
+      // dans les specs inline.
+      fuel: true,
       location: true,
     },
   });

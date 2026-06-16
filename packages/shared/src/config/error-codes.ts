@@ -24,6 +24,12 @@ export enum EAlertErrorCode {
 }
 export type TAlertErrorCode = EAlertErrorCode;
 
+export enum EPriceAnalysisErrorCode {
+  AD_NOT_FOUND = 'PRICE_ANALYSIS_AD_NOT_FOUND',
+  ANALYSIS_FAILED = 'PRICE_ANALYSIS_FAILED',
+}
+export type TPriceAnalysisErrorCode = EPriceAnalysisErrorCode;
+
 export enum ESettingsErrorCode {
   SETTINGS_SAVE_FAILED = 'SETTINGS_SAVE_FAILED',
 }
@@ -57,6 +63,7 @@ export type TErrorCode =
   | TAccountErrorCode
   | TSubscriptionErrorCode
   | TAlertErrorCode
+  | TPriceAnalysisErrorCode
   | TSettingsErrorCode
   | TAuthErrorCode
   | TWorkerErrorCode
