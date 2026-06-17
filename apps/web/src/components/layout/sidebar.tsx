@@ -11,7 +11,6 @@ import {
   LogOut,
   Menu,
   Settings,
-  User,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -23,7 +22,6 @@ const navItems = [
   { label: "Alertes", href: pages.alerts.list, icon: Bell },
   { label: "Réglages", href: pages.settings, icon: Settings },
   { label: "Abonnement", href: pages.subscription, icon: CreditCard },
-  { label: "Mon compte", href: pages.account, icon: User },
 ] as const;
 
 export const Sidebar = () => {
