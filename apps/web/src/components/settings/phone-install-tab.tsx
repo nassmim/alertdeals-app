@@ -1,8 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 // Onglet "Installation téléphone" du dashboard settings.
-// L'app mobile n'est pas encore dispo : on affiche un simple message d'attente,
-// pas de vidéo/tuto tant qu'il n'y a rien à installer.
 export function PhoneInstallTab() {
   return (
     <Card>
