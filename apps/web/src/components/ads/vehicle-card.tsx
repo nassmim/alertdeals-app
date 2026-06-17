@@ -1,9 +1,12 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { pages } from '@/config/routes';
-import { cn } from '@/lib/utils';
-import type { TAdWithRelations } from '@/services/ad.service';
+import { DealBadge } from "@/components/ads/deal-badge";
+import { MarginCallout } from "@/components/ads/margin-callout";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { pages } from "@/config/routes";
+import { cn } from "@/lib/utils";
+import type { TAdWithRelations } from "@/services/ad.service";
+import { getMarginPresentation } from "@/utils/margin.utils";
 import {
   CalendarClock,
   ExternalLink,
@@ -15,27 +18,26 @@ import {
   Repeat,
   Settings,
   Zap,
-} from 'lucide-react';
-import Link from 'next/link';
-import { DealBadge } from '@/components/ads/deal-badge';
+} from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   ad: TAdWithRelations;
   isLocked?: boolean;
 };
 
-const eurosFormatter = new Intl.NumberFormat('fr-FR', {
-  style: 'currency',
-  currency: 'EUR',
+const eurosFormatter = new Intl.NumberFormat("fr-FR", {
+  style: "currency",
+  currency: "EUR",
   maximumFractionDigits: 0,
 });
 
-const kmFormatter = new Intl.NumberFormat('fr-FR');
+const kmFormatter = new Intl.NumberFormat("fr-FR");
 
-const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
-  day: '2-digit',
-  month: 'short',
-  year: 'numeric',
+const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
 });
 
 // Carte annonce en grille (carte verticale dans une grille 2-3 colonnes).
@@ -123,12 +125,12 @@ function CardImage({ ad }: { ad: TAdWithRelations }) {
 
       {/* Badge source en overlay : marqueur visuel rapide d'où vient
           l'annonce. Emerald = "validé / source connue" (cf. design). */}
-      <div className="absolute left-2 top-2">
+      {/* <div className="absolute left-2 top-2">
         <Badge className="gap-1 border border-emerald-200/60 bg-emerald-50 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-900/40 dark:bg-emerald-950/60 dark:text-emerald-300">
           <ExternalLink className="size-3" />
           LeBonCoin
         </Badge>
-      </div>
+      </div> */}
 
       {/* Republiée : signal important côté business (= vendeur qui
           a re-poussé son annonce, possiblement parce qu'elle ne part
@@ -148,29 +150,17 @@ function CardImage({ ad }: { ad: TAdWithRelations }) {
 
 // Bloc prix + marge. C'est LE bloc qui doit accrocher l'œil — toute la
 // hiérarchie de la carte est construite autour. Prix en `text-primary`
-// (violet du thème) XL bold, marge en emerald juste en dessous.
+// (violet du thème) XL bold, puis l'encart marge partagé (MarginCallout)
+// dont la couleur dépend du signe des bornes (rouge/ambre/vert).
 function PriceBlock({ ad }: { ad: TAdWithRelations }) {
-  const marginAmount = formatEuroRange(ad.marginAmountMin, ad.marginAmountMax);
-  const marginPercent = formatPercentRange(
-    ad.marginPercentageMin,
-    ad.marginPercentageMax,
-  );
+  const margin = getMarginPresentation(ad);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-2">
       <div className="text-2xl font-bold leading-tight text-primary sm:text-3xl">
         {eurosFormatter.format(ad.price)}
       </div>
-      {marginAmount && (
-        <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-          Marge : {marginAmount}
-        </div>
-      )}
-      {marginPercent && (
-        <div className="text-xs text-emerald-600/80 dark:text-emerald-400/80">
-          {marginPercent}
-        </div>
-      )}
+      {margin && <MarginCallout presentation={margin} />}
     </div>
   );
 }
@@ -183,7 +173,10 @@ function InlineMeta({ ad }: { ad: TAdWithRelations }) {
   const items: Array<{ icon: React.ReactNode; label: string }> = [];
 
   if (ad.modelYear != null) {
-    items.push({ icon: <CalendarClock className="size-3.5" />, label: String(ad.modelYear) });
+    items.push({
+      icon: <CalendarClock className="size-3.5" />,
+      label: String(ad.modelYear),
+    });
   }
   if (ad.mileage != null) {
     items.push({
@@ -197,12 +190,18 @@ function InlineMeta({ ad }: { ad: TAdWithRelations }) {
     items.push({ icon: <Fuel className="size-3.5" />, label: ad.fuel.name });
   }
   if (ad.dinPower != null) {
-    items.push({ icon: <Zap className="size-3.5" />, label: `${ad.dinPower} ch` });
+    items.push({
+      icon: <Zap className="size-3.5" />,
+      label: `${ad.dinPower} ch`,
+    });
   }
   // Boîte en bonus si on a la place — laissée en dernier parce que c'est
   // l'info la moins discriminante du quatuor (année/km/carburant priment).
   if (ad.gearBox?.name) {
-    items.push({ icon: <Settings className="size-3.5" />, label: ad.gearBox.name });
+    items.push({
+      icon: <Settings className="size-3.5" />,
+      label: ad.gearBox.name,
+    });
   }
 
   if (items.length === 0) return null;
@@ -232,18 +231,14 @@ function StatePills({ ad }: { ad: TAdWithRelations }) {
           `goodDealName` (calculé par le worker). Ne s'affiche que si l'annonce
           est qualifiée comme une affaire. */}
       <DealBadge goodDealName={ad.goodDealName} variant="compact" />
-      {ad.brand?.name && (
-        <Badge variant="secondary">{ad.brand.name}</Badge>
-      )}
+      {ad.brand?.name && <Badge variant="secondary">{ad.brand.name}</Badge>}
       {ad.vehicleModel?.name && (
         <Badge variant="secondary">{ad.vehicleModel.name}</Badge>
       )}
       {daysOnline != null && (
         <Badge variant="secondary">{daysOnline} j en ligne</Badge>
       )}
-      {ad.isUrgent && (
-        <Badge variant="destructive">Urgent</Badge>
-      )}
+      {ad.isUrgent && <Badge variant="destructive">Urgent</Badge>}
     </div>
   );
 }
@@ -259,7 +254,7 @@ function CardFooterMeta({
   return (
     <div
       className={cn(
-        'flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground',
+        "flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground",
         className,
       )}
     >
@@ -292,7 +287,7 @@ function CardActions({
   className?: string;
 }) {
   return (
-    <div className={cn('flex flex-col gap-2', className)}>
+    <div className={cn("flex flex-col gap-2", className)}>
       <Button asChild className="w-full">
         <Link href={pages.hotDealDetails(ad.id)}>
           <Eye className="size-4" />
@@ -355,22 +350,4 @@ function computeDaysOnline(lastPublicationDate: string): number | null {
   if (Number.isNaN(ts)) return null;
   const diffMs = Date.now() - ts;
   return Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)));
-}
-
-function formatEuroRange(min: number | null, max: number | null): string | null {
-  if (min == null && max == null) return null;
-  if (min != null && max != null && min !== max)
-    return `${eurosFormatter.format(min)} – ${eurosFormatter.format(max)}`;
-  if (min != null) return eurosFormatter.format(min);
-  return eurosFormatter.format(max!);
-}
-
-function formatPercentRange(min: number | null, max: number | null): string | null {
-  if (min == null && max == null) return null;
-  // Worker stocke des fractions (0.15 = 15%) — on convertit en % affichable.
-  const toPercent = (v: number) => Math.round(v * 100);
-  if (min != null && max != null && min !== max)
-    return `${toPercent(min)}% – ${toPercent(max)}%`;
-  if (min != null) return `${toPercent(min)}%`;
-  return `${toPercent(max!)}%`;
 }

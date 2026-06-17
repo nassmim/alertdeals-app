@@ -1,15 +1,17 @@
-import { PriceAnalysisButton } from '@/components/ads/price-analysis/price-analysis-button';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { pages } from '@/config/routes';
-import type { TAdWithFullRelations } from '@/services/ad.service';
+import { MarginCallout } from "@/components/ads/margin-callout";
+import { PriceAnalysisButton } from "@/components/ads/price-analysis/price-analysis-button";
+import { VehicleGallery } from "@/components/ads/vehicle-gallery";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { pages } from "@/config/routes";
+import type { TAdWithFullRelations } from "@/services/ad.service";
+import { getMarginPresentation } from "@/utils/margin.utils";
 import {
   ArrowLeft,
   Award,
   Calendar,
   CalendarClock,
-  Car,
   ExternalLink,
   Fuel,
   Gauge,
@@ -25,25 +27,25 @@ import {
   TrendingDown,
   Users,
   Zap,
-} from 'lucide-react';
-import Link from 'next/link';
+} from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   ad: TAdWithFullRelations;
 };
 
-const eurosFormatter = new Intl.NumberFormat('fr-FR', {
-  style: 'currency',
-  currency: 'EUR',
+const eurosFormatter = new Intl.NumberFormat("fr-FR", {
+  style: "currency",
+  currency: "EUR",
   maximumFractionDigits: 0,
 });
 
-const kmFormatter = new Intl.NumberFormat('fr-FR');
+const kmFormatter = new Intl.NumberFormat("fr-FR");
 
-const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
-  day: '2-digit',
-  month: 'long',
-  year: 'numeric',
+const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
 });
 
 // Page détail "fiche d'analyse" : titre en chapeau, galerie à gauche,
@@ -52,16 +54,9 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
 // la colonne droite est le centre de décision (prix / marge / actions),
 // la galerie + spécifications sont du contenu narratif.
 export function VehicleDetails({ ad }: Props) {
-  // Bornes min/max affichées telles quelles : pas de calcul dérivé (médiane,
-  // marge moyenne…), une fourchette min–max ne s'agrège pas.
-  const marginAmountRange = formatEuroRange(
-    ad.marginAmountMin,
-    ad.marginAmountMax,
-  );
-  const marginPercentRange = formatPercentRange(
-    ad.marginPercentageMin,
-    ad.marginPercentageMax,
-  );
+  // Présentation marge centralisée (texte min/max explicite + niveau de
+  // couleur selon le signe des bornes), partagée avec la carte de la grille.
+  const margin = getMarginPresentation(ad);
 
   const priceRange =
     ad.priceMin != null && ad.priceMax != null && ad.priceMin !== ad.priceMax
@@ -104,21 +99,21 @@ export function VehicleDetails({ ad }: Props) {
             {/* Source : alertdeals scrape exclusivement LeBonCoin pour le
                 moment, mais on rend ce badge explicite pour la cohérence
                 avec la maquette (et au cas où d'autres sources arrivent). */}
-            <Badge
+            {/* <Badge
               variant="secondary"
               className="gap-1 border border-emerald-200/60 bg-emerald-50 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-900/40 dark:bg-emerald-950/40 dark:text-emerald-300"
             >
               <ExternalLink className="size-3" />
               Source : LeBonCoin
-            </Badge>
+            </Badge> */}
 
             {/* Catégorie LBC (type + sous-type). */}
-            {ad.type?.name && (
+            {/* {ad.type?.name && (
               <Badge variant="secondary" className="gap-1">
                 <Car className="size-3" />
                 {ad.type.name}
               </Badge>
-            )}
+            )} */}
             {ad.subtype?.name && (
               <Badge variant="secondary">{ad.subtype.name}</Badge>
             )}
@@ -160,19 +155,20 @@ export function VehicleDetails({ ad }: Props) {
               <span className="inline-flex items-center gap-1.5">
                 <MapPin className="size-4" />
                 {ad.location.name}
-                {ad.location.zipcode ? ` (${ad.location.zipcode})` : ''}
-                {ad.location.region ? ` · ${ad.location.region}` : ''}
+                {ad.location.zipcode ? ` (${ad.location.zipcode})` : ""}
+                {ad.location.region ? ` · ${ad.location.region}` : ""}
               </span>
             )}
             <span className="inline-flex items-center gap-1.5">
               <CalendarClock className="size-4" />
-              Publiée le {dateFormatter.format(new Date(ad.lastPublicationDate))}
+              Publiée le{" "}
+              {dateFormatter.format(new Date(ad.lastPublicationDate))}
             </span>
             {ad.initialPublicationDate &&
               ad.initialPublicationDate !== ad.lastPublicationDate && (
                 <span className="inline-flex items-center gap-1.5">
                   <Calendar className="size-4" />
-                  En ligne depuis le{' '}
+                  En ligne depuis le{" "}
                   {dateFormatter.format(new Date(ad.initialPublicationDate))}
                 </span>
               )}
@@ -183,58 +179,12 @@ export function VehicleDetails({ ad }: Props) {
           {/* COLONNE GAUCHE : galerie + description + caractéristiques + équipements + contact */}
           <div className="space-y-6">
             {/*
-              Galerie : image principale en grand avec un compteur "1 / N"
-              en overlay haut-droite (façon site marchand). Pas de carrousel
-              interactif pour rester en server component — c'est l'image
-              principale qu'on veut mettre en avant, les autres sont
-              accessibles via les miniatures.
+              Galerie : image active en grand avec un compteur "n / N" en
+              overlay haut-droite (façon site marchand). Cliquer sur une
+              miniature la met en avant — d'où le composant client dédié
+              (état local), le reste de la fiche restant server component.
             */}
-            {gallery.length > 0 && (
-              <div className="space-y-2">
-                <div className="relative overflow-hidden rounded-2xl border bg-muted shadow-sm">
-                  <img
-                    src={gallery[0]}
-                    alt={ad.title}
-                    className="aspect-[16/10] w-full object-cover transition duration-500 hover:scale-[1.02]"
-                  />
-                  {gallery.length > 1 && (
-                    <div className="absolute right-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
-                      1 / {gallery.length}
-                    </div>
-                  )}
-                </div>
-                {gallery.length > 1 && (
-                  <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8">
-                    {gallery.slice(1, 9).map((src, i) => (
-                      <div
-                        key={`${src}-${i}`}
-                        className="overflow-hidden rounded-lg border bg-muted shadow-sm"
-                      >
-                        <img
-                          src={src}
-                          alt={`${ad.title} — vue ${i + 2}`}
-                          className="aspect-square w-full object-cover transition duration-300 hover:scale-105"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Description complète, non tronquée. */}
-            {ad.description && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Description</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
-                    {ad.description}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
+            <VehicleGallery images={gallery} alt={ad.title} />
 
             {/*
               Caractéristiques : grille de tuiles "plates" (sans bordure
@@ -343,6 +293,20 @@ export function VehicleDetails({ ad }: Props) {
               </CardContent>
             </Card>
 
+            {/* Description complète, non tronquée. */}
+            {ad.description && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Description</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                    {ad.description}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Équipements + spécifications complémentaires si présents. */}
             {(ad.equipments || ad.otherSpecifications) && (
               <Card>
@@ -362,7 +326,9 @@ export function VehicleDetails({ ad }: Props) {
                   )}
                   {ad.otherSpecifications && (
                     <div>
-                      <h4 className="mb-1 font-medium">Autres spécifications</h4>
+                      <h4 className="mb-1 font-medium">
+                        Autres spécifications
+                      </h4>
                       <p className="whitespace-pre-line text-muted-foreground">
                         {ad.otherSpecifications}
                       </p>
@@ -379,11 +345,17 @@ export function VehicleDetails({ ad }: Props) {
                 <CardTitle className="text-lg">Contact</CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
-                <ContactRow icon={<Phone className="size-4" />} label="Téléphone">
-                  {ad.phoneNumber ?? 'Non renseigné'}
+                <ContactRow
+                  icon={<Phone className="size-4" />}
+                  label="Téléphone"
+                >
+                  {ad.phoneNumber ?? "Non renseigné"}
                 </ContactRow>
                 {ad.ownerName && (
-                  <ContactRow icon={<Users className="size-4" />} label="Vendeur">
+                  <ContactRow
+                    icon={<Users className="size-4" />}
+                    label="Vendeur"
+                  >
                     {ad.ownerName}
                   </ContactRow>
                 )}
@@ -405,9 +377,10 @@ export function VehicleDetails({ ad }: Props) {
               <CardContent className="space-y-2 text-sm">
                 {/*
                   Lignes paramètre / valeur, alignées à droite façon fiche
-                  comptable. Les deux lignes "Marge" sont mises en
-                  surbrillance verte parce qu'elles portent la valeur
-                  business — c'est elles qui justifient de cliquer.
+                  comptable. La marge est rendue via l'encart partagé
+                  (MarginCallout) : libellés "Marge min / Marge max" explicites
+                  et couleur selon le signe (rouge/ambre/vert), c'est elle qui
+                  porte la valeur business.
                 */}
                 <AnalyseRow
                   label="Prix annonce"
@@ -416,20 +389,7 @@ export function VehicleDetails({ ad }: Props) {
                 {priceRange && (
                   <AnalyseRow label="Fourchette marché" value={priceRange} />
                 )}
-                {marginAmountRange && (
-                  <AnalyseRow
-                    label="Marge potentielle"
-                    value={marginAmountRange}
-                    highlight
-                  />
-                )}
-                {marginPercentRange && (
-                  <AnalyseRow
-                    label="% de marge"
-                    value={marginPercentRange}
-                    highlight
-                  />
-                )}
+                {margin && <MarginCallout presentation={margin} />}
               </CardContent>
             </Card>
 
@@ -477,29 +437,14 @@ function FlatSpec({
 }
 
 // Ligne de la card "Analyse" : label à gauche (muted), valeur à droite
-// (bold). Quand `highlight` est vrai, on encadre dans une bande verte
-// pour signaler que la valeur porte la décision (marge potentielle).
+// (bold). La marge, elle, est rendue par MarginCallout (encart coloré).
 function AnalyseRow({
   label,
   value,
-  highlight = false,
 }: {
   label: string;
   value: React.ReactNode;
-  highlight?: boolean;
 }) {
-  if (highlight) {
-    return (
-      <div className="flex items-center justify-between rounded-md border border-emerald-200/60 bg-emerald-50/70 px-2.5 py-1.5 dark:border-emerald-900/40 dark:bg-emerald-950/30">
-        <span className="font-medium text-emerald-800 dark:text-emerald-300">
-          {label}
-        </span>
-        <span className="font-semibold text-emerald-800 dark:text-emerald-300">
-          {value}
-        </span>
-      </div>
-    );
-  }
   return (
     <div className="flex items-center justify-between px-2.5 py-1">
       <span className="text-muted-foreground">{label}</span>
@@ -532,7 +477,10 @@ function ContactRow({
 
 // Construit la liste finale d'images : image principale en tête, puis
 // les images additionnelles, sans doublons. Si tout est null on renvoie [].
-function buildGallery(picture: string | null, pictures: string[] | null): string[] {
+function buildGallery(
+  picture: string | null,
+  pictures: string[] | null,
+): string[] {
   const all: string[] = [];
   if (picture) all.push(picture);
   if (pictures) {
@@ -541,24 +489,4 @@ function buildGallery(picture: string | null, pictures: string[] | null): string
     }
   }
   return all;
-}
-
-// Affiche une fourchette "min / max" en euros. Si une seule borne existe (ou
-// si min === max), on renvoie la valeur unique. Aucune borne → null.
-function formatEuroRange(min: number | null, max: number | null): string | null {
-  if (min == null && max == null) return null;
-  if (min != null && max != null && min !== max)
-    return `${eurosFormatter.format(min)} / ${eurosFormatter.format(max)}`;
-  if (min != null) return eurosFormatter.format(min);
-  return eurosFormatter.format(max!);
-}
-
-function formatPercentRange(min: number | null, max: number | null): string | null {
-  if (min == null && max == null) return null;
-  // Worker stocke des fractions (0.15 = 15%) — on convertit en % affichable.
-  const toPercent = (v: number) => Math.round(v * 100);
-  if (min != null && max != null && min !== max)
-    return `${toPercent(min)}% / ${toPercent(max)}%`;
-  if (min != null) return `${toPercent(min)}%`;
-  return `${toPercent(max!)}%`;
 }
