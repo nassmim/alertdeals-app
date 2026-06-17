@@ -47,10 +47,13 @@ export function HotDealsPagination({ page, totalPages }: Props) {
             Précédent
           </Link>
         ) : (
-          <span>
+          // Fragment (pas <span>) : sans wrapper, l'icône et le texte sont
+          // enfants directs du <button> et héritent de son flex/gap, donc
+          // l'espacement reste identique à l'état actif (le <Link>).
+          <>
             <ChevronLeft className="size-4" />
             Précédent
-          </span>
+          </>
         )}
       </Button>
 
@@ -71,10 +74,12 @@ export function HotDealsPagination({ page, totalPages }: Props) {
             <ChevronRight className="size-4" />
           </Link>
         ) : (
-          <span>
+          // Idem : Fragment pour conserver l'espacement icône/texte à l'état
+          // désactivé, cohérent avec le bouton actif.
+          <>
             Suivant
             <ChevronRight className="size-4" />
-          </span>
+          </>
         )}
       </Button>
     </nav>
