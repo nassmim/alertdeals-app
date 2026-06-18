@@ -230,6 +230,11 @@ sender_name = "L'équipe AlertDeals"
 subject = "Tu as été invité à rejoindre AlertDeals"
 content_path = "./supabase/templates/invite.html"
 
+# Customize email template for email change confirmation
+[auth.email.template.email_change]
+subject = "Confirme ton changement d'email AlertDeals"
+content_path = "./supabase/templates/email-change.html"
+
 # Uncomment to customize notification email template
 # [auth.email.notification.password_changed]
 # enabled = true

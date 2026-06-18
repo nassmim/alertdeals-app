@@ -1,0 +1,23 @@
+<h2>AlertDeals — Confirme ton changement d'email</h2>
+
+<p>
+  Tu as demandé à modifier l'adresse email de ton compte AlertDeals. Suis ce
+  lien pour confirmer le changement :
+</p>
+
+<p>
+  <a
+    href="{{ .SiteURL }}/api/auth/callback?token_hash={{ .TokenHash }}&type=email_change&next=/dashboard/settings"
+    >Confirmer mon nouvel email</a
+  >
+</p>
+
+<p>
+  Si le bouton ne fonctionne pas, copie et colle ce lien dans ton navigateur:
+</p>
+<p>
+  {{ .SiteURL }}/api/auth/callback?token_hash={{ .TokenHash
+  }}&type=email_change&next=/dashboard/settings
+</p>
+
+<p>Si tu n'es pas à l'origine de cette demande, ignore cet email.</p>

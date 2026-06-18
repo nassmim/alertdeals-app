@@ -87,6 +87,11 @@ const AUTH_ERROR_MESSAGES: Record<EAuthErrorCode, string> = {
     'Impossible d’accéder à ton compte pour le moment. Réessaie dans quelques instants.',
   [EAuthErrorCode.USER_ALREADY_EXISTS]:
     'Un compte existe déjà avec cette adresse email.',
+  [EAuthErrorCode.EMAIL_INVALID]: "L'email ne semble pas valide.",
+  [EAuthErrorCode.EMAIL_UPDATE_FAILED]:
+    "Impossible de modifier ton email pour le moment. Réessaie plus tard.",
+  [EAuthErrorCode.EMAIL_UNCHANGED]:
+    "C'est déjà ton adresse email actuelle.",
 };
 
 const ERROR_MESSAGES: Record<TErrorCode, string> = {

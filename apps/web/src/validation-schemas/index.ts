@@ -1,3 +1,4 @@
+export * from './account.validation';
 export * from './admin.validation';
 export * from './alert.validation';
 export * from './auth.validation';
