@@ -1,26 +1,26 @@
-'use client';
+"use client";
 
 import {
   createBillingPortalSession,
   createCheckoutSession,
-} from '@/actions/subscription.actions';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { getErrorMessage } from '@/utils/error-messages.utils';
+} from "@/actions/subscription.actions";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { getErrorMessage } from "@/utils/error-messages.utils";
+import type { TPlan, TSubscription } from "@alertdeals/db";
 import {
   ACTIVE_SUBSCRIPTION_STATUSES,
   type TSubscriptionStatus,
-} from '@alertdeals/shared';
-import type { TPlan, TSubscription } from '@alertdeals/db';
+} from "@alertdeals/shared";
 import {
   ArrowRight,
   CalendarDays,
   Check,
   Loader2,
   Sparkles,
-} from 'lucide-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
+} from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 type Props = {
   subscription: TSubscription | null;
@@ -28,17 +28,29 @@ type Props = {
 };
 
 const STATUS_LABELS: Record<string, string> = {
-  active: 'Actif',
-  past_due: 'Paiement en retard',
-  canceled: 'Annulé',
+  active: "Actif",
+  past_due: "Paiement en retard",
+  canceled: "Annulé",
 };
 
 // Subtle tone per status — green for healthy, amber for past_due, slate for ended/other.
 // Slate also doubles as the fallback for any unmapped Stripe status code.
-const FALLBACK_TONE = { dot: 'bg-slate-400', text: 'text-slate-300', bg: 'bg-slate-500/10' };
+const FALLBACK_TONE = {
+  dot: "bg-slate-400",
+  text: "text-slate-300",
+  bg: "bg-slate-500/10",
+};
 const STATUS_TONES: Record<string, typeof FALLBACK_TONE> = {
-  active: { dot: 'bg-emerald-400', text: 'text-emerald-300', bg: 'bg-emerald-500/10' },
-  past_due: { dot: 'bg-amber-400', text: 'text-amber-300', bg: 'bg-amber-500/10' },
+  active: {
+    dot: "bg-emerald-400",
+    text: "text-emerald-300",
+    bg: "bg-emerald-500/10",
+  },
+  past_due: {
+    dot: "bg-amber-400",
+    text: "text-amber-300",
+    bg: "bg-amber-500/10",
+  },
   canceled: FALLBACK_TONE,
 };
 
@@ -48,10 +60,10 @@ function formatAmount(amountInCents: number): string {
 }
 
 function formatDate(date: Date | string): string {
-  return new Date(date).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
+  return new Date(date).toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   });
 }
 
@@ -62,15 +74,19 @@ export function SubscriptionView({ subscription, plans }: Props) {
 
   // Default to "month" — most users land on the page expecting to see the monthly price first,
   // and the toggle lets them switch to "year" without changing the page hierarchy.
-  const [selectedInterval, setSelectedInterval] = useState<'month' | 'year'>('month');
+  const [selectedInterval, setSelectedInterval] = useState<"month" | "year">(
+    "month",
+  );
 
   // We render a single "pricing card" with a Mensuel/Annuel toggle when the user isn't subscribed.
   // Resolving each plan upfront keeps the toggle component free of `.find(...)` calls.
-  const monthlyPlan = plans.find((plan) => plan.interval === 'month');
-  const yearlyPlan = plans.find((plan) => plan.interval === 'year');
+  const monthlyPlan = plans.find((plan) => plan.interval === "month");
+  const yearlyPlan = plans.find((plan) => plan.interval === "year");
 
   const isActive = subscription
-    ? ACTIVE_SUBSCRIPTION_STATUSES.includes(subscription.status as TSubscriptionStatus)
+    ? ACTIVE_SUBSCRIPTION_STATUSES.includes(
+        subscription.status as TSubscriptionStatus,
+      )
     : false;
 
   // Look up the plan the user is subscribed to so we can display its name and price.
@@ -83,7 +99,7 @@ export function SubscriptionView({ subscription, plans }: Props) {
   const handleSubscribe = async (priceId: string) => {
     setLoadingAction(priceId);
     const result = await createCheckoutSession(priceId);
-    if ('error' in result) {
+    if ("error" in result) {
       toast.error(getErrorMessage(result.error));
       setLoadingAction(null);
       return;
@@ -96,9 +112,9 @@ export function SubscriptionView({ subscription, plans }: Props) {
   };
 
   const handleManage = async () => {
-    setLoadingAction('manage');
+    setLoadingAction("manage");
     const result = await createBillingPortalSession();
-    if ('error' in result) {
+    if ("error" in result) {
       toast.error(getErrorMessage(result.error));
       setLoadingAction(null);
       return;
@@ -128,13 +144,13 @@ export function SubscriptionView({ subscription, plans }: Props) {
                   </span>
                 </div>
                 <h2 className="text-2xl font-semibold text-slate-100">
-                  {currentPlan?.name ?? 'Abonnement'}
+                  {currentPlan?.name ?? "Abonnement"}
                 </h2>
                 {currentPlan && (
                   <p className="text-3xl font-bold text-slate-100">
                     {formatAmount(currentPlan.priceEur)}
                     <span className="ml-1 text-base font-normal text-slate-400">
-                      € / {currentPlan.interval === 'year' ? 'an' : 'mois'}
+                      € / {currentPlan.interval === "year" ? "an" : "mois"}
                     </span>
                   </p>
                 )}
@@ -148,7 +164,7 @@ export function SubscriptionView({ subscription, plans }: Props) {
             <div className="flex items-center gap-2 text-sm text-slate-400">
               <CalendarDays className="h-4 w-4" />
               <span>
-                Prochaine échéance le{' '}
+                Prochaine échéance le{" "}
                 <span className="text-slate-200">
                   {formatDate(subscription.currentPeriodEnd)}
                 </span>
@@ -160,7 +176,7 @@ export function SubscriptionView({ subscription, plans }: Props) {
               disabled={loadingAction !== null}
               className="mt-6 w-full sm:w-auto"
             >
-              {loadingAction === 'manage' ? (
+              {loadingAction === "manage" ? (
                 <span className="flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Chargement...
@@ -191,8 +207,8 @@ export function SubscriptionView({ subscription, plans }: Props) {
 function PricingCardWithToggle(props: {
   monthlyPlan: TPlan | undefined;
   yearlyPlan: TPlan | undefined;
-  selectedInterval: 'month' | 'year';
-  setSelectedInterval: (interval: 'month' | 'year') => void;
+  selectedInterval: "month" | "year";
+  setSelectedInterval: (interval: "month" | "year") => void;
   loadingAction: string | null;
   onSubscribe: (priceId: string) => void;
 }) {
@@ -205,7 +221,7 @@ function PricingCardWithToggle(props: {
     onSubscribe,
   } = props;
 
-  const selectedPlan = selectedInterval === 'month' ? monthlyPlan : yearlyPlan;
+  const selectedPlan = selectedInterval === "month" ? monthlyPlan : yearlyPlan;
 
   // Yearly "savings" badge — computed only if both intervals are configured.
   // Compares yearly to (monthly * 12) and shows the % discount, the standard
@@ -223,7 +239,11 @@ function PricingCardWithToggle(props: {
   // No plans synced yet (Stripe catalog empty or unreachable) — surface a neutral
   // message instead of an empty card, so QA / boss know it's a config issue not a bug.
   if (!monthlyPlan && !yearlyPlan) {
-    return <p className="text-sm text-slate-400">Aucun plan disponible pour le moment.</p>;
+    return (
+      <p className="text-sm text-slate-400">
+        Aucun plan disponible pour le moment.
+      </p>
+    );
   }
 
   return (
@@ -235,22 +255,22 @@ function PricingCardWithToggle(props: {
           <div className="inline-flex items-center gap-1 rounded-full border border-slate-700/60 bg-slate-900/80 p-1 shadow-lg shadow-black/20 backdrop-blur">
             <button
               type="button"
-              onClick={() => setSelectedInterval('month')}
+              onClick={() => setSelectedInterval("month")}
               className={`rounded-full px-5 py-2 text-sm font-medium transition-all ${
-                selectedInterval === 'month'
-                  ? 'bg-slate-100 text-slate-900 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                selectedInterval === "month"
+                  ? "bg-slate-100 text-slate-900 shadow-sm"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               Mensuel
             </button>
             <button
               type="button"
-              onClick={() => setSelectedInterval('year')}
+              onClick={() => setSelectedInterval("year")}
               className={`relative rounded-full px-5 py-2 text-sm font-medium transition-all ${
-                selectedInterval === 'year'
-                  ? 'bg-slate-100 text-slate-900 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                selectedInterval === "year"
+                  ? "bg-slate-100 text-slate-900 shadow-sm"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               Annuel
@@ -282,7 +302,9 @@ function PricingCardWithToggle(props: {
                   </span>
                 </div>
                 {selectedPlan.description && (
-                  <p className="text-sm text-slate-400">{selectedPlan.description}</p>
+                  <p className="text-sm text-slate-400">
+                    {selectedPlan.description}
+                  </p>
                 )}
               </div>
 
@@ -291,16 +313,19 @@ function PricingCardWithToggle(props: {
                   <span className="text-5xl font-bold tracking-tight text-slate-100">
                     {formatAmount(selectedPlan.priceEur)}
                   </span>
-                  <span className="text-2xl font-semibold text-slate-300">€</span>
+                  <span className="text-2xl font-semibold text-slate-300">
+                    €
+                  </span>
                   <span className="ml-1 text-base font-normal text-slate-400">
-                    / {selectedInterval === 'year' ? 'an' : 'mois'}
+                    / {selectedInterval === "year" ? "an" : "mois"}
                   </span>
                 </div>
                 {/* For the yearly plan, show the equivalent monthly rate — this is the
                     standard SaaS pricing cue that signals "annual is cheaper per month". */}
-                {selectedInterval === 'year' && (
+                {selectedInterval === "year" && (
                   <p className="mt-1 text-sm text-slate-400">
-                    soit {formatAmount(Math.round(selectedPlan.priceEur / 12))} € / mois
+                    soit {formatAmount(Math.round(selectedPlan.priceEur / 12))}{" "}
+                    € / mois
                   </p>
                 )}
               </div>
@@ -312,13 +337,25 @@ function PricingCardWithToggle(props: {
                   <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/15">
                     <Check className="h-3 w-3 text-emerald-400" />
                   </span>
-                  Accès complet à l&apos;application
+                  Alertes quotidiennes
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/15">
                     <Check className="h-3 w-3 text-emerald-400" />
                   </span>
-                  Alertes en temps réel
+                  Filtres de recherche exhaustifs
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/15">
+                    <Check className="h-3 w-3 text-emerald-400" />
+                  </span>
+                  Numéros de téléphone disponibles
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/15">
+                    <Check className="h-3 w-3 text-emerald-400" />
+                  </span>
+                  Analyses avancées des véhicules
                 </li>
               </ul>
 

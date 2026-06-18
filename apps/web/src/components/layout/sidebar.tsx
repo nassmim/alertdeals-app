@@ -126,7 +126,7 @@ export const Sidebar = ({ isAdmin = false }: { isAdmin?: boolean }) => {
             <p>
               Made by{" "}
               <a
-                href="https://nassim-dev.netlify.app"
+                href="https://nassim-dev.netlify.app/fr"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-slate-400 transition-colors hover:text-white"
