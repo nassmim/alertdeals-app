@@ -1,6 +1,8 @@
 import { getUserAccount } from '@/services/account.service';
+import { Loader2 } from 'lucide-react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import { AdminInviteForm } from './admin-invite-form';
 
 export const metadata: Metadata = {
@@ -8,7 +10,10 @@ export const metadata: Metadata = {
   description: 'Invite de nouveaux utilisateurs à rejoindre AlertDeals',
 };
 
-export default async function AdminPage() {
+// Le contrôle d'accès lit le compte (donc les cookies → donnée dynamique).
+// On l'isole dans un composant async sous <Suspense> pour ne pas bloquer le
+// rendu de toute la route hors boundary (exigence Next "uncached data").
+async function AdminPageContent() {
   const account = await getUserAccount({ columnsToKeep: { isAdmin: true } });
 
   // Hide the page entirely from non-admins
@@ -25,5 +30,20 @@ export default async function AdminPage() {
 
       <AdminInviteForm />
     </div>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center gap-2 py-20 text-sm text-slate-400">
+          <Loader2 className="size-5 animate-spin" />
+          Chargement…
+        </div>
+      }
+    >
+      <AdminPageContent />
+    </Suspense>
   );
 }
