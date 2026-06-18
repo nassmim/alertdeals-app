@@ -22,6 +22,7 @@ export const pages = {
   hotDealDetails: (adId: string) => `${DASHBOARD_PREFIX}/hot-deals/${adId}`,
   subscription: `${DASHBOARD_PREFIX}/subscription`,
   settings: `${DASHBOARD_PREFIX}/settings`,
+  admin: `${DASHBOARD_PREFIX}/admin`,
 
   // Alerts routes
   alerts: {

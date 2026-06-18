@@ -7,7 +7,8 @@ export const accounts = pgTable(
   {
     id: uuid().primaryKey(),
     email: varchar({ length: 320 }).notNull(),
-    confirmedByAdmin: boolean('confirmed_by_admin').default(false).notNull(),
+    confirmedByAdmin: boolean('confirmed_by_admin').default(true).notNull(),
+    isAdmin: boolean('is_admin').default(false).notNull(),
     isFirstConnexion: boolean('is_first_connexion').default(true).notNull(),
     // Trial state — every new account starts trial-eligible; the actual 3-day
     // countdown begins on the first alert creation (trialEndDate is set then).

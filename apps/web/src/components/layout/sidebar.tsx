@@ -11,6 +11,7 @@ import {
   LogOut,
   Menu,
   Settings,
+  Shield,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -24,10 +25,15 @@ const navItems = [
   { label: "Abonnement", href: pages.subscription, icon: CreditCard },
 ] as const;
 
-export const Sidebar = () => {
+export const Sidebar = ({ isAdmin = false }: { isAdmin?: boolean }) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [isSigningOut, startSignOut] = useTransition();
+
+  // Admins get an extra entry to invite new users; hidden for everyone else.
+  const items = isAdmin
+    ? [...navItems, { label: "Admin", href: pages.admin, icon: Shield }]
+    : navItems;
 
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
@@ -80,7 +86,7 @@ export const Sidebar = () => {
           </Link>
 
           <nav className="flex-1 space-y-1 p-3">
-            {navItems.map(({ label, href, icon: Icon }) => {
+            {items.map(({ label, href, icon: Icon }) => {
               const active = isActive(href);
               return (
                 <Link
