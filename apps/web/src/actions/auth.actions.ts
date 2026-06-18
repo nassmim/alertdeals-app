@@ -2,6 +2,7 @@
 
 import { apiRoutes, pages } from "@/config/routes";
 import { createClient } from "@/lib/supabase/server";
+import { handlePostAuth, type TPostAuthResult } from "@/services/auth.service";
 import { getSiteUrl } from "@/utils/get-site-url";
 import { magicLinkSchema } from "@/validation-schemas";
 import { EAuthErrorCode, EGeneralErrorCode } from "@alertdeals/shared";
@@ -69,4 +70,17 @@ export async function getUser() {
     data: { user },
   } = await supabase.auth.getUser();
   return user;
+}
+
+/**
+ * Runs the post-auth gate from the client implicit-flow confirm page.
+ *
+ * The session lives in cookies by the time this runs (the browser client wrote
+ * them via setSession), so handlePostAuth reads the user server-side and applies
+ * the SAME confirmedByAdmin gate as the auth callback route.
+ */
+export async function completeImplicitAuth(
+  next: string,
+): Promise<TPostAuthResult> {
+  return handlePostAuth(next);
 }

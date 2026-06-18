@@ -1,6 +1,6 @@
 import { pages } from "@/config/routes";
 import { createClient } from "@/lib/supabase/server";
-import { accounts, eq, getDBAdminClient } from "@alertdeals/db";
+import { handlePostAuth } from "@/services/auth.service";
 import { EAuthErrorCode } from "@alertdeals/shared";
 import { NextResponse } from "next/server";
 
@@ -33,34 +33,13 @@ function redirectToLogin(origin: string, code: EAuthErrorCode) {
 }
 
 async function handleAuthSuccess(origin: string): Promise<NextResponse> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Shared gate (also used by the implicit/hash flow via completeImplicitAuth):
+  // account exists + confirmedByAdmin, signs out on failure.
+  const result = await handlePostAuth(pages.hotDeals);
 
-  if (!user) return redirectToLogin(origin, EAuthErrorCode.AUTH_ERROR);
+  if (!result.ok) return redirectToLogin(origin, result.error);
 
-  const db = getDBAdminClient();
-  const account = await db.query.accounts.findFirst({
-    where: eq(accounts.id, user.id),
-    columns: {
-      id: true,
-      confirmedByAdmin: true,
-      isFirstConnexion: true,
-    },
-  });
-
-  if (!account) {
-    await supabase.auth.signOut();
-    return redirectToLogin(origin, EAuthErrorCode.ACCOUNT_FETCH_FAILED);
-  }
-
-  if (!account.confirmedByAdmin) {
-    await supabase.auth.signOut();
-    return redirectToLogin(origin, EAuthErrorCode.ACCOUNT_PENDING_VALIDATION);
-  }
-
-  return NextResponse.redirect(`${origin}${pages.hotDeals}`);
+  return NextResponse.redirect(`${origin}${result.next}`);
 }
 
 export async function GET(request: Request) {

@@ -1,0 +1,1 @@
+ALTER TABLE "accounts" ALTER COLUMN "confirmed_by_admin" SET DEFAULT true;

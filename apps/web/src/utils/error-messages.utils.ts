@@ -13,6 +13,7 @@ import {
 
 const GENERAL_ERROR_MESSAGES: Record<EGeneralErrorCode, string> = {
   [EGeneralErrorCode.UNAUTHORIZED]: 'Tu dois être connecté pour effectuer cette action.',
+  [EGeneralErrorCode.FORBIDDEN]: "Tu n'as pas les droits nécessaires pour effectuer cette action.",
   [EGeneralErrorCode.VALIDATION_FAILED]: 'Les informations saisies ne sont pas valides.',
   [EGeneralErrorCode.UNKNOWN_ERROR]:
     "Une erreur inattendue s'est produite. Réessaie plus tard.",
@@ -84,6 +85,8 @@ const AUTH_ERROR_MESSAGES: Record<EAuthErrorCode, string> = {
     'Ton compte est en attente de validation par notre équipe. Tu recevras un email dès qu’il sera prêt.',
   [EAuthErrorCode.ACCOUNT_FETCH_FAILED]:
     'Impossible d’accéder à ton compte pour le moment. Réessaie dans quelques instants.',
+  [EAuthErrorCode.USER_ALREADY_EXISTS]:
+    'Un compte existe déjà avec cette adresse email.',
 };
 
 const ERROR_MESSAGES: Record<TErrorCode, string> = {
