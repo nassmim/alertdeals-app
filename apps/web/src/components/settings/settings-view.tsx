@@ -1,26 +1,29 @@
 'use client';
 
+import { AccountTab } from '@/components/settings/account-tab';
 import { PhoneInstallTab } from '@/components/settings/phone-install-tab';
 import { WhatsappTab } from '@/components/settings/whatsapp-tab';
 import type { TAccountSettings } from '@/services/settings.service';
 import type { TDetectedWhatsappGroup } from '@/services/whatsapp-group.service';
 import { cn } from '@/lib/utils';
-import { MessageCircle, Smartphone } from 'lucide-react';
+import { MessageCircle, Smartphone, User } from 'lucide-react';
 import { useState } from 'react';
 
-type Tab = 'whatsapp' | 'phone-install';
+type Tab = 'whatsapp' | 'phone-install' | 'account';
 
 type Props = {
   settings: TAccountSettings;
   detectedGroups: TDetectedWhatsappGroup[];
+  currentEmail: string;
 };
 
 const TABS = [
   { id: 'whatsapp' as const, label: 'WhatsApp', icon: MessageCircle },
   { id: 'phone-install' as const, label: 'Installation téléphone', icon: Smartphone },
+  { id: 'account' as const, label: 'Compte', icon: User },
 ];
 
-export function SettingsView({ settings, detectedGroups }: Props) {
+export function SettingsView({ settings, detectedGroups, currentEmail }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>('whatsapp');
 
   return (
@@ -61,6 +64,7 @@ export function SettingsView({ settings, detectedGroups }: Props) {
           <WhatsappTab settings={settings} detectedGroups={detectedGroups} />
         )}
         {activeTab === 'phone-install' && <PhoneInstallTab />}
+        {activeTab === 'account' && <AccountTab currentEmail={currentEmail} />}
       </div>
     </div>
   );

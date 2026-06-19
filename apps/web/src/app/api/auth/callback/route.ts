@@ -57,16 +57,25 @@ export async function GET(request: Request) {
     );
   }
 
-  // Magic link / invite flow
+  // Magic link / invite / email change flow
   if (tokenHash && type) {
     const supabase = await createClient();
     const { error: verifyError } = await supabase.auth.verifyOtp({
       token_hash: tokenHash,
-      type: type as "email" | "invite" | "magiclink" | "recovery",
+      type: type as "email" | "invite" | "magiclink" | "recovery" | "email_change",
     });
 
     if (verifyError)
       return redirectToLogin(origin, mapAuthError(verifyError.message));
+
+    // Email change confirmation: the user already has an active session, so we
+    // must NOT run the post-auth gate (it is the first-login/invite gate and
+    // could sign the user out). Just bring them back to their settings page.
+    if (type === "email_change") {
+      return NextResponse.redirect(
+        `${origin}${pages.settings}?emailChanged=1`,
+      );
+    }
 
     return handleAuthSuccess(origin);
   }
