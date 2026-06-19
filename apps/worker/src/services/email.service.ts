@@ -1,4 +1,4 @@
-import { Resend } from 'resend';
+import { Resend } from "resend";
 
 // Lit une variable d'env et throw si manquante. Le helper renvoie `string`
 // (non-nullable) pour que TS propage le type dans les closures plus bas — un
@@ -14,24 +14,24 @@ function requireEnv(name: string): string {
 
 // URL publique du site, partagée avec le web via `.env` racine. En dev pointe
 // sur `http://localhost:5100`, en prod sur l'URL prod d'alertdeals.
-const SITE_URL = requireEnv('NEXT_PUBLIC_SITE_URL');
+const SITE_URL = requireEnv("NEXT_PUBLIC_SITE_URL");
 
 // Clé API Resend (côté boss, valeur transmise via secret manager).
-const RESEND_API_KEY = requireEnv('RESEND_API_KEY');
+const RESEND_API_KEY = requireEnv("RESEND_API_KEY");
 
 // Adresse "From" affichée au destinataire. Format Resend attendu :
 // `"L'équipe AlertDeals <hello@alertdeals.fr>"`. Le domaine doit être
 // vérifié sur Resend en prod ; en dev on utilise `onboarding@resend.dev`.
-const RESEND_FROM_EMAIL = requireEnv('RESEND_FROM_EMAIL');
+const NEXT_PUBLIC_EMAIL_SENDER = requireEnv("NEXT_PUBLIC_EMAIL_SENDER");
 
 // Route + query param qui filtre les hot-deals par alerte. Dupliqué ici parce
 // que le worker ne peut pas importer depuis @alertdeals/web (couplage interdit).
 // À garder synchro avec `HOT_DEALS_FILTER_PARAMS.alert` côté web.
-const HOT_DEALS_PATH = '/dashboard/hot-deals';
-const HOT_DEALS_ALERT_PARAM = 'alert';
+const HOT_DEALS_PATH = "/dashboard/hot-deals";
+const HOT_DEALS_ALERT_PARAM = "alert";
 
 // Sujet validé produit (cf. ticket "mail d'alerte simple").
-const EMAIL_SUBJECT = 'Ton alerte quotidienne';
+const EMAIL_SUBJECT = "Ton alerte quotidienne";
 
 // Client Resend partagé pour la durée de vie du worker. Lazy serait inutile
 // ici, on a déjà checké la clé au module-load.
@@ -59,7 +59,7 @@ export async function sendAlertMatchEmail(
 
   try {
     const result = await resend.emails.send({
-      from: RESEND_FROM_EMAIL,
+      from: NEXT_PUBLIC_EMAIL_SENDER,
       to,
       subject: EMAIL_SUBJECT,
       html: buildHtml({ alertName, newMatchesCount, hotDealsUrl }),
@@ -90,8 +90,10 @@ function buildHtml(args: {
   // Accord singulier/pluriel — copy validé dans le ticket, ne pas modifier
   // sans validation produit.
   const isPlural = newMatchesCount > 1;
-  const opportunityWord = isPlural ? 'nouvelles opportunités' : 'nouvelle opportunité';
-  const verbWord = isPlural ? 'viennent' : 'vient';
+  const opportunityWord = isPlural
+    ? "nouvelles opportunités"
+    : "nouvelle opportunité";
+  const verbWord = isPlural ? "viennent" : "vient";
 
   return `
 <!doctype html>
@@ -125,9 +127,9 @@ function buildHtml(args: {
 // ni ouvrir une porte d'injection HTML.
 function escapeHtml(input: string): string {
   return input
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }

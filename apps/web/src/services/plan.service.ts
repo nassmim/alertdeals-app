@@ -1,5 +1,4 @@
-import { createDrizzleSupabaseClient } from '@/lib/db';
-import { asc, plans, type TPlan } from '@alertdeals/db';
+import { asc, getDBAdminClient, plans, type TPlan } from "@alertdeals/db";
 
 export type { TPlan };
 
@@ -11,12 +10,10 @@ export type { TPlan };
  * RLS allows any authenticated user to read this table.
  */
 export async function getMainPlans(): Promise<TPlan[]> {
-  const db = await createDrizzleSupabaseClient();
+  const db = getDBAdminClient();
 
-  return db.rls((tx) =>
-    tx.query.plans.findMany({
-      where: (table, { eq }) => eq(table.isActive, true),
-      orderBy: asc(plans.sortOrder),
-    }),
-  );
+  return db.query.plans.findMany({
+    where: (table, { eq }) => eq(table.isActive, true),
+    orderBy: asc(plans.sortOrder),
+  });
 }
