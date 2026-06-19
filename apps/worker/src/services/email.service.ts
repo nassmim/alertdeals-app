@@ -22,7 +22,7 @@ const RESEND_API_KEY = requireEnv("RESEND_API_KEY");
 // Adresse "From" affichée au destinataire. Format Resend attendu :
 // `"L'équipe AlertDeals <hello@alertdeals.fr>"`. Le domaine doit être
 // vérifié sur Resend en prod ; en dev on utilise `onboarding@resend.dev`.
-const NEXT_PUBLIC_SENDER_NAME = requireEnv("NEXT_PUBLIC_SENDER_NAME");
+const NEXT_PUBLIC_EMAIL_SENDER = requireEnv("NEXT_PUBLIC_EMAIL_SENDER");
 
 // Route + query param qui filtre les hot-deals par alerte. Dupliqué ici parce
 // que le worker ne peut pas importer depuis @alertdeals/web (couplage interdit).
@@ -59,7 +59,7 @@ export async function sendAlertMatchEmail(
 
   try {
     const result = await resend.emails.send({
-      from: NEXT_PUBLIC_SENDER_NAME,
+      from: NEXT_PUBLIC_EMAIL_SENDER,
       to,
       subject: EMAIL_SUBJECT,
       html: buildHtml({ alertName, newMatchesCount, hotDealsUrl }),
