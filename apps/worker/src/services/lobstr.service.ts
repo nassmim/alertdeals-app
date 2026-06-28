@@ -11,17 +11,22 @@ import {
   TAdInsert,
   TAdReferenceData,
   vehicleModels as vehicleModelsTable,
-} from '@alertdeals/db';
-import { EAdGoodDeal, parsePhoneNumberWithError } from '@alertdeals/shared';
-import { customParseInt } from '../utils/general.utils.js';
-import { fetchAllReferenceData } from './ad.service.js';
+} from "@alertdeals/db";
+import { EAdGoodDeal, parsePhoneNumberWithError } from "@alertdeals/shared";
+import { customParseInt } from "../utils/general.utils.js";
+import { fetchAllReferenceData } from "./ad.service.js";
 
-const LOBSTR_PLATFORM_FIELD = 'lobstrValue' as const;
+const LOBSTR_PLATFORM_FIELD = "lobstrValue" as const;
 
 // Build the `set` payload for upserts: every column except id/createdAt/originalAdId
 // is overwritten with the incoming row's value (`excluded.<col>` in Postgres).
 const allColumns = getTableColumns(adsTable);
-const { id: _id, createdAt: _createdAt, originalAdId: _origId, ...columnsToUpdate } = allColumns;
+const {
+  id: _id,
+  createdAt: _createdAt,
+  originalAdId: _origId,
+  ...columnsToUpdate
+} = allColumns;
 
 const setAdUpdateOnConflict = Object.fromEntries(
   Object.entries(columnsToUpdate).map(([key, column]) => [
@@ -64,17 +69,17 @@ type TAdFromLobstr = {
     Carburant: string;
     Kilométrage: string;
     Équipements: string;
-    'Puissance DIN': string;
-    'Année modèle': string;
-    'Nombre de portes': string;
-    'Boîte de vitesse': string;
+    "Puissance DIN": string;
+    "Année modèle": string;
+    "Nombre de portes": string;
+    "Boîte de vitesse": string;
     Caractéristiques: string;
-    'Puissance fiscale': string;
-    'Type de véhicule': string;
-    'Nombre de place(s)': string;
-    'Date de première mise en circulation': string;
-    'Date de fin de validité du contrôle technique': string;
-    'État du véhicule': string;
+    "Puissance fiscale": string;
+    "Type de véhicule": string;
+    "Nombre de place(s)": string;
+    "Date de première mise en circulation": string;
+    "Date de fin de validité du contrôle technique": string;
+    "État du véhicule": string;
     Cylindrée: string;
     Type: string;
   };
@@ -195,12 +200,15 @@ const saveAdsFromLobstr = async (runId: string): Promise<void> => {
   const adsToPersistPromise = await Promise.allSettled(getAdsData);
 
   // Drop any ad whose mapping rejected or produced no `typeId` (which is required).
-  const adsToPersist = adsToPersistPromise.reduce<TAdInsert[]>((listOfAds, adPromise) => {
-    if (adPromise.status === 'fulfilled' && !!adPromise.value?.typeId) {
-      listOfAds = listOfAds.concat(adPromise.value);
-    }
-    return listOfAds;
-  }, []);
+  const adsToPersist = adsToPersistPromise.reduce<TAdInsert[]>(
+    (listOfAds, adPromise) => {
+      if (adPromise.status === "fulfilled" && !!adPromise.value?.typeId) {
+        listOfAds = listOfAds.concat(adPromise.value);
+      }
+      return listOfAds;
+    },
+    [],
+  );
 
   if (adsToPersist.length === 0) {
     console.log(`[lobstr] run ${runId}: no valid ads to persist`);
@@ -215,18 +223,16 @@ const saveAdsFromLobstr = async (runId: string): Promise<void> => {
       set: setAdUpdateOnConflict,
     })
     .returning();
-
-  console.log(`[lobstr] run ${runId}: upserted ${adsToPersist.length} ads`);
 };
 
 const getResultsFromRun = async (runId: string): Promise<Response> => {
   return fetch(
     `https://api.lobstr.io/v1/results?cluster=${process.env.LOBSTR_CLUSTER}&run=${runId}&page=1&page_size=10000`,
     {
-      method: 'GET',
+      method: "GET",
       headers: {
         Authorization: `Token ${process.env.LOBSTR_API_KEY}`,
-        'Content-Type': 'application/json;charset=UTF-8',
+        "Content-Type": "application/json;charset=UTF-8",
       },
     },
   );
@@ -278,23 +284,25 @@ const getAdData = async (
     price: ad.price,
     url: ad.url,
     hasPhone: ad.phone ? true : false,
-    phoneNumber: ad.phone ? parsePhoneNumberWithError(ad.phone, 'FR')?.number : null,
+    phoneNumber: ad.phone
+      ? parsePhoneNumberWithError(ad.phone, "FR")?.number
+      : null,
     picture: ad.picture,
-    pictures: ad.pictures.split(','),
+    pictures: ad.pictures.split(","),
     initialPublicationDate: new Date(ad.first_publication_date).toDateString(),
     lastPublicationDate: new Date(ad.last_publication_date).toDateString(),
     ownerName: ad.owner_name,
     hasBeenBoosted: ad.is_boosted,
     isUrgent: ad.urgent,
-    modelYear: customParseInt(adDetails['Année modèle']),
+    modelYear: customParseInt(adDetails["Année modèle"]),
     dinPower: customParseInt(adMoreDetails.horse_power_din),
     entryYear: customParseInt(
-      adDetails['Date de première mise en circulation'].slice(-4),
+      adDetails["Date de première mise en circulation"].slice(-4),
     ),
     hasBeenReposted: ad.last_publication_date
       ? ad.first_publication_date !== ad.last_publication_date
       : false,
-    mileage: customParseInt(adDetails['Kilométrage']),
+    mileage: customParseInt(adDetails["Kilométrage"]),
     priceHasDropped: adMoreDetails.old_price
       ? ad.price < parseInt(adMoreDetails.old_price)
       : false,
@@ -308,34 +316,48 @@ const getAdData = async (
     equipments: adMoreDetails.vehicle_interior_specs || null,
     otherSpecifications: adMoreDetails.vehicle_specifications,
     technicalInspectionYear: customParseInt(
-      adDetails['Date de fin de validité du contrôle technique'],
+      adDetails["Date de fin de validité du contrôle technique"],
     ),
   };
 
   // FK lookups via reference Maps; brand/model auto-create if unseen.
   adData.typeId = referenceData.adTypes.get(ad.category_name) || 1;
-  adData.brandId = await resolveBrandId(db, referenceData, adDetails['Marque']);
+  adData.brandId = await resolveBrandId(db, referenceData, adDetails["Marque"]);
   adData.modelId = adData.brandId
-    ? await resolveModelId(db, referenceData, adMoreDetails.model, adData.brandId)
+    ? await resolveModelId(
+        db,
+        referenceData,
+        adMoreDetails.model,
+        adData.brandId,
+      )
     : null;
   adData.marketPositionId =
-    referenceData.marketPositions.get(adMoreDetails.car_price_positioning) || null;
+    referenceData.marketPositions.get(adMoreDetails.car_price_positioning) ||
+    null;
   adData.locationId = referenceData.zipcodes.get(ad.postal_code) || 1;
 
-  
   if (ad.region && adData.locationId) {
     await db
       .update(locationsTable)
       .set({ region: ad.region })
-      .where(and(eq(locationsTable.id, adData.locationId), isNull(locationsTable.region)));
+      .where(
+        and(
+          eq(locationsTable.id, adData.locationId),
+          isNull(locationsTable.region),
+        ),
+      );
   }
-  adData.gearBoxId = referenceData.gearBoxes.get(adDetails['Boîte de vitesse']) || null;
-  adData.drivingLicenceId = referenceData.drivingLicences.get(adDetails['Permis']) || 1;
+  adData.gearBoxId =
+    referenceData.gearBoxes.get(adDetails["Boîte de vitesse"]) || null;
+  adData.drivingLicenceId =
+    referenceData.drivingLicences.get(adDetails["Permis"]) || 1;
   adData.fuelId = referenceData.fuels.get(adMoreDetails.fuel) || null;
   adData.vehicleSeatsId =
-    referenceData.vehicleSeats.get(adDetails['Nombre de place(s)']) || null;
-  adData.vehicleStateId = referenceData.vehicleStates.get(adDetails['État du véhicule']) || 2;
-  adData.subtypeId = referenceData.adSubTypes.get(adDetails['Type de véhicule']) || null;
+    referenceData.vehicleSeats.get(adDetails["Nombre de place(s)"]) || null;
+  adData.vehicleStateId =
+    referenceData.vehicleStates.get(adDetails["État du véhicule"]) || 2;
+  adData.subtypeId =
+    referenceData.adSubTypes.get(adDetails["Type de véhicule"]) || null;
 
   // Good-deal classification: trust Lobstr's positioning, but also flag VERY_GOOD when
   // the ad is priced at <= 85% of the market floor (catches deals Lobstr underrates).

@@ -3,12 +3,12 @@ import {
   eq,
   getDBAdminClient,
   matchedAds as matchedAdsTable,
-} from '@alertdeals/db';
-import { EAlertStatus } from '@alertdeals/shared';
-import { Job } from 'bullmq';
-import { expireTrials } from '../services/expire-trials.service.js';
-import { findMatchedAdIdsForAccount } from '../services/matching.service.js';
-import { dispatchAlertMatchNotifications } from '../services/notification.service.js';
+} from "@alertdeals/db";
+import { EAlertStatus } from "@alertdeals/shared";
+import { Job } from "bullmq";
+import { expireTrials } from "../services/expire-trials.service.js";
+import { findMatchedAdIdsForAccount } from "../services/matching.service.js";
+import { dispatchAlertMatchNotifications } from "../services/notification.service.js";
 
 interface DailyOrchestratorJob {
   triggeredAt: string;
@@ -38,7 +38,11 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
   });
 
   if (activeAlerts.length === 0) {
-    return { matchedRows: 0, accountsProcessed: 0, durationMs: Date.now() - startTime };
+    return {
+      matchedRows: 0,
+      accountsProcessed: 0,
+      durationMs: Date.now() - startTime,
+    };
   }
 
   // Regroupement par compte pour matcher chaque user contre toutes ses alertes
@@ -65,7 +69,11 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
       // veut une seule row par (compte, ad), même si l'ad matche plusieurs alertes.
       // Le 1er alertId rencontré gagne, les autres sont ignorés.
       const seenAdIds = new Set<string>();
-      const rowsToInsert: { accountId: string; alertId: string; adId: string }[] = [];
+      const rowsToInsert: {
+        accountId: string;
+        alertId: string;
+        adId: string;
+      }[] = [];
       for (const { adId, alertId } of matches) {
         if (seenAdIds.has(adId)) continue;
         seenAdIds.add(adId);
@@ -81,7 +89,10 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
         .onConflictDoNothing({
           target: [matchedAdsTable.accountId, matchedAdsTable.adId],
         })
-        .returning({ id: matchedAdsTable.id, alertId: matchedAdsTable.alertId });
+        .returning({
+          id: matchedAdsTable.id,
+          alertId: matchedAdsTable.alertId,
+        });
 
       totalInserted += inserted.length;
       if (inserted.length === 0) continue;
@@ -106,18 +117,23 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
       for (const [alertId, newMatchesCount] of newMatchesByAlert) {
         const alert = alertsById.get(alertId);
         if (!alert) continue;
-        dispatchAlertMatchNotifications({ accountId, account, alert, newMatchesCount });
+        dispatchAlertMatchNotifications({
+          accountId,
+          account,
+          alert,
+          newMatchesCount,
+        });
         totalNotificationsDispatched += 1;
       }
     } catch (error) {
-      console.error(`[daily-orchestrator] failed for account ${accountId}`, error);
+      console.error(
+        `[daily-orchestrator] failed for account ${accountId}`,
+        error,
+      );
     }
   }
 
   const durationMs = Date.now() - startTime;
-  console.log(
-    `[daily-orchestrator] processed ${accountsProcessed} accounts, inserted ${totalInserted} new matches, dispatched ${totalNotificationsDispatched} notifications in ${durationMs}ms`,
-  );
 
   return {
     matchedRows: totalInserted,
