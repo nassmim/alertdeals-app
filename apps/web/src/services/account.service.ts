@@ -1,6 +1,10 @@
 import { createDrizzleSupabaseClient } from '@/lib/db';
 import { createClient } from '@/lib/supabase/server';
-import type { TAccount, TAccountSelectedKeys } from '@alertdeals/db';
+import {
+  getDBAdminClient,
+  type TAccount,
+  type TAccountSelectedKeys,
+} from '@alertdeals/db';
 import { EAccountErrorCode, EGeneralErrorCode } from '@alertdeals/shared';
 
 export async function getCurrentAccountId() {
@@ -29,4 +33,20 @@ export async function getUserAccount(
 
   if (!account) throw new Error(EAccountErrorCode.ACCOUNT_NOT_FOUND);
   return account;
+}
+
+export type TPendingAccount = Pick<TAccount, 'id' | 'email' | 'createdAt'>;
+
+/**
+ * Lists accounts still awaiting admin confirmation (self-signups).
+ * Reads other users' rows, so it bypasses RLS — caller must be a super-admin.
+ */
+export async function getPendingAccounts(): Promise<TPendingAccount[]> {
+  const db = getDBAdminClient();
+
+  return db.query.accounts.findMany({
+    columns: { id: true, email: true, createdAt: true },
+    where: (table, { eq }) => eq(table.confirmedByAdmin, false),
+    orderBy: (table, { asc }) => asc(table.createdAt),
+  });
 }
