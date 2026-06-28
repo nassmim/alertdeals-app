@@ -1,9 +1,11 @@
-import { getUserAccount } from '@/services/account.service';
+import { getPendingAccounts, getUserAccount } from '@/services/account.service';
+import { EAdminRole } from '@alertdeals/shared';
 import { Loader2 } from 'lucide-react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { AdminInviteForm } from './admin-invite-form';
+import { AdminPendingAccounts } from './admin-pending-accounts';
 
 export const metadata: Metadata = {
   title: 'Admin',
@@ -14,10 +16,13 @@ export const metadata: Metadata = {
 // On l'isole dans un composant async sous <Suspense> pour ne pas bloquer le
 // rendu de toute la route hors boundary (exigence Next "uncached data").
 async function AdminPageContent() {
-  const account = await getUserAccount({ columnsToKeep: { isAdmin: true } });
+  const account = await getUserAccount({ columnsToKeep: { adminRole: true } });
 
   // Hide the page entirely from non-admins
-  if (!account?.isAdmin) notFound();
+  if (!account?.adminRole) notFound();
+
+  const isSuperAdmin = account.adminRole === EAdminRole.SUPER_ADMIN;
+  const pendingAccounts = isSuperAdmin ? await getPendingAccounts() : [];
 
   return (
     <div className="mx-auto max-w-2xl space-y-8">
@@ -29,6 +34,8 @@ async function AdminPageContent() {
       </div>
 
       <AdminInviteForm />
+
+      {isSuperAdmin && <AdminPendingAccounts accounts={pendingAccounts} />}
     </div>
   );
 }
