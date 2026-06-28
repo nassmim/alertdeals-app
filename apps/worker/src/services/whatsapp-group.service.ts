@@ -1,5 +1,10 @@
-import { accounts, getDBAdminClient, sql, whatsappGroups } from '@alertdeals/db';
-import type { DetectedGroup } from '@alertdeals/whatsapp';
+import {
+  accounts,
+  getDBAdminClient,
+  sql,
+  whatsappGroups,
+} from "@alertdeals/db";
+import type { DetectedGroup } from "@alertdeals/whatsapp";
 
 /**
  * Persiste un groupe WhatsApp fraîchement détecté.
@@ -14,7 +19,10 @@ import type { DetectedGroup } from '@alertdeals/whatsapp';
  */
 export async function handleDetectedGroup(group: DetectedGroup): Promise<void> {
   if (!group.addedBy) {
-    console.warn('[whatsapp-group] groupe détecté sans auteur, ignoré', group.groupId);
+    console.warn(
+      "[whatsapp-group] groupe détecté sans auteur, ignoré",
+      group.groupId,
+    );
     return;
   }
 
@@ -52,8 +60,4 @@ export async function handleDetectedGroup(group: DetectedGroup): Promise<void> {
     .onConflictDoNothing({
       target: [whatsappGroups.accountId, whatsappGroups.groupId],
     });
-
-  console.log(
-    `[whatsapp-group] groupe ${group.groupId} rattaché au compte ${account.id}`,
-  );
 }

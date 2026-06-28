@@ -13,16 +13,10 @@ import {
   persistWhatsAppCredentials,
   QRConnectionResult,
   WhatsAppEventHandlers,
-} from '@alertdeals/whatsapp';
-import qrcodeTerminal from 'qrcode-terminal';
+} from "@alertdeals/whatsapp";
+import qrcodeTerminal from "qrcode-terminal";
 
 async function main() {
-  console.log('[pair] Initialisation du pairing WhatsApp…');
-  console.log(
-    '[pair] Sur ton téléphone : WhatsApp → Paramètres → Appareils connectés → Lier un appareil',
-  );
-  console.log('');
-
   // Référence remplie après le retour de createWhatsAppConnection. Les
   // handlers ferment par closure dessus, et ne se déclenchent qu'après
   // (les events Baileys sont émis de manière asynchrone).
@@ -30,12 +24,13 @@ async function main() {
 
   const handlers: WhatsAppEventHandlers = {
     onQRCode: (qr) => {
-      console.log('[pair] Scanne ce QR (expire dans 2 min) :');
       qrcodeTerminal.generate(qr, { small: true });
     },
     onConnected: async () => {
       if (!connection) {
-        console.error('[pair] onConnected déclenché avant que la connexion soit prête');
+        console.error(
+          "[pair] onConnected déclenché avant que la connexion soit prête",
+        );
         process.exit(1);
       }
       try {
@@ -44,23 +39,22 @@ async function main() {
         // pairing, et pas un état trop précoce.
         const state = connection.saveState();
         await persistWhatsAppCredentials(state);
-        console.log('[pair] ✓ Session sauvée. Tu peux maintenant lancer le worker.');
         connection.cleanup();
         process.exit(0);
       } catch (error) {
         console.error(
-          '[pair] Échec sauvegarde session :',
+          "[pair] Échec sauvegarde session :",
           error instanceof Error ? error.message : error,
         );
         process.exit(1);
       }
     },
     onDisconnected: (reason) => {
-      console.error('[pair] Déconnecté :', reason);
+      console.error("[pair] Déconnecté :", reason);
       process.exit(1);
     },
     onError: (error) => {
-      console.error('[pair] Erreur :', error);
+      console.error("[pair] Erreur :", error);
       process.exit(1);
     },
   };
@@ -72,6 +66,9 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error('[pair] Fatal :', error instanceof Error ? error.message : error);
+  console.error(
+    "[pair] Fatal :",
+    error instanceof Error ? error.message : error,
+  );
   process.exit(1);
 });
