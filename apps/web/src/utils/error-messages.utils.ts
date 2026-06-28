@@ -15,6 +15,9 @@ const GENERAL_ERROR_MESSAGES: Record<EGeneralErrorCode, string> = {
   [EGeneralErrorCode.UNAUTHORIZED]: 'Tu dois être connecté pour effectuer cette action.',
   [EGeneralErrorCode.FORBIDDEN]: "Tu n'as pas les droits nécessaires pour effectuer cette action.",
   [EGeneralErrorCode.VALIDATION_FAILED]: 'Les informations saisies ne sont pas valides.',
+  [EGeneralErrorCode.NOT_FOUND]: "L'élément demandé est introuvable.",
+  [EGeneralErrorCode.DATABASE_ERROR]:
+    "Une erreur est survenue côté serveur. Réessaie plus tard.",
   [EGeneralErrorCode.UNKNOWN_ERROR]:
     "Une erreur inattendue s'est produite. Réessaie plus tard.",
 };

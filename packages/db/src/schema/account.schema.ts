@@ -1,14 +1,18 @@
+import { ADMIN_ROLE_VALUES } from '@alertdeals/shared';
 import { InferSelectModel, sql } from 'drizzle-orm';
-import { boolean, pgPolicy, pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { boolean, pgEnum, pgPolicy, pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 import { authenticatedRole, authUid } from 'drizzle-orm/supabase';
+
+// Platform-level admin roles (null = regular user, no admin rights)
+export const adminRole = pgEnum('admin_role', ADMIN_ROLE_VALUES);
 
 export const accounts = pgTable(
   'accounts',
   {
     id: uuid().primaryKey(),
     email: varchar({ length: 320 }).notNull(),
-    confirmedByAdmin: boolean('confirmed_by_admin').default(true).notNull(),
-    isAdmin: boolean('is_admin').default(false).notNull(),
+    confirmedByAdmin: boolean('confirmed_by_admin').default(false).notNull(),
+    adminRole: adminRole('admin_role'),
     isFirstConnexion: boolean('is_first_connexion').default(true).notNull(),
     // Trial state — every new account starts trial-eligible; the actual 3-day
     // countdown begins on the first alert creation (trialEndDate is set then).

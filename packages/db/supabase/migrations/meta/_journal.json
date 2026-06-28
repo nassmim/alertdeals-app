@@ -113,6 +113,20 @@
       "when": 1781821772882,
       "tag": "0015_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1782468488125,
+      "tag": "0016_change_user_creation_trigger",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1782667008963,
+      "tag": "0017_migration",
+      "breakpoints": true
     }
   ]
 }

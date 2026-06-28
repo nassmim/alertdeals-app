@@ -17,7 +17,7 @@ async function DashboardLayoutInner({ children }: { children: ReactNode }) {
       <div className="pointer-events-none absolute -top-32 -left-32 h-80 w-80 rounded-full bg-indigo-500/20 blur-3xl" />
       <div className="pointer-events-none absolute -right-32 -bottom-32 h-96 w-96 rounded-full bg-fuchsia-500/15 blur-3xl" />
 
-      <Sidebar isAdmin={account.isAdmin} />
+      <Sidebar isAdmin={Boolean(account.adminRole)} />
 
       <main className="relative md:pl-64">
         <TrialBanner status={trialStatus} />
