@@ -74,6 +74,10 @@ const WHATSAPP_ERROR_MESSAGES: Record<EWhatsAppErrorCode, string> = {
     "Le service WhatsApp n'est pas encore configuré. Contacte-nous.",
   [EWhatsAppErrorCode.SESSION_DECRYPT_FAILED]:
     "Erreur technique côté WhatsApp. Contacte-nous si le problème persiste.",
+  [EWhatsAppErrorCode.CONNECTION_FAILED]:
+    "La connexion à WhatsApp a échoué. Réessaie dans quelques instants.",
+  [EWhatsAppErrorCode.QR_GENERATION_FAILED]:
+    "Impossible de générer le QR code WhatsApp. Réessaie dans quelques instants.",
 };
 
 const AUTH_ERROR_MESSAGES: Record<EAuthErrorCode, string> = {

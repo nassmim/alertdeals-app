@@ -26,3 +26,6 @@ mytracks-analyse-flex-sample.json
 
 # Claude Design output for advanced price analysis (visual reference only)
 analyse-avancee/
+
+# Plans de travail (notes de reprise, non versionnées)
+.plan/

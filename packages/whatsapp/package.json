@@ -16,9 +16,11 @@
     "@whiskeysockets/baileys": "7.0.0-rc.9",
     "@hapi/boom": "^10.0.1",
     "@alertdeals/shared": "workspace:*",
-    "@alertdeals/db": "workspace:*"
+    "@alertdeals/db": "workspace:*",
+    "qrcode": "^1.5.4"
   },
   "devDependencies": {
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "@types/qrcode": "^1.5.5"
   }
 }
