@@ -1,4 +1,5 @@
 import { getPendingAccounts, getUserAccount } from '@/services/account.service';
+import { getWhatsappSessionStatus } from '@/services/whatsapp.service';
 import { EAdminRole } from '@alertdeals/shared';
 import { Loader2 } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -6,6 +7,7 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { AdminInviteForm } from './admin-invite-form';
 import { AdminPendingAccounts } from './admin-pending-accounts';
+import { WhatsAppConnectionCard } from './whatsapp-connection-card';
 
 export const metadata: Metadata = {
   title: 'Admin',
@@ -24,6 +26,10 @@ async function AdminPageContent() {
   const isSuperAdmin = account.adminRole === EAdminRole.SUPER_ADMIN;
   const pendingAccounts = isSuperAdmin ? await getPendingAccounts() : [];
 
+  // Statut de la session WhatsApp centrale (singleton) — sert d'état initial à
+  // la carte de connexion. Accessible à tout admin (pas seulement super-admin).
+  const whatsappStatus = await getWhatsappSessionStatus();
+
   return (
     <div className="mx-auto max-w-2xl space-y-8">
       <div>
@@ -36,6 +42,11 @@ async function AdminPageContent() {
       <AdminInviteForm />
 
       {isSuperAdmin && <AdminPendingAccounts accounts={pendingAccounts} />}
+
+      <WhatsAppConnectionCard
+        initialIsConnected={whatsappStatus.isConnected}
+        initialIsDisconnected={whatsappStatus.isDisconnected}
+      />
     </div>
   );
 }

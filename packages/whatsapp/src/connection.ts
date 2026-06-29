@@ -13,6 +13,7 @@ import makeWASocket, {
   initAuthCreds,
   SignalDataTypeMap,
 } from '@whiskeysockets/baileys';
+import * as QRCode from 'qrcode';
 import {
   ConnectionWaitResult,
   CredentialConnectionResult,
@@ -170,6 +171,21 @@ export const createDBAuthState = (
   };
 
   return { state, saveState, updateCreds };
+};
+
+/**
+ * Convertit le QR string brut émis par Baileys en data URL base64 (PNG),
+ * directement affichable dans un <img>/<Image>. Utilisé par le flow de pairing
+ * web (l'admin scanne depuis le navigateur) ; le CLI, lui, rend le QR en ASCII.
+ */
+export const generateQRCodeDataURL = async (
+  qrString: string,
+): Promise<string> => {
+  return QRCode.toDataURL(qrString, {
+    width: 256,
+    margin: 2,
+    color: { dark: '#000000', light: '#ffffff' },
+  });
 };
 
 /**
