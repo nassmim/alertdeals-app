@@ -22,7 +22,8 @@ app.get("/health", (_req: Request, res: Response) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
-// TODO: add auth middleware (Bearer token) before deploying — webhooks are public.
+// /cron et /whatsapp sont protégés par un Bearer secret (cf. routes/index.ts).
+// /webhooks reste public (appelé par des services externes sans notre secret).
 app.use("/", routes);
 
 (async () => {

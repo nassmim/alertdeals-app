@@ -48,6 +48,10 @@ export enum EWhatsAppErrorCode {
   MESSAGE_SEND_FAILED = 'MESSAGE_SEND_FAILED',
   SESSION_NOT_PAIRED = 'SESSION_NOT_PAIRED',
   SESSION_DECRYPT_FAILED = 'SESSION_DECRYPT_FAILED',
+  // Pairing web (page admin) : la connexion au compte WhatsApp a échoué ou le
+  // QR n'a pas pu être généré.
+  CONNECTION_FAILED = 'CONNECTION_FAILED',
+  QR_GENERATION_FAILED = 'QR_GENERATION_FAILED',
 }
 export type TWhatsAppErrorCode = EWhatsAppErrorCode;
 
