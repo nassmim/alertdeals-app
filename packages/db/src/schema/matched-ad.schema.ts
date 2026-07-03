@@ -18,7 +18,7 @@ export const matchedAds = pgTable(
   {
     id: uuid().defaultRandom().primaryKey(),
     accountId: uuid('account_id').notNull(),
-    alertId: uuid('alert_id').notNull(),
+    alertId: uuid('alert_id'),
     adId: uuid('ad_id').notNull(),
     matchedAt: timestamp('matched_at', { withTimezone: true })
       .notNull()
@@ -34,7 +34,7 @@ export const matchedAds = pgTable(
       columns: [table.alertId],
       foreignColumns: [alerts.id],
       name: 'matched_ad_alert_id_fk',
-    }).onDelete('cascade'),
+    }).onDelete('set null'),
     foreignKey({
       columns: [table.adId],
       foreignColumns: [ads.id],
