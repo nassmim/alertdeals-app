@@ -101,6 +101,10 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
       // (et pas une par match — sinon on spam le user).
       const newMatchesByAlert = new Map<string, number>();
       for (const row of inserted) {
+        // `alertId` est nullable en base (une matched_ad peut survivre à la
+        // suppression de son alerte via ON DELETE set null), mais ici on vient
+        // de l'insérer avec un alertId défini → on ignore le cas null par sûreté.
+        if (!row.alertId) continue;
         newMatchesByAlert.set(
           row.alertId,
           (newMatchesByAlert.get(row.alertId) ?? 0) + 1,
