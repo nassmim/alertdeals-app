@@ -18,6 +18,8 @@ export async function startAllWorkers(): Promise<Worker[]> {
     new Worker(QUEUE_NAMES.SCRAPING, scrapingWorker, {
       connection,
       ...RETRY_CONFIG.SCRAPING,
+      // 5 min — scraping fetches the Lobstr API then batch-upserts ads.
+      lockDuration: 300000,
     }),
     new Worker(QUEUE_NAMES.DAILY_ORCHESTRATOR, dailyOrchestratorWorker, {
       connection,

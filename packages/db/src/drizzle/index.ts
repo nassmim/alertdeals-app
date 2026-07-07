@@ -15,7 +15,14 @@ const globalForPostgres = globalThis as unknown as {
 };
 
 const postgresClient =
-  globalForPostgres.postgresClient ?? postgres(databaseUrl, { prepare: false });
+  globalForPostgres.postgresClient ??
+  postgres(databaseUrl, {
+    prepare: false,
+    // Close idle connections after 20s (postgres.js/Supabase recommendation
+    // behind a remote pooler): Supavisor and NAT silently drop idle TCP
+    // sockets, and reusing a dead socket makes queries hang forever.
+    idle_timeout: 20,
+  });
 
 if (process.env.NODE_ENV !== 'production') {
   globalForPostgres.postgresClient = postgresClient;
