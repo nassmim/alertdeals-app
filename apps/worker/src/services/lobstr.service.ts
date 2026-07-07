@@ -189,12 +189,27 @@ export const handleLobstrWebhook = async (runId: string): Promise<void> => {
 const saveAdsFromLobstr = async (runId: string): Promise<void> => {
   const db = getDBAdminClient();
 
+  console.log(`[lobstr] run ${runId}: fetching results from Lobstr API`);
   const fetchedResults = await getResultsFromRun(runId);
-  const results = (await fetchedResults.json()) as { data: TAdFromLobstr[] };
-  const ads: TAdFromLobstr[] = results.data;
+  if (!fetchedResults.ok) {
+    const body = await fetchedResults.text();
+    throw new Error(
+      `Lobstr results API returned ${fetchedResults.status} for run ${runId}: ${body}`,
+    );
+  }
+
+  const results = (await fetchedResults.json()) as { data?: TAdFromLobstr[] };
+  const ads = results.data;
+  if (!Array.isArray(ads)) {
+    throw new Error(
+      `Lobstr results API returned no "data" array for run ${runId}: ${JSON.stringify(results).slice(0, 500)}`,
+    );
+  }
+  console.log(`[lobstr] run ${runId}: ${ads.length} ads fetched`);
 
   // Load all lookup tables once into Maps for O(1) lookup during mapping.
   const referenceData = await fetchAllReferenceData(db, LOBSTR_PLATFORM_FIELD);
+  console.log(`[lobstr] run ${runId}: reference data loaded, mapping ads`);
 
   const getAdsData = ads.map((ad) => getAdData(db, ad, referenceData));
   const adsToPersistPromise = await Promise.allSettled(getAdsData);
@@ -215,14 +230,22 @@ const saveAdsFromLobstr = async (runId: string): Promise<void> => {
     return;
   }
 
-  await db
-    .insert(adsTable)
-    .values(adsToPersist)
-    .onConflictDoUpdate({
-      target: [adsTable.originalAdId],
-      set: setAdUpdateOnConflict,
-    })
-    .returning();
+  // Batch the upsert: a single INSERT with thousands of rows would exceed
+  // Postgres' 65534-parameter limit (~40 columns × rows) and blow up.
+  const BATCH_SIZE = 500;
+  for (let i = 0; i < adsToPersist.length; i += BATCH_SIZE) {
+    const batch = adsToPersist.slice(i, i + BATCH_SIZE);
+    await db
+      .insert(adsTable)
+      .values(batch)
+      .onConflictDoUpdate({
+        target: [adsTable.originalAdId],
+        set: setAdUpdateOnConflict,
+      });
+    console.log(
+      `[lobstr] run ${runId}: upserted ${Math.min(i + BATCH_SIZE, adsToPersist.length)}/${adsToPersist.length} ads`,
+    );
+  }
 };
 
 const getResultsFromRun = async (runId: string): Promise<Response> => {
@@ -234,6 +257,9 @@ const getResultsFromRun = async (runId: string): Promise<Response> => {
         Authorization: `Token ${process.env.LOBSTR_API_KEY}`,
         "Content-Type": "application/json;charset=UTF-8",
       },
+      // Hard cap: without it a slow-streaming response never times out and the
+      // BullMQ job stays "active" forever (undici resets its timer on each chunk).
+      signal: AbortSignal.timeout(120_000),
     },
   );
 };
