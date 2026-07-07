@@ -189,7 +189,6 @@ export const handleLobstrWebhook = async (runId: string): Promise<void> => {
 const saveAdsFromLobstr = async (runId: string): Promise<void> => {
   const db = getDBAdminClient();
 
-  console.log(`[lobstr] run ${runId}: fetching results from Lobstr API`);
   const fetchedResults = await getResultsFromRun(runId);
   if (!fetchedResults.ok) {
     const body = await fetchedResults.text();
@@ -205,11 +204,9 @@ const saveAdsFromLobstr = async (runId: string): Promise<void> => {
       `Lobstr results API returned no "data" array for run ${runId}: ${JSON.stringify(results).slice(0, 500)}`,
     );
   }
-  console.log(`[lobstr] run ${runId}: ${ads.length} ads fetched`);
 
   // Load all lookup tables once into Maps for O(1) lookup during mapping.
   const referenceData = await fetchAllReferenceData(db, LOBSTR_PLATFORM_FIELD);
-  console.log(`[lobstr] run ${runId}: reference data loaded, mapping ads`);
 
   const getAdsData = ads.map((ad) => getAdData(db, ad, referenceData));
   const adsToPersistPromise = await Promise.allSettled(getAdsData);
