@@ -55,6 +55,12 @@ export enum EWhatsAppErrorCode {
 }
 export type TWhatsAppErrorCode = EWhatsAppErrorCode;
 
+export enum EPushErrorCode {
+  SUBSCRIBE_FAILED = 'PUSH_SUBSCRIBE_FAILED',
+  UNSUBSCRIBE_FAILED = 'PUSH_UNSUBSCRIBE_FAILED',
+}
+export type TPushErrorCode = EPushErrorCode;
+
 export enum EAuthErrorCode {
   AUTH_ERROR = 'AUTH_ERROR',
   LINK_EXPIRED = 'LINK_EXPIRED',
@@ -78,4 +84,5 @@ export type TErrorCode =
   | TSettingsErrorCode
   | TAuthErrorCode
   | TWorkerErrorCode
-  | TWhatsAppErrorCode;
+  | TWhatsAppErrorCode
+  | TPushErrorCode;

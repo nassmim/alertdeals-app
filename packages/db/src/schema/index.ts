@@ -5,6 +5,7 @@ export * from './billing-customer.schema';
 export * from './matched-ad.schema';
 export * from './plan.schema';
 export * from './price-analysis.schema';
+export * from './push-subscription.schema';
 export * from './subscription.schema';
 export * from './whatsapp-group.schema';
 export * from './whatsapp-session.schema';

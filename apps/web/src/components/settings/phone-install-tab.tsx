@@ -2,13 +2,24 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { usePushSubscription } from '@/hooks/use-push-subscription';
 import { usePwaInstall } from '@/hooks/use-pwa-install';
-import { Check, Download, Share, Smartphone } from 'lucide-react';
+import { Bell, Check, Download, Share, Smartphone } from 'lucide-react';
 
-// Onglet "Installation téléphone" du dashboard settings : propose d'installer
-// AlertDeals en PWA sur l'appareil. Le parcours diffère selon la plateforme
-// (prompt natif Android/Chrome vs. ajout manuel iOS), d'où le hook dédié.
+// Onglet "Installation téléphone" du dashboard settings. Deux blocs distincts :
+//  1. installer AlertDeals en PWA (prompt natif Android vs. ajout manuel iOS),
+//  2. activer les notifications push sur l'appareil.
+// Sur iOS le push n'est possible qu'une fois l'app installée, d'où l'ordre.
 export function PhoneInstallTab() {
+  return (
+    <div className="space-y-6">
+      <InstallCard />
+      <NotificationsCard />
+    </div>
+  );
+}
+
+function InstallCard() {
   const { canPrompt, isIOS, isInstalled, promptInstall } = usePwaInstall();
 
   return (
@@ -30,7 +41,7 @@ export function PhoneInstallTab() {
           <>
             <p className="text-sm text-muted-foreground">
               Installe AlertDeals sur ton téléphone pour la lancer en plein écran
-              comme une vraie app et bientôt recevoir les notifications.
+              comme une vraie app et recevoir les notifications.
             </p>
 
             {canPrompt && (
@@ -61,6 +72,48 @@ export function PhoneInstallTab() {
                 Ouvre le menu de ton navigateur puis « Installer AlertDeals » pour
                 l'ajouter à ton appareil.
               </p>
+            )}
+          </>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function NotificationsCard() {
+  const { isSupported, isSubscribed, isBusy, enable, disable } = usePushSubscription();
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Bell className="h-5 w-5" />
+          Notifications push
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {!isSupported ? (
+          // Navigateur sans support (ou iOS pas encore installé en PWA).
+          <p className="text-sm text-muted-foreground">
+            Les notifications ne sont pas disponibles sur cet appareil. Sur iPhone,
+            installe d'abord l'app sur ton écran d'accueil.
+          </p>
+        ) : (
+          <>
+            <p className="text-sm text-muted-foreground">
+              Reçois une notification sur cet appareil dès qu'une nouvelle
+              opportunité correspond à tes alertes.
+            </p>
+
+            {isSubscribed ? (
+              <Button variant="outline" onClick={disable} disabled={isBusy}>
+                Désactiver les notifications
+              </Button>
+            ) : (
+              <Button onClick={enable} disabled={isBusy} className="gap-2">
+                <Bell className="h-4 w-4" />
+                Activer les notifications
+              </Button>
             )}
           </>
         )}
