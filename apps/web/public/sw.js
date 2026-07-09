@@ -2,6 +2,11 @@
 // puis ouvre la bonne page au clic. Fichier vanilla JS servi tel quel (pas de
 // build) : il tourne dans le scope navigateur, hors de l'app React.
 
+// Handler fetch minimal (passe-plat) : on ne fait pas de cache offline, mais sa
+// présence est requise par les critères d'installabilité de Chrome pour que le
+// bouton « Installer » soit proposé. On laisse le navigateur gérer la requête.
+self.addEventListener('fetch', () => {});
+
 // Réception d'un push : le worker envoie un payload JSON { title, body, url }.
 self.addEventListener('push', (event) => {
   let data = {};

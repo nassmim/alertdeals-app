@@ -1,3 +1,4 @@
+import { PwaSetup } from '@/components/pwa/pwa-setup';
 import { Toaster } from '@/components/ui/sonner';
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
@@ -24,6 +25,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
   <html lang="fr" className="dark">
     <body>
       {children}
+      <PwaSetup />
       <Toaster position="top-right" richColors />
     </body>
   </html>
