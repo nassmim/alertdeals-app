@@ -1,5 +1,5 @@
-import { eq, getDBAdminClient, pushSubscriptions } from '@alertdeals/db';
-import webpush from 'web-push';
+import { eq, getDBAdminClient, pushSubscriptions } from "@alertdeals/db";
+import webpush from "web-push";
 
 // Lit une variable d'env et throw si manquante (même helper que email.service).
 function requireEnv(name: string): string {
@@ -13,17 +13,17 @@ function requireEnv(name: string): string {
 // Clés VAPID : identifient AlertDeals auprès des services de push et signent
 // chaque envoi. La publique doit correspondre à NEXT_PUBLIC_VAPID_PUBLIC_KEY
 // côté web. VAPID_SUBJECT = contact (mailto:… ou URL) exigé par le protocole.
-const VAPID_PUBLIC_KEY = requireEnv('VAPID_PUBLIC_KEY');
-const VAPID_PRIVATE_KEY = requireEnv('VAPID_PRIVATE_KEY');
-const VAPID_SUBJECT = requireEnv('VAPID_SUBJECT');
-const SITE_URL = requireEnv('NEXT_PUBLIC_SITE_URL');
+const VAPID_PUBLIC_KEY = requireEnv("NEXT_PUBLIC_VAPID_PUBLIC_KEY");
+const VAPID_PRIVATE_KEY = requireEnv("VAPID_PRIVATE_KEY");
+const VAPID_SUBJECT = requireEnv("VAPID_SUBJECT");
+const SITE_URL = requireEnv("NEXT_PUBLIC_SITE_URL");
 
 webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
 
 // Route + query param qui filtre les hot-deals par alerte. Dupliqué comme dans
 // email.service (le worker ne peut pas importer depuis @alertdeals/web).
-const HOT_DEALS_PATH = '/dashboard/hot-deals';
-const HOT_DEALS_ALERT_PARAM = 'alert';
+const HOT_DEALS_PATH = "/dashboard/hot-deals";
+const HOT_DEALS_ALERT_PARAM = "alert";
 
 type TPushMatchPayload = {
   accountId: string;
@@ -61,9 +61,11 @@ export async function sendPushMatchNotification(
 
   const url = `${SITE_URL}${HOT_DEALS_PATH}?${HOT_DEALS_ALERT_PARAM}=${payload.alertId}`;
   const isPlural = payload.newMatchesCount > 1;
-  const opportunityWord = isPlural ? 'nouvelles opportunités' : 'nouvelle opportunité';
+  const opportunityWord = isPlural
+    ? "nouvelles opportunités"
+    : "nouvelle opportunité";
   const notification = JSON.stringify({
-    title: 'AlertDeals',
+    title: "AlertDeals",
     body: `${payload.newMatchesCount} ${opportunityWord} pour ton alerte "${payload.alertName}" !`,
     url,
   });
@@ -91,7 +93,9 @@ async function sendToOne(
     // de push → on le supprime pour ne plus le retenter.
     if (statusCode === 404 || statusCode === 410) {
       const db = getDBAdminClient();
-      await db.delete(pushSubscriptions).where(eq(pushSubscriptions.id, subscription.id));
+      await db
+        .delete(pushSubscriptions)
+        .where(eq(pushSubscriptions.id, subscription.id));
       return;
     }
     console.error(
