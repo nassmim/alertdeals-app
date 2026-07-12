@@ -4,6 +4,7 @@ import {
   EAuthErrorCode,
   EGeneralErrorCode,
   EPriceAnalysisErrorCode,
+  EPushErrorCode,
   ESettingsErrorCode,
   ESubscriptionErrorCode,
   EWhatsAppErrorCode,
@@ -80,6 +81,15 @@ const WHATSAPP_ERROR_MESSAGES: Record<EWhatsAppErrorCode, string> = {
     "Impossible de générer le QR code WhatsApp. Réessaie dans quelques instants.",
 };
 
+// Erreurs Push : activation/désactivation des notifications depuis l'onglet
+// "Installation téléphone" des settings.
+const PUSH_ERROR_MESSAGES: Record<EPushErrorCode, string> = {
+  [EPushErrorCode.SUBSCRIBE_FAILED]:
+    "Impossible d'activer les notifications sur cet appareil. Réessaie.",
+  [EPushErrorCode.UNSUBSCRIBE_FAILED]:
+    'Impossible de désactiver les notifications. Réessaie.',
+};
+
 const AUTH_ERROR_MESSAGES: Record<EAuthErrorCode, string> = {
   [EAuthErrorCode.AUTH_ERROR]:
     'La connexion a échoué. Réessaie ou contacte-nous si le problème persiste.',
@@ -110,6 +120,7 @@ const ERROR_MESSAGES: Record<TErrorCode, string> = {
   ...SETTINGS_ERROR_MESSAGES,
   ...WORKER_ERROR_MESSAGES,
   ...WHATSAPP_ERROR_MESSAGES,
+  ...PUSH_ERROR_MESSAGES,
   ...AUTH_ERROR_MESSAGES,
 };
 

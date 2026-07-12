@@ -1,11 +1,8 @@
 import type { TAccount, TAlert } from '@alertdeals/db';
 import { getWhatsAppJID, sendWhatsAppMessage } from '@alertdeals/whatsapp';
 import { sendAlertMatchEmail } from './email.service.js';
+import { sendPushMatchNotification } from './push.service.js';
 import { getWhatsAppSocket } from './whatsapp.service.js';
-
-// Préfixe visible dans la console pour repérer les notifs simulées (le canal
-// phone reste mocké ; email et WhatsApp sont réels).
-const MOCK_PREFIX = '[mock-notification]';
 
 type TNotificationPayload = {
   accountId: string;
@@ -75,13 +72,6 @@ export async function sendEmailMatchNotification(
   });
 }
 
-// Phone reste mocké — pas de provider branché pour ce canal.
-export function sendPhoneMatchNotification(payload: TNotificationPayload): void {
-  console.log(
-    `${MOCK_PREFIX} phone → account=${payload.accountId} :: ${buildMessage(payload)}`,
-  );
-}
-
 /**
  * Récupère le socket singleton (lazy connect
  * à la première utilisation), construit le JID depuis le numéro/groupe du
@@ -143,7 +133,11 @@ export function dispatchAlertMatchNotifications(args: {
     // notifs suivantes. Les erreurs sont loggées dans email.service.
     void sendEmailMatchNotification(payload, account.email);
   }
-  if (channels.phone) sendPhoneMatchNotification(payload);
+  if (channels.phone) {
+    // Canal "phone" = notifications push (Web Push). Fire-and-forget : les
+    // erreurs et la purge des abonnements morts sont gérées dans push.service.
+    void sendPushMatchNotification(payload);
+  }
 
   // WhatsApp n'est tenté que si le user a renseigné son numéro/groupe dans
   // les settings (sinon getWhatsAppJID renverrait un JID bidon).
