@@ -8,6 +8,7 @@ import { EAlertStatus } from "@alertdeals/shared";
 import { Job } from "bullmq";
 import { expireTrials } from "../services/expire-trials.service.js";
 import { findMatchedAdIdsForAccount } from "../services/matching.service.js";
+import { pauseUnsubscribedAlerts } from "../services/pause-unsubscribed-alerts.service.js";
 import { dispatchAlertMatchNotifications } from "../services/notification.service.js";
 
 interface DailyOrchestratorJob {
@@ -24,6 +25,17 @@ export async function dailyOrchestratorWorker(job: Job<DailyOrchestratorJob>) {
   if (expired.expiredAccounts > 0) {
     console.log(
       `[daily-orchestrator] expired ${expired.expiredAccounts} trials, paused ${expired.alertsPaused} alerts`,
+    );
+  }
+
+  // Defensive sweep AFTER trial expiry (so freshly-expired accounts are already
+  // isTrial=false) and BEFORE matching: pauses alerts of non-trial accounts whose
+  // subscription lapsed. Safety net for missed/failed Stripe webhooks and for
+  // `past_due` subscriptions that never emit a `deleted` event.
+  const unsubscribed = await pauseUnsubscribedAlerts(db);
+  if (unsubscribed.alertsPaused > 0) {
+    console.log(
+      `[daily-orchestrator] paused ${unsubscribed.alertsPaused} alerts across ${unsubscribed.accountsPaused} unsubscribed accounts`,
     );
   }
 
