@@ -58,8 +58,9 @@ const silentLogger = {
 // connexion juste après l'ouverture avec un 428 (connectionClosed) en boucle.
 // On la garde donc uniquement en FALLBACK : on tente d'abord la version la
 // plus récente via `fetchLatestBaileysVersion()`, et on retombe sur ce pin si
-// la récupération réseau échoue.
-const WA_PINNED_VERSION = [2, 3000, 1033893291] as [number, number, number];
+// la récupération réseau échoue. Pin rafraîchi en juillet 2026 (l'ancien,
+// 1033893291, avait expiré et cassait le pairing — cf. auto-prospect PR #159).
+const WA_PINNED_VERSION = [2, 3000, 1035194821] as [number, number, number];
 
 // Résout la version WhatsApp Web à annoncer : dernière version connue de
 // Baileys si dispo, sinon le pin de secours. Évite les déconnexions 428 dues
@@ -230,11 +231,24 @@ export const createWhatsAppConnection = async (
     if (qr) handlers.onQRCode(qr);
 
     if (connection === 'close') {
-      const statusCode = (lastDisconnect?.error as Boom)?.output?.statusCode;
+      const disconnectError = lastDisconnect?.error as Boom | undefined;
+      const statusCode = disconnectError?.output?.statusCode;
       // 515 = restartRequired : Baileys demande de ré-ouvrir le socket
       // post-pairing pour récupérer une session stable. C'est normal.
       const shouldReconnect =
         statusCode === DisconnectReason.restartRequired || statusCode === 515;
+
+      // Fermeture anormale : on logge le détail (status + payload WA), sinon
+      // impossible de diagnostiquer un rejet serveur (405/428…) — la connexion
+      // fermait avant le QR sans aucune trace exploitable.
+      if (!shouldReconnect) {
+        console.error('[whatsapp] connection closed', {
+          statusCode,
+          message: disconnectError?.message,
+          payload: disconnectError?.output?.payload,
+          data: disconnectError?.data,
+        });
+      }
 
       if (shouldReconnect && !isCleanedUp) {
         setTimeout(() => {
@@ -330,7 +344,19 @@ export const connectWithCredentials = async (
     }
 
     if (connection === 'close') {
-      const statusCode = (lastDisconnect?.error as Boom)?.output?.statusCode;
+      const disconnectError = lastDisconnect?.error as Boom | undefined;
+      const statusCode = disconnectError?.output?.statusCode;
+
+      // Même logique que le mode QR : toute fermeture hors restartRequired
+      // est anormale → on logge le détail pour diagnostic.
+      if (statusCode !== DisconnectReason.restartRequired) {
+        console.error('[whatsapp] credential connection closed', {
+          statusCode,
+          message: disconnectError?.message,
+          payload: disconnectError?.output?.payload,
+          data: disconnectError?.data,
+        });
+      }
 
       // Auto-reconnect 1× sur restartRequired — c'est normal après une
       // période d'inactivité du socket.

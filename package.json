@@ -6,6 +6,11 @@
   "engines": {
     "node": ">=20.11.0"
   },
+  "pnpm": {
+    "overrides": {
+      "whatsapp-rust-bridge": "0.5.5"
+    }
+  },
   "scripts": {
     "_with-env-dev": "dotenvx run -f .env -f .env.local -f .env.development.local --",
     "_with-env-prod": "dotenvx run -f .env -f .env.local -f .env.production.local --",
