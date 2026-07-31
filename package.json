@@ -39,6 +39,8 @@
     "db:push": "pnpm _with-env-dev bash -c 'if [[ \"$SUPABASE_DATABASE_URL\" != *127.0.0.1* ]]; then echo \"❌ db:push only works on local DB\"; exit 1; fi && pnpm --filter @alertdeals/db push'",
     "db:link:prod": "supabase --workdir packages/db link --project-ref lvehubngaygkfahvzthu",
     "db:push:prod": "pnpm db:link:prod && supabase --workdir packages/db db push",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
     "secrets:encrypt": "bash scripts/encrypt-secrets.sh",
     "encrypt:var": "bash scripts/encrypt-var.sh",
     "supabase:functions:serve": "pnpm _with-env-dev supabase --workdir packages/db functions serve"
