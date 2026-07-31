@@ -13,7 +13,7 @@
     "lint": "echo 'no lint configured'"
   },
   "dependencies": {
-    "@whiskeysockets/baileys": "7.0.0-rc.9",
+    "@whiskeysockets/baileys": "7.0.0-rc13",
     "@hapi/boom": "^10.0.1",
     "@alertdeals/shared": "workspace:*",
     "@alertdeals/db": "workspace:*",
