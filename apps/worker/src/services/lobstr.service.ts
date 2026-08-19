@@ -14,7 +14,10 @@ import {
 } from "@alertdeals/db";
 import { EAdGoodDeal, parsePhoneNumberWithError } from "@alertdeals/shared";
 import { customParseInt } from "../utils/general.utils.js";
-import { fetchAllReferenceData } from "./ad.service.js";
+import {
+  fetchAllReferenceData,
+  getVehicleModelLookupKey,
+} from "./ad.service.js";
 
 const LOBSTR_PLATFORM_FIELD = "lobstrValue" as const;
 
@@ -440,7 +443,10 @@ const resolveModelId = async (
 ): Promise<number | null> => {
   if (!lobstrValue) return null;
 
-  const existing = referenceData.vehicleModels.get(lobstrValue);
+  // Lookup scoped by brand: model names are not unique across brands
+  // (e.g. Peugeot 208 vs Ferrari 208)
+  const lookupKey = getVehicleModelLookupKey(brandId, lobstrValue);
+  const existing = referenceData.vehicleModels.get(lookupKey);
   if (existing) return existing;
 
   const [inserted] = await db
@@ -454,6 +460,6 @@ const resolveModelId = async (
 
   if (!inserted) throw new Error(`Failed to upsert model "${lobstrValue}"`);
 
-  referenceData.vehicleModels.set(lobstrValue, inserted.id);
+  referenceData.vehicleModels.set(lookupKey, inserted.id);
   return inserted.id;
 };
