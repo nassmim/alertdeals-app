@@ -309,7 +309,7 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
               name="locationId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Localisation</FormLabel>
+                  <FormLabel>Localisation *</FormLabel>
                   <LocationSearch
                     value={selectedLocation}
                     onChange={(location) => {
@@ -327,7 +327,7 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
               name="radiusInKm"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Périmètre (km)</FormLabel>
+                  <FormLabel>Périmètre (km) *</FormLabel>
                   <FormControl>
                     <Input type="number" min={0} onKeyDown={blockNegativeKeystroke} placeholder="50" {...field} value={field.value ?? ''} />
                   </FormControl>
