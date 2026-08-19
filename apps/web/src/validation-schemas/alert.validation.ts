@@ -9,6 +9,12 @@ const emptyToNull = (v: unknown) =>
 const optionalNumber = (schema: z.ZodTypeAny) =>
   z.preprocess(emptyToNull, schema.nullable());
 
+// Champ numérique obligatoire : accepte les mêmes entrées qu'`optionalNumber`
+// ('' devient null) mais rejette null avec un message dédié, pour que le form
+// affiche "requis" plutôt qu'une erreur de coercion générique.
+const requiredNumber = (schema: z.ZodTypeAny, message: string) =>
+  z.preprocess(emptyToNull, schema.nullable().refine((v) => v !== null, { message }));
+
 const notificationChannelsSchema = z.object({
   email: z.boolean(),
   phone: z.boolean(),
@@ -21,8 +27,14 @@ export const alertFormSchema = z
 
     brandIds: z.array(z.number().int().positive()).default([]),
     modelIds: z.array(z.number().int().positive()).default([]),
-    locationId: optionalNumber(z.coerce.number().int().positive()),
-    radiusInKm: optionalNumber(z.coerce.number().int().min(0).max(200)),
+    locationId: requiredNumber(
+      z.coerce.number().int().positive(),
+      'La localisation est requise',
+    ),
+    radiusInKm: requiredNumber(
+      z.coerce.number().int().min(0).max(200),
+      'Le périmètre est requis',
+    ),
     modelYearMin: optionalNumber(
       z.coerce
         .number()
