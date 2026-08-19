@@ -21,6 +21,16 @@ import {
 export type TPlatformValue = 'lobstrValue';
 
 /**
+ * Builds the lookup key for vehicle models.
+ * Model names are not unique across brands (e.g. Peugeot 208 vs Ferrari 208),
+ * so the lookup must be scoped by brand.
+ */
+export const getVehicleModelLookupKey = (
+  brandId: number,
+  platformValue: string,
+): string => `${brandId}:${platformValue}`;
+
+/**
  * Loads every lookup table once and returns Map<platformValue, id> for O(1) lookup
  * during ad ingestion. Called once per webhook batch.
  */
@@ -59,7 +69,10 @@ export const fetchAllReferenceData = async (
     adSubTypes: new Map(adSubTypesData.map((item) => [item[platformField] || '', item.id])),
     brands: new Map(brandsData.map((item) => [item[platformField] || '', item.id])),
     vehicleModels: new Map(
-      vehicleModelsData.map((item) => [item[platformField] || '', item.id]),
+      vehicleModelsData.map((item) => [
+        getVehicleModelLookupKey(item.brandId, item[platformField] || ''),
+        item.id,
+      ]),
     ),
     marketPositions: new Map(
       marketPositionsData.map((item) => [item[platformField] || '', item.id]),
