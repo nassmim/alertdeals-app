@@ -64,9 +64,11 @@ export async function sendPushMatchNotification(
   const opportunityWord = isPlural
     ? "nouvelles opportunités"
     : "nouvelle opportunité";
+  // Le nom de l'app est déjà affiché par l'OS/navigateur en en-tête de la notif
+  // ("via AlertDeals") : on met l'info utile dans le titre pour ne pas répéter.
   const notification = JSON.stringify({
-    title: "AlertDeals",
-    body: `${payload.newMatchesCount} ${opportunityWord} pour ton alerte "${payload.alertName}" !`,
+    title: `${payload.newMatchesCount} ${opportunityWord}`,
+    body: `Pour ton alerte "${payload.alertName}"`,
     url,
   });
 
