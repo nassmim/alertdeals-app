@@ -60,9 +60,22 @@ export function usePushSubscription(): TPushSubscriptionState {
 
     // Reflète l'état réel : un abonnement est-il déjà actif sur cet appareil ?
     // `ready` ne résout que si un SW est déjà enregistré (rien à faire sinon).
+    //
+    // L'abonnement navigateur peut exister SANS ligne en base (persistance qui
+    // a échoué lors d'un essai précédent, compte différent…) : l'UI dirait
+    // « activé » alors que le worker n'a aucun endpoint à notifier. On renvoie
+    // donc systématiquement l'abonnement au serveur (upsert idempotent) et on
+    // n'affiche « activé » que si la base est bien à jour.
     navigator.serviceWorker.ready
       .then((registration) => registration.pushManager.getSubscription())
-      .then((subscription) => setIsSubscribed(Boolean(subscription)))
+      .then(async (subscription) => {
+        if (!subscription) {
+          setIsSubscribed(false);
+          return;
+        }
+        const result = await subscribeToPush(subscription.toJSON());
+        setIsSubscribed('success' in result);
+      })
       .catch(() => {});
   }, []);
 
@@ -70,8 +83,11 @@ export function usePushSubscription(): TPushSubscriptionState {
     if (!isSupported || !VAPID_PUBLIC_KEY) return;
     setIsBusy(true);
     try {
-      const registration = await navigator.serviceWorker.register('/sw.js');
-
+      // La demande de permission doit être le PREMIER appel après le clic :
+      // Safari iOS (et Chrome Android en « prompt discret ») n'affichent la
+      // popup que si elle découle directement du geste utilisateur. Un `await`
+      // placé avant (ex. register du SW) consomme cette activation → la demande
+      // est refusée silencieusement.
       const permission = await Notification.requestPermission();
       if (permission !== 'granted') {
         toast.error(
@@ -79,6 +95,13 @@ export function usePushSubscription(): TPushSubscriptionState {
         );
         return;
       }
+
+      // Le SW est déjà enregistré au chargement (PwaSetup) ; on ré-enregistre
+      // par sécurité puis on attend `ready` : `pushManager.subscribe` exige un SW
+      // *actif*, or `register()` peut renvoyer une registration encore en cours
+      // d'installation (première visite mobile) → InvalidStateError.
+      await navigator.serviceWorker.register('/sw.js');
+      const registration = await navigator.serviceWorker.ready;
 
       const subscription = await registration.pushManager.subscribe({
         // Obligatoire : garantit qu'un push affiche toujours une notif visible.
@@ -94,7 +117,8 @@ export function usePushSubscription(): TPushSubscriptionState {
 
       setIsSubscribed(true);
       toast.success('Notifications activées sur cet appareil.');
-    } catch {
+    } catch (error) {
+      console.error('[push] subscribe failed', error);
       toast.error("Impossible d'activer les notifications sur cet appareil.");
     } finally {
       setIsBusy(false);
