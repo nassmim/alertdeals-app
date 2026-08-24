@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { pages } from "@/config/routes";
 import type { TAdWithFullRelations } from "@/services/ad.service";
 import { getMarginPresentation } from "@/utils/margin.utils";
+import { getAdSourceLabel } from "@alertdeals/shared";
 import {
   ArrowLeft,
   Award,
@@ -96,16 +97,14 @@ export function VehicleDetails({ ad }: Props) {
           </h1>
 
           <div className="flex flex-wrap items-center gap-1.5">
-            {/* Source : alertdeals scrape exclusivement LeBonCoin pour le
-                moment, mais on rend ce badge explicite pour la cohérence
-                avec la maquette (et au cas où d'autres sources arrivent). */}
-            {/* <Badge
+            {/* Source : d'où vient l'annonce (multi-plateformes). */}
+            <Badge
               variant="secondary"
               className="gap-1 border border-emerald-200/60 bg-emerald-50 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-900/40 dark:bg-emerald-950/40 dark:text-emerald-300"
             >
               <ExternalLink className="size-3" />
-              Source : LeBonCoin
-            </Badge> */}
+              Source : {getAdSourceLabel(ad.source)}
+            </Badge>
 
             {/* Catégorie LBC (type + sous-type). */}
             {/* {ad.type?.name && (
@@ -402,7 +401,7 @@ export function VehicleDetails({ ad }: Props) {
               <Button asChild variant="outline" className="w-full" size="lg">
                 <a href={ad.url} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="size-4" />
-                  Voir sur LeBonCoin
+                  Voir sur {getAdSourceLabel(ad.source)}
                 </a>
               </Button>
             </div>

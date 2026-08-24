@@ -61,6 +61,7 @@ export async function createAlert(data: unknown): Promise<TCreateAlertResult> {
         .values({
           accountId,
           name: validated.name ?? null,
+          sources: validated.sources,
           locationId: validated.locationId ?? null,
           radiusInKm: validated.radiusInKm ?? null,
           modelYearMin: validated.modelYearMin ?? null,
@@ -135,6 +136,7 @@ export async function updateAlert(
         .update(alerts)
         .set({
           name: validated.name ?? null,
+          sources: validated.sources,
           locationId: validated.locationId ?? null,
           radiusInKm: validated.radiusInKm ?? null,
           modelYearMin: validated.modelYearMin ?? null,
