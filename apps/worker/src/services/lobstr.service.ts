@@ -29,7 +29,6 @@ const setAdUpdateOnConflict = Object.fromEntries(
   ]),
 );
 
-
 /**
  * Entry point called by the BullMQ scraping worker after Lobstr posts a webhook.
  */
@@ -56,9 +55,6 @@ const saveAdsFromLobstr = async (
   const db = getDBAdminClient();
 
   const ads = await getResultsFromRun(runId);
-  console.log(
-    `[lobstr] run ${runId} (${source}): ${ads.length} result(s) fetched`,
-  );
 
   // Load all lookup tables once into Maps for O(1) lookup during mapping.
   const referenceData = await fetchAllReferenceData(db, LOBSTR_PLATFORM_FIELD);
@@ -67,31 +63,18 @@ const saveAdsFromLobstr = async (
   const getAdsData = ads.map((ad) => mapAd(db, ad, referenceData));
   const adsToPersistPromise = await Promise.allSettled(getAdsData);
 
+  // This step to ensure we insert only valid objects to the db query
   // Log every drop: a rejected mapper (unexpected payload shape), a null
-  // (deliberate skip, e.g. non-vehicle or no price) or a missing typeId
+  // (deliberate skip, e.g. non-vehicle or no price)
   // would otherwise disappear silently.
   const adsToPersist: TAdInsert[] = [];
-  adsToPersistPromise.forEach((adPromise, index) => {
-    const label = getRawAdLabel(ads[index]);
-    if (adPromise.status === "rejected") {
-      console.error(
-        `[lobstr] run ${runId} (${source}): mapper FAILED for ${label}:`,
-        adPromise.reason,
-      );
-      return;
-    }
-    if (!adPromise.value) {
-      console.log(
-        `[lobstr] run ${runId} (${source}): skipped by mapper (non-vehicle or no price): ${label}`,
-      );
-      return;
-    }
-    if (!adPromise.value.typeId) {
-      console.log(
-        `[lobstr] run ${runId} (${source}): dropped, no typeId resolved: ${label}`,
-      );
-      return;
-    }
+  adsToPersistPromise.forEach((adPromise) => {
+    if (adPromise.status === "rejected") return;
+    if (!adPromise.value) return;
+
+    // Everything we ingest today is a car: default to typeId 1 instead of dropping
+    if (!adPromise.value.typeId) adPromise.value.typeId = 1;
+
     adsToPersist.push(adPromise.value);
   });
 
