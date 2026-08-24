@@ -1,6 +1,7 @@
 import {
   ALERT_MODE_VALUES,
   ALERT_STATUS_VALUES,
+  DEFAULT_ALERT_SOURCES,
   EAlertStatus,
   TAlertNotificationChannels,
 } from '@alertdeals/shared';
@@ -22,7 +23,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { authenticatedRole, authUid } from 'drizzle-orm/supabase';
 import { accounts } from './account.schema';
-import { brands, locations, vehicleModels } from './ad.schema';
+import { adSource, brands, locations, vehicleModels } from './ad.schema';
 
 export const alertStatus = pgEnum('alert_status', ALERT_STATUS_VALUES);
 export const alertMode = pgEnum('alert_mode', ALERT_MODE_VALUES);
@@ -34,6 +35,8 @@ export const alerts = pgTable(
     accountId: uuid('account_id').notNull(),
     name: varchar({ length: 255 }),
     status: alertStatus().notNull().default(EAlertStatus.ACTIVE),
+    // Listing platforms this alert matches ads from
+    sources: adSource().array().notNull().default(DEFAULT_ALERT_SOURCES),
     locationId: integer('location_id').references(() => locations.id),
     radiusInKm: smallint('radius_in_km'),
     modelYearMin: smallint('model_year_min'),

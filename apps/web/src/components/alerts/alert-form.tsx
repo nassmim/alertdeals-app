@@ -21,7 +21,14 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { getErrorMessage } from '@/utils/error-messages.utils';
 import { alertFormSchema, type TAlertFormData } from '@/validation-schemas';
 import type { TBrand, TLocation, TVehicleModel } from '@alertdeals/db';
-import { ALERT_MODE_DEFINITIONS, EAlertMode } from '@alertdeals/shared';
+import {
+  AD_SOURCE_DEFINITIONS,
+  ALERT_MODE_DEFINITIONS,
+  DEFAULT_ALERT_SOURCES,
+  EAlertMode,
+  getAdSourceLabel,
+  getSourcesMissingFilter,
+} from '@alertdeals/shared';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
@@ -89,6 +96,7 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
     resolver: zodResolver(alertFormSchema),
     defaultValues: {
       name: alert?.name ?? '',
+      sources: alert?.sources ?? DEFAULT_ALERT_SOURCES,
       // Multi-select : une alerte peut cibler plusieurs marques et modèles.
       // Les valeurs viennent des tables de jointure `alert_brands` / `alert_models`,
       // on aplatit en simple liste d'IDs côté form.
@@ -114,6 +122,12 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
 
   const selectedBrandIds = useWatch({ control: form.control, name: 'brandIds' }) ?? [];
   const selectedMode = useWatch({ control: form.control, name: 'mode' });
+  const selectedSources = useWatch({ control: form.control, name: 'sources' }) ?? [];
+  // Margin mode needs a market estimate, which not every platform provides
+  const sourcesWithoutMargin =
+    selectedMode === EAlertMode.MARGIN_MIN
+      ? getSourcesMissingFilter('marginMin', selectedSources)
+      : [];
   // Local state to display the selected location's name/zipcode in the LocationSearch trigger.
   // The form only stores the locationId, which is what the server action expects.
   const [selectedLocation, setSelectedLocation] = useState<TLocation | null>(
@@ -177,6 +191,52 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
             </FormItem>
           )}
         />
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Plateformes</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <FormField
+              control={form.control}
+              name="sources"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div className="flex flex-wrap gap-4">
+                      {AD_SOURCE_DEFINITIONS.map((source) => {
+                        const values = field.value ?? [];
+                        const isSelected = values.includes(source.value);
+                        return (
+                          <label
+                            key={source.value}
+                            className="flex cursor-pointer items-center gap-2 text-sm"
+                          >
+                            <Checkbox
+                              checked={isSelected}
+                              onCheckedChange={(checked) =>
+                                field.onChange(
+                                  checked === true
+                                    ? [...values, source.value]
+                                    : values.filter((v) => v !== source.value),
+                                )
+                              }
+                            />
+                            {source.label}
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </FormControl>
+                  <FormDescription>
+                    Plateformes sur lesquelles cette alerte surveille les annonces.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
 
         <Card>
           <CardHeader>
@@ -435,6 +495,14 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                         value={field.value ?? ''}
                       />
                     </FormControl>
+                    {sourcesWithoutMargin.length > 0 && (
+                      <FormDescription className="text-amber-600">
+                        Le mode marge nécessite une estimation du marché :
+                        aucune annonce de{' '}
+                        {sourcesWithoutMargin.map(getAdSourceLabel).join(', ')}{' '}
+                        ne pourra matcher cette alerte.
+                      </FormDescription>
+                    )}
                     <FormMessage />
                   </FormItem>
                 )}

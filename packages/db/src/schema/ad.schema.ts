@@ -5,6 +5,8 @@ import {
   doublePrecision,
   index,
   integer,
+  jsonb,
+  pgEnum,
   pgPolicy,
   pgTable,
   real,
@@ -13,15 +15,33 @@ import {
   smallserial,
   text,
   unique,
+  uniqueIndex,
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
 import { authenticatedRole } from 'drizzle-orm/supabase';
+import { AD_SOURCE_VALUES, EAdSource } from '@alertdeals/shared';
+
+export const adSource = pgEnum('ad_source', AD_SOURCE_VALUES);
+
+/**
+ * Platform-agnostic comparison key for a reference name: accents stripped,
+ * uppercased, everything but A-Z0-9+ removed ("Mercedes-Benz" → "MERCEDESBENZ",
+ * "+" kept: Prius vs Prius+). Computed by Postgres so that every insert (seed,
+ * worker, scripts) gets it and the unique index makes spelling duplicates
+ * impossible. MUST stay in sync with `normalizeReferenceName` in @alertdeals/shared.
+ */
+const normalizedNameSql = (column: string) =>
+  sql.raw(
+    `upper(regexp_replace(translate(${column}, 'àâäáãåçéèêëíìîïñóòôöõúùûüýÿÀÂÄÁÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝ', 'aaaaaaceeeeiiiinooooouuuuyyAAAAAACEEEEIIIINOOOOOUUUUY'), '[^A-Za-z0-9+]', '', 'g'))`,
+  );
 
 export const ads = pgTable(
   'ads',
   {
     id: uuid().defaultRandom().primaryKey(),
+    // Listing platform the ad was scraped from (one Lobstr squid per source)
+    source: adSource().notNull().default(EAdSource.LEBONCOIN),
     typeId: smallint('type_id')
       .references(() => adTypes.id)
       .notNull(),
@@ -38,7 +58,8 @@ export const ads = pgTable(
     marketPositionId: smallint('market_position_id').references(() => marketPositions.id),
     fuelId: smallint('fuel_id').references(() => fuels.id),
     url: text().notNull(),
-    originalAdId: text('original_ad_id').notNull().unique(),
+    // Unique per source only: two platforms may reuse the same id
+    originalAdId: text('original_ad_id').notNull(),
     title: text().notNull(),
     description: text(),
     picture: text(),
@@ -69,8 +90,14 @@ export const ads = pgTable(
     otherSpecifications: text('other_specifications'),
     technicalInspectionYear: smallint('technical_inspection_year'),
     goodDealName: text('good_deal_name'),
+    // Raw platform values that found no match in our reference data
+    // (e.g. {"fuel":"Benzin"}). Null = everything mapped. Reviewed manually
+    // every week to grow the mappers' dictionaries.
+    unmappedValues: jsonb('unmapped_values').$type<Record<string, string>>(),
   },
   (table) => [
+    unique('ads_source_original_ad_id_key').on(table.source, table.originalAdId),
+    index('ads_source_idx').on(table.source),
     index("ads_brand_id_idx").on(table.brandId),
     index("ads_model_id_idx").on(table.modelId),
     index("ads_vehicle_state_id_idx").on(table.vehicleStateId),
@@ -247,10 +274,18 @@ export const brands = pgTable(
   {
     id: smallserial().primaryKey(),
     name: text().notNull().unique('brand_name_unique'),
+    normalizedName: text('normalized_name')
+      .notNull()
+      .generatedAlwaysAs(normalizedNameSql('name')),
     lbcValue: text('lbc_value'),
     lobstrValue: text('lobstr_value'),
+    // True when created automatically by an ingestion run (not curated):
+    // to be checked weekly for spelling variants of an existing brand
+    needsReview: boolean('needs_review').default(false).notNull(),
   },
-  () => [
+  (table) => [
+    uniqueIndex('brands_normalized_name_key').on(table.normalizedName),
+    index('brands_needs_review_idx').on(table.needsReview),
     pgPolicy('enable read for authenticated users', {
       as: 'permissive',
       for: 'select',
@@ -269,11 +304,21 @@ export const vehicleModels = pgTable(
       .references(() => brands.id)
       .notNull(),
     name: text().notNull(),
+    normalizedName: text('normalized_name')
+      .notNull()
+      .generatedAlwaysAs(normalizedNameSql('name')),
     lbcValue: text('lbc_value'),
     lobstrValue: text('lobstr_value'),
+    // Same as brands.needsReview
+    needsReview: boolean('needs_review').default(false).notNull(),
   },
   (table) => [
     unique('vehicle_model_brand_name_unique').on(table.brandId, table.name),
+    uniqueIndex('vehicle_models_brand_id_normalized_name_key').on(
+      table.brandId,
+      table.normalizedName,
+    ),
+    index('vehicle_models_needs_review_idx').on(table.needsReview),
     pgPolicy('enable read for authenticated users', {
       as: 'permissive',
       for: 'select',
@@ -369,7 +414,12 @@ export type TAdReferenceData = {
   adTypes: Map<string, number>;
   adSubTypes: Map<string, number>;
   brands: Map<string, number>;
+  // normalized_name → id, and id → name (for brand-scoped model aliases)
+  brandsByNormalizedName: Map<string, number>;
+  brandNamesById: Map<number, string>;
   vehicleModels: Map<string, number>;
+  // "brandId:normalized_name" → id
+  vehicleModelsByNormalizedName: Map<string, number>;
   marketPositions: Map<string, number>;
   zipcodes: Map<string, number>;
   gearBoxes: Map<string, number>;

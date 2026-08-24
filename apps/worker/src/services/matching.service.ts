@@ -13,7 +13,7 @@ import {
   type TAlertModel,
   type TLocation,
 } from '@alertdeals/db';
-import { EAlertMode } from '@alertdeals/shared';
+import { DEFAULT_ALERT_SOURCES, EAlertMode } from '@alertdeals/shared';
 
 // Depuis la PR multi-select, les marques/modèles d'une alerte vivent dans
 // des tables de jointure (`alertBrands`, `alertModels`) et non plus en
@@ -37,6 +37,10 @@ export async function findMatchedAdIdsForAccount(
 
   for (const alert of alertsForAccount) {
     const conditions: SQL[] = [];
+
+    // Listing platforms the user opted in for this alert
+    const alertSources = alert.sources?.length ? alert.sources : DEFAULT_ALERT_SOURCES;
+    conditions.push(inArray(ads.source, alertSources));
 
     // Marques/modèles : l'utilisateur peut en sélectionner plusieurs.
     // Si la liste est vide → pas de contrainte (alerte tous-modèles confondus),

@@ -68,9 +68,19 @@ export const fetchAllReferenceData = async (
     adTypes: new Map(adTypesData.map((item) => [item[platformField] || '', item.id])),
     adSubTypes: new Map(adSubTypesData.map((item) => [item[platformField] || '', item.id])),
     brands: new Map(brandsData.map((item) => [item[platformField] || '', item.id])),
+    brandsByNormalizedName: new Map(
+      brandsData.map((item) => [item.normalizedName, item.id]),
+    ),
+    brandNamesById: new Map(brandsData.map((item) => [item.id, item.name])),
     vehicleModels: new Map(
       vehicleModelsData.map((item) => [
         getVehicleModelLookupKey(item.brandId, item[platformField] || ''),
+        item.id,
+      ]),
+    ),
+    vehicleModelsByNormalizedName: new Map(
+      vehicleModelsData.map((item) => [
+        getVehicleModelLookupKey(item.brandId, item.normalizedName),
         item.id,
       ]),
     ),
