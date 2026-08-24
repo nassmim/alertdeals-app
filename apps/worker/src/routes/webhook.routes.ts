@@ -3,6 +3,7 @@
  */
 
 import { Request, Response, Router } from 'express';
+import { getSourceFromSquidId } from '../config/worker.config.js';
 import { scrapingQueue } from '../queues/index.js';
 
 const router: Router = Router();
@@ -14,15 +15,26 @@ const router: Router = Router();
  */
 router.post('/lobstr', async (req: Request, res: Response) => {
   try {
-    const { id: runId } = req.body;
+    const { id: runId, squid } = req.body;
 
     if (!runId) {
       return res.status(400).json({ error: 'runId is required' });
     }
 
+    // Each squid scrapes one listing platform: squid.id identifies the source
+    const squidId: string | undefined = squid?.id;
+    const source = getSourceFromSquidId(squidId);
+
+    if (!source) {
+      console.error(
+        `[webhook/lobstr] unknown squid ${squidId ?? '(none)'} (${squid?.name ?? '?'}), run ${runId}`,
+      );
+      return res.status(400).json({ error: 'Unknown squid' });
+    }
+
     const job = await scrapingQueue.add(
       `lobstr-run-${runId}`,
-      { runId },
+      { runId, source },
       // Stable jobId prevents duplicate processing if Lobstr retries the webhook.
       { jobId: `lobstr-${runId}` },
     );

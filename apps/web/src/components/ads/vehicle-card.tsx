@@ -7,6 +7,7 @@ import { pages } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import type { TAdWithRelations } from "@/services/ad.service";
 import { getMarginPresentation } from "@/utils/margin.utils";
+import { getAdSourceLabel } from "@alertdeals/shared";
 import {
   CalendarClock,
   ExternalLink,
@@ -125,12 +126,12 @@ function CardImage({ ad }: { ad: TAdWithRelations }) {
 
       {/* Badge source en overlay : marqueur visuel rapide d'où vient
           l'annonce. Emerald = "validé / source connue" (cf. design). */}
-      {/* <div className="absolute left-2 top-2">
+      <div className="absolute left-2 top-2">
         <Badge className="gap-1 border border-emerald-200/60 bg-emerald-50 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-900/40 dark:bg-emerald-950/60 dark:text-emerald-300">
           <ExternalLink className="size-3" />
-          LeBonCoin
+          {getAdSourceLabel(ad.source)}
         </Badge>
-      </div> */}
+      </div>
 
       {/* Republiée : signal important côté business (= vendeur qui
           a re-poussé son annonce, possiblement parce qu'elle ne part
@@ -274,7 +275,7 @@ function CardFooterMeta({
 
 // Deux CTAs empilés :
 //  - "Voir détails" (primaire) → page interne avec l'analyse complète.
-//  - "Voir sur LeBonCoin" (outline) → annonce d'origine, nouvel onglet.
+//  - "Voir sur <plateforme>" (outline) → annonce d'origine, nouvel onglet.
 // On stack (pas de flex-row) pour garder un alignement uniforme entre
 // cartes étroites en grille (côte à côte, le label LBC wrappe et casse
 // l'alignement). La page détail existe désormais sur main, on peut donc
@@ -297,7 +298,7 @@ function CardActions({
       <Button asChild variant="outline" className="w-full">
         <a href={ad.url} target="_blank" rel="noopener noreferrer">
           <ExternalLink className="size-4" />
-          Voir sur LeBonCoin
+          Voir sur {getAdSourceLabel(ad.source)}
         </a>
       </Button>
     </div>

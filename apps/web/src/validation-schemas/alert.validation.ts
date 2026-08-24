@@ -1,4 +1,8 @@
-import { ALERT_MODE_VALUES, EAlertMode } from '@alertdeals/shared';
+import {
+  AD_SOURCE_VALUES,
+  ALERT_MODE_VALUES,
+  EAlertMode,
+} from '@alertdeals/shared';
 import { z } from 'zod';
 
 const currentYear = new Date().getFullYear();
@@ -24,6 +28,11 @@ const notificationChannelsSchema = z.object({
 export const alertFormSchema = z
   .object({
     name: z.string().trim().min(1, "Le nom de l'alerte est requis").max(255),
+
+    // Listing platforms this alert matches ads from
+    sources: z
+      .array(z.enum(AD_SOURCE_VALUES))
+      .min(1, 'Sélectionnez au moins une plateforme'),
 
     brandIds: z.array(z.number().int().positive()).default([]),
     modelIds: z.array(z.number().int().positive()).default([]),

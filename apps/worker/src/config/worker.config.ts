@@ -3,6 +3,8 @@
  * Single source of truth for ingestion-related constants.
  */
 
+import { EAdSource, TAdSource } from '@alertdeals/shared';
+
 /**
  * Error Classification for Retry Logic
  *
@@ -29,3 +31,24 @@ export const RETRY_CONFIG = {
     },
   },
 } as const;
+
+/**
+ * Lobstr squids: one squid (scraper) per listing platform.
+ * The webhook gives us `squid.id`, which tells us where the ads come from.
+ */
+export const LOBSTR_SQUIDS: Record<TAdSource, () => string | undefined> = {
+  [EAdSource.LEBONCOIN]: () => process.env.LOBSTR_SQUID_LEBONCOIN,
+  [EAdSource.AUTOSCOUT24]: () => process.env.LOBSTR_SQUID_AUTOSCOUT24,
+  [EAdSource.LACENTRALE]: () => process.env.LOBSTR_SQUID_LACENTRALE,
+  [EAdSource.PARUVENDU]: () => process.env.LOBSTR_SQUID_PARUVENDU,
+};
+
+export const getSourceFromSquidId = (
+  squidId: string | undefined,
+): TAdSource | null => {
+  if (!squidId) return null;
+  const match = (
+    Object.entries(LOBSTR_SQUIDS) as [TAdSource, () => string | undefined][]
+  ).find(([, getSquidId]) => getSquidId() === squidId);
+  return match ? match[0] : null;
+};
