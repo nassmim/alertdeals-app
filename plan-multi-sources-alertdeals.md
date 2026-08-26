@@ -2,7 +2,7 @@
 
 ## Mission
 
-Répliquer sur AlertDeals (`/Users/nassim/Projets/AlertDeals/alertdeals-app`) le chantier multi-sources déjà **terminé et testé** sur auto-prospect (`/Users/nassim/Projets/auto-prospect/auto-prospect-app`, branche `feat/multi-sources`) : ingérer AutoScout24, LaCentrale et ParuVendu en plus de Leboncoin via les squids Lobstr.
+Répliquer sur AlertDeals (`/Users/nassim/Projets/One Month Ship/AlertDeals/alertdeals-app`) le chantier multi-sources déjà **terminé et testé** sur auto-prospect (`/Users/nassim/Projets/auto-prospect/auto-prospect-app`, branche `feat/multi-sources`) : ingérer AutoScout24, LaCentrale et ParuVendu en plus de Leboncoin via les squids Lobstr.
 
 **Différence de périmètre** : AlertDeals n'a **pas de prospection intégrée** → ne PAS répliquer tout ce qui touche au contact des annonces (orchestrateur quotidien, dédup par téléphone, priorité de contact entre sources, canaux/credits/templates, variable `{{plateforme}}`/`{{vendeur_nom}}`, warning LaCentrale "crédits vocaux"). Seule l'**ingestion + affichage** compte.
 
