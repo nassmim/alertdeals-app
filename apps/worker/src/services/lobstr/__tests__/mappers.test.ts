@@ -96,7 +96,10 @@ const makeReferenceData = (): TAdReferenceData =>
       ["5", 5],
       ["7 ou plus", 7],
     ]),
-    vehicleStates: new Map(),
+    vehicleStates: new Map([
+      ["Endommagé", 1],
+      ["Non endommagé", 2],
+    ]),
   });
 
 describe("parsePhone", () => {
@@ -252,6 +255,49 @@ describe("mapAutoScout24Ad", () => {
     );
     expect(fair?.goodDealName).toBeNull();
     expect(fair?.marketPositionId).toBe(3);
+  });
+
+  it("maps the damage flag to the vehicle state", async () => {
+    const damaged = await mapAutoScout24Ad(
+      makeDb(),
+      { ...ad, functions: { json_data: { vehicle: { isCurrentlyDamaged: true } } } },
+      makeReferenceData(),
+    );
+    expect(damaged?.vehicleStateId).toBe(1);
+
+    const undamaged = await mapAutoScout24Ad(
+      makeDb(),
+      { ...ad, functions: { json_data: { vehicle: { isCurrentlyDamaged: false } } } },
+      makeReferenceData(),
+    );
+    expect(undamaged?.vehicleStateId).toBe(2);
+
+    // Missing flag = not reported as damaged
+    const missing = await mapAutoScout24Ad(makeDb(), ad, makeReferenceData());
+    expect(missing?.vehicleStateId).toBe(2);
+  });
+
+  it("derives boosted and low price from the ad tier and price evaluation", async () => {
+    const boosted = await mapAutoScout24Ad(
+      makeDb(),
+      {
+        ...ad,
+        functions: { json_data: { adTier: "T20", price: { priceEvaluation: 2 } } },
+      },
+      makeReferenceData(),
+    );
+    expect(boosted).toMatchObject({ hasBeenBoosted: true, isLowPrice: true });
+
+    const base = await mapAutoScout24Ad(
+      makeDb(),
+      {
+        ...ad,
+        price_label: null,
+        functions: { json_data: { adTier: "T10", price: { priceEvaluation: 3 } } },
+      },
+      makeReferenceData(),
+    );
+    expect(base).toMatchObject({ hasBeenBoosted: false, isLowPrice: false });
   });
 
   it("skips listings without a price", async () => {

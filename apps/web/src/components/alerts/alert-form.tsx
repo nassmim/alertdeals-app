@@ -117,6 +117,7 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
       mode: alert?.mode ?? EAlertMode.PRICE_MAX,
       priceMax: alert?.priceMax ?? null,
       marginMinPercentage: alert?.marginMinPercentage ?? null,
+      excludeDamaged: alert?.excludeDamaged ?? true,
       notificationChannels: alert?.notificationChannels ?? {
         email: true,
         phone: false,
@@ -133,6 +134,11 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
     selectedMode === EAlertMode.MARGIN_MIN
       ? getSourcesMissingFilter('marginMin', selectedSources)
       : [];
+  const excludeDamaged = useWatch({ control: form.control, name: 'excludeDamaged' });
+  // The damage flag is not reported by every platform: their ads pass the filter
+  const sourcesWithoutVehicleState = excludeDamaged
+    ? getSourcesMissingFilter('vehicleState', selectedSources)
+    : [];
   // Local state to display the selected location's name/zipcode in the LocationSearch trigger.
   // The form only stores the locationId, which is what the server action expects.
   const [selectedLocation, setSelectedLocation] = useState<TLocation | null>(
@@ -410,6 +416,37 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                   <FormControl>
                     <Input type="number" min={0} onKeyDown={blockNegativeKeystroke} placeholder="3000" {...field} value={field.value ?? ''} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="excludeDamaged"
+              render={({ field }) => (
+                <FormItem className="space-y-2 md:col-span-2">
+                  <div className="flex flex-row items-center gap-3">
+                    <FormControl>
+                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                    <FormLabel className="cursor-pointer">
+                      Ignorer les véhicules endommagés
+                    </FormLabel>
+                  </div>
+                  <FormDescription className="ml-7">
+                    Une épave affichée à bas prix n&apos;est pas une bonne affaire.
+                    {sourcesWithoutVehicleState.length > 0 && (
+                      <>
+                        {' '}
+                        <span className="text-amber-600">
+                          {sourcesWithoutVehicleState.map(getAdSourceLabel).join(', ')}{' '}
+                          n&apos;indique pas l&apos;état du véhicule : ses annonces ne
+                          seront pas filtrées.
+                        </span>
+                      </>
+                    )}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
