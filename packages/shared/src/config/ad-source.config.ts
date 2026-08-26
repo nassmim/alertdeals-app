@@ -85,11 +85,13 @@ export const getAdSourceLabel = (source: TAdSource): string => {
  * used. Criteria absent from this map are supported by all sources.
  * - Margin mode needs an argus estimate: Leboncoin gives a price range,
  *   LaCentrale a single quotation; AutoScout24 and ParuVendu give nothing.
- * - Vehicle state only exists on Leboncoin.
+ * - Vehicle state: Leboncoin details it, AutoScout24 only reports whether the
+ *   car is currently damaged (enough to exclude wrecks); LaCentrale and
+ *   ParuVendu give nothing.
  */
 export const FILTER_SOURCE_AVAILABILITY = {
   marginMin: [EAdSource.LEBONCOIN, EAdSource.LACENTRALE],
-  vehicleState: [EAdSource.LEBONCOIN],
+  vehicleState: [EAdSource.LEBONCOIN, EAdSource.AUTOSCOUT24],
 } as const satisfies Record<string, readonly TAdSource[]>;
 
 export type TSourceRestrictedFilter = keyof typeof FILTER_SOURCE_AVAILABILITY;

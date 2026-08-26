@@ -3,6 +3,10 @@
  * Shared between the ingestion worker and the web UI.
  */
 
+// `vehicle_states` seed id of "Endommagé": the only state an alert filters on
+// (the other rows are condition levels of undamaged cars, not damage flags)
+export const DAMAGED_VEHICLE_STATE_ID = 1;
+
 export const AD_GOOD_DEAL_DEFINITIONS = [
   {
     key: 'VERY_GOOD',

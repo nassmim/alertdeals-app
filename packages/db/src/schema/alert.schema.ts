@@ -7,6 +7,7 @@ import {
 } from '@alertdeals/shared';
 import { InferInsertModel, InferSelectModel, relations, sql } from 'drizzle-orm';
 import {
+  boolean,
   foreignKey,
   index,
   integer,
@@ -47,6 +48,8 @@ export const alerts = pgTable(
     mode: alertMode().notNull(),
     priceMax: real('price_max'),
     marginMinPercentage: real('margin_min_percentage'),
+    // Skip wrecks: a very low price on a damaged car is not a deal
+    excludeDamaged: boolean('exclude_damaged').notNull().default(true),
     notificationChannels: jsonb('notification_channels')
       .$type<TAlertNotificationChannels>()
       .notNull(),
