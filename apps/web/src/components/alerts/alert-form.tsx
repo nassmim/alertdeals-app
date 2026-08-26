@@ -22,7 +22,8 @@ import { getErrorMessage } from '@/utils/error-messages.utils';
 import { alertFormSchema, type TAlertFormData } from '@/validation-schemas';
 import type { TBrand, TLocation, TVehicleModel } from '@alertdeals/db';
 import {
-  AD_SOURCE_DEFINITIONS,
+  ENABLED_AD_SOURCE_DEFINITIONS,
+  ENABLED_AD_SOURCE_VALUES,
   ALERT_MODE_DEFINITIONS,
   DEFAULT_ALERT_SOURCES,
   EAlertMode,
@@ -96,7 +97,11 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
     resolver: zodResolver(alertFormSchema),
     defaultValues: {
       name: alert?.name ?? '',
-      sources: alert?.sources ?? DEFAULT_ALERT_SOURCES,
+      // Platforms disabled since the alert was created are dropped silently
+      sources:
+        alert?.sources?.filter((source) =>
+          ENABLED_AD_SOURCE_VALUES.includes(source),
+        ) ?? DEFAULT_ALERT_SOURCES,
       // Multi-select : une alerte peut cibler plusieurs marques et modèles.
       // Les valeurs viennent des tables de jointure `alert_brands` / `alert_models`,
       // on aplatit en simple liste d'IDs côté form.
@@ -204,7 +209,7 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                 <FormItem>
                   <FormControl>
                     <div className="flex flex-wrap gap-4">
-                      {AD_SOURCE_DEFINITIONS.map((source) => {
+                      {ENABLED_AD_SOURCE_DEFINITIONS.map((source) => {
                         const values = field.value ?? [];
                         const isSelected = values.includes(source.value);
                         return (

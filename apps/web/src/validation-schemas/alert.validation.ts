@@ -1,5 +1,5 @@
 import {
-  AD_SOURCE_VALUES,
+  ENABLED_AD_SOURCE_VALUES,
   ALERT_MODE_VALUES,
   EAlertMode,
 } from '@alertdeals/shared';
@@ -31,7 +31,7 @@ export const alertFormSchema = z
 
     // Listing platforms this alert matches ads from
     sources: z
-      .array(z.enum(AD_SOURCE_VALUES))
+      .array(z.enum(ENABLED_AD_SOURCE_VALUES))
       .min(1, 'Sélectionnez au moins une plateforme'),
 
     brandIds: z.array(z.number().int().positive()).default([]),
