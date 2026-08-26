@@ -4,7 +4,10 @@ import {
   getDBAdminClient,
   gte,
   inArray,
+  isNull,
   locations,
+  ne,
+  or,
   lte,
   sql,
   type SQL,
@@ -13,7 +16,11 @@ import {
   type TAlertModel,
   type TLocation,
 } from '@alertdeals/db';
-import { DEFAULT_ALERT_SOURCES, EAlertMode } from '@alertdeals/shared';
+import {
+  DAMAGED_VEHICLE_STATE_ID,
+  DEFAULT_ALERT_SOURCES,
+  EAlertMode,
+} from '@alertdeals/shared';
 
 // Depuis la PR multi-select, les marques/modèles d'une alerte vivent dans
 // des tables de jointure (`alertBrands`, `alertModels`) et non plus en
@@ -55,6 +62,14 @@ export async function findMatchedAdIdsForAccount(
     if (alert.mileageMin != null) conditions.push(gte(ads.mileage, alert.mileageMin));
     if (alert.mileageMax != null) conditions.push(lte(ads.mileage, alert.mileageMax));
     if (alert.priceMin != null) conditions.push(gte(ads.price, alert.priceMin));
+
+    // Épaves : seules Leboncoin et AutoScout24 renseignent l'état ; les autres
+    // sources tombent sur "Non endommagé" par défaut et passent donc le filtre.
+    if (alert.excludeDamaged) {
+      conditions.push(
+        or(ne(ads.vehicleStateId, DAMAGED_VEHICLE_STATE_ID), isNull(ads.vehicleStateId))!,
+      );
+    }
 
     if (alert.mode === EAlertMode.PRICE_MAX && alert.priceMax != null) {
       conditions.push(lte(ads.price, alert.priceMax));

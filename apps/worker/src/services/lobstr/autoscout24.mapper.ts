@@ -71,13 +71,21 @@ export type TAdFromAutoScout24 = {
   listing_country: string | null;
   position: number | null;
   first_online_date: string | null;
-  // Raw scraped page data; carries the numeric price evaluation
+  // Raw scraped page data; carries the numeric price evaluation, the damage
+  // flag and the ad tier (only present on part of the listings)
   functions?: {
     json_data?: {
       price?: { priceEvaluation?: number | null } | null;
+      vehicle?: { isCurrentlyDamaged?: boolean | null } | null;
+      adTier?: string | null;
     } | null;
   } | null;
 };
+
+// Every listing is "T10" unless the seller paid for more visibility
+const BASE_AD_TIER = "T10";
+// priceEvaluation 1 (très bonne affaire) and 2 (bonne affaire) are below market
+const LOW_PRICE_MAX_EVALUATION = 2;
 
 // The squid scrapes autoscout24.fr: values come in French; EN kept as a
 // safety net since the doc examples were English
@@ -225,6 +233,8 @@ export const mapAutoScout24Ad: TAdMapper<TAdFromAutoScout24> = async (
   const phone = parsePhone(ad.phone);
   const unmapped = createUnmappedCollector();
   const priceEvaluation = getPriceEvaluation(ad);
+  const jsonData = ad.functions?.json_data;
+  const adTier = jsonData?.adTier ?? null;
   const pictures = ad.image_urls ?? [];
   const firstOnline = ad.first_online_date ?? null;
   // Only the first registration is provided: use its year as the model year
@@ -244,7 +254,7 @@ export const mapAutoScout24Ad: TAdMapper<TAdFromAutoScout24> = async (
     initialPublicationDate: toDbDate(firstOnline),
     lastPublicationDate: toDbDate(firstOnline),
     ownerName: ad.seller_name || DEFAULT_OWNER_NAME,
-    hasBeenBoosted: false,
+    hasBeenBoosted: adTier !== null && adTier !== BASE_AD_TIER,
     isUrgent: false,
     modelYear: registrationYear,
     entryYear: registrationYear,
@@ -253,6 +263,9 @@ export const mapAutoScout24Ad: TAdMapper<TAdFromAutoScout24> = async (
     priceHasDropped: false,
     // No market estimate on AutoScout24: no price range, no margins
     ...computeMarketComparison(ad.price, null, null),
+    // ...but the price evaluation tells whether the ad sits below the market
+    isLowPrice:
+      priceEvaluation !== null && priceEvaluation <= LOW_PRICE_MAX_EVALUATION,
     dinPower: extractDinPower(ad.power),
     equipments: ad.equipment?.length ? ad.equipment.join(", ") : null,
     otherSpecifications:
@@ -299,7 +312,14 @@ export const mapAutoScout24Ad: TAdMapper<TAdFromAutoScout24> = async (
     null,
     ad.seats ? (ad.seats >= 7 ? "7 ou plus" : String(ad.seats)) : null,
   );
-  adData.vehicleStateId = DEFAULT_VEHICLE_STATE_ID;
+  // Missing flag = not reported as damaged
+  adData.vehicleStateId =
+    lookupRef(
+      referenceData.vehicleStates,
+      jsonData?.vehicle?.isCurrentlyDamaged
+        ? REF.vehicleStates.DAMAGED
+        : REF.vehicleStates.UNDAMAGED,
+    ) ?? DEFAULT_VEHICLE_STATE_ID;
   adData.subtypeId = unmapped.resolve(
     "bodyType",
     referenceData.adSubTypes,

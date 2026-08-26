@@ -29,6 +29,7 @@ import {
   Pause,
   Pencil,
   Phone,
+  ShieldCheck,
   Play,
   Target,
   Trash2,
@@ -198,6 +199,13 @@ export function AlertCard({ alert }: Props) {
             <div className="flex items-center gap-2">
               <Gauge className="size-4 shrink-0" />
               <span>Kilométrage : {mileageRange}</span>
+            </div>
+          )}
+
+          {alert.excludeDamaged && (
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="size-4 shrink-0" />
+              <span>Véhicules endommagés ignorés</span>
             </div>
           )}
 

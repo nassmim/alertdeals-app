@@ -59,6 +59,10 @@ export const REF = {
     SCOOTER: "Scooter",
     QUAD: "Quad",
   },
+  vehicleStates: {
+    DAMAGED: "Endommagé",
+    UNDAMAGED: "Non endommagé",
+  },
 } as const;
 
 export type TPhoneInfo = {

@@ -65,6 +65,7 @@ export const alertFormSchema = z
     mode: z.enum(ALERT_MODE_VALUES),
     priceMax: optionalNumber(z.coerce.number().positive()),
     marginMinPercentage: optionalNumber(z.coerce.number().positive().max(100)),
+    excludeDamaged: z.boolean().default(true),
 
     notificationChannels: notificationChannelsSchema,
   })
