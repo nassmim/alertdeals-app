@@ -4,7 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { usePushSubscription } from '@/hooks/use-push-subscription';
 import { usePwaInstall } from '@/hooks/use-pwa-install';
-import { Bell, Check, Download, Share, Smartphone } from 'lucide-react';
+import { Bell, Check, Download, PlayCircle, Share, Smartphone } from 'lucide-react';
+
+// Tutoriels vidéo pas-à-pas pour installer l'app sur l'écran d'accueil.
+const INSTALL_VIDEO_ANDROID_URL = 'https://www.youtube.com/watch?v=P5mbnM4UAvw';
+const INSTALL_VIDEO_IOS_URL = 'https://www.youtube.com/shorts/zArPzLKdw_8';
 
 // Onglet "Installation téléphone" du dashboard settings. Deux blocs distincts :
 //  1. installer AlertDeals en PWA (prompt natif Android vs. ajout manuel iOS),
@@ -73,6 +77,8 @@ function InstallCard() {
                 l'ajouter à ton appareil.
               </p>
             )}
+
+            <InstallVideos isIOS={isIOS} />
           </>
         )}
       </CardContent>
@@ -80,8 +86,44 @@ function InstallCard() {
   );
 }
 
+// Liens vers les tutoriels vidéo. Les deux plateformes sont toujours listées
+// (l'utilisateur peut consulter depuis son PC pour installer sur son téléphone),
+// celle correspondant à l'appareil détecté est affichée en premier.
+function InstallVideos({ isIOS }: { isIOS: boolean }) {
+  const videos = [
+    { label: 'Tutoriel Android', href: INSTALL_VIDEO_ANDROID_URL, isIOS: false },
+    { label: 'Tutoriel iPhone', href: INSTALL_VIDEO_IOS_URL, isIOS: true },
+  ].sort((a, b) => Number(b.isIOS === isIOS) - Number(a.isIOS === isIOS));
+
+  return (
+    <div className="space-y-2">
+      <p className="text-sm font-medium">Besoin d'aide ? Regarde la vidéo :</p>
+      <div className="flex flex-wrap gap-2">
+        {videos.map((video, index) => (
+          <Button
+            key={video.href}
+            asChild
+            variant={index === 0 ? 'default' : 'outline'}
+            className="gap-2"
+          >
+            <a href={video.href} target="_blank" rel="noopener noreferrer">
+              <PlayCircle className="h-4 w-4" />
+              {video.label}
+            </a>
+          </Button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function NotificationsCard() {
   const { isSupported, isSubscribed, isBusy, enable, disable } = usePushSubscription();
+  // Tant que l'app n'est pas installée (standalone), on bloque l'activation :
+  // sur iOS le push ne fonctionne pas hors PWA, et on veut que l'utilisateur
+  // suive l'ordre installer → activer sur tous les appareils.
+  const { isInstalled } = usePwaInstall();
+  const canEnable = isInstalled && !isBusy;
 
   return (
     <Card>
@@ -110,10 +152,20 @@ function NotificationsCard() {
                 Désactiver les notifications
               </Button>
             ) : (
-              <Button onClick={enable} disabled={isBusy} className="gap-2">
-                <Bell className="h-4 w-4" />
-                Activer les notifications
-              </Button>
+              <>
+                {!isInstalled && (
+                  // App non installée : bouton grisé + explication.
+                  <p className="rounded-lg bg-secondary p-3 text-sm text-secondary-foreground">
+                    Installe d'abord AlertDeals sur ton écran d'accueil (voir
+                    ci-dessus), puis ouvre l'app installée pour activer les
+                    notifications.
+                  </p>
+                )}
+                <Button onClick={enable} disabled={!canEnable} className="gap-2">
+                  <Bell className="h-4 w-4" />
+                  Activer les notifications
+                </Button>
+              </>
             )}
           </>
         )}
