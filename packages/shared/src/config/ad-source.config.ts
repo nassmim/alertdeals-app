@@ -10,6 +10,7 @@ export const AD_SOURCE_DEFINITIONS = [
     label: 'Leboncoin',
     description: 'Annonces Leboncoin',
     color: 'amber',
+    isEnabled: true,
   },
   {
     key: 'AUTOSCOUT24',
@@ -17,6 +18,7 @@ export const AD_SOURCE_DEFINITIONS = [
     label: 'AutoScout24',
     description: 'Annonces AutoScout24',
     color: 'orange',
+    isEnabled: true,
   },
   {
     key: 'LACENTRALE',
@@ -24,6 +26,7 @@ export const AD_SOURCE_DEFINITIONS = [
     label: 'LaCentrale',
     description: 'Annonces LaCentrale',
     color: 'red',
+    isEnabled: true,
   },
   {
     key: 'PARUVENDU',
@@ -31,6 +34,9 @@ export const AD_SOURCE_DEFINITIONS = [
     label: 'ParuVendu',
     description: 'Annonces ParuVendu',
     color: 'blue',
+    // Squid/mapper/enum kept for a possible reactivation; hidden from alerts
+    // meanwhile (no market estimate, so no good deal detection either)
+    isEnabled: false,
   },
 ] as const;
 
@@ -50,6 +56,15 @@ export const AD_SOURCE_VALUES = AD_SOURCE_DEFINITIONS.map((s) => s.value) as [
   TAdSource,
   ...TAdSource[],
 ];
+
+// Sources an alert can select (disabled platforms stay in the db enum and the worker)
+export const ENABLED_AD_SOURCE_DEFINITIONS = AD_SOURCE_DEFINITIONS.filter(
+  (s) => s.isEnabled,
+);
+
+export const ENABLED_AD_SOURCE_VALUES = ENABLED_AD_SOURCE_DEFINITIONS.map(
+  (s) => s.value,
+) as [TAdSource, ...TAdSource[]];
 
 // Default sources for an alert (and for alerts created before multi-source)
 export const DEFAULT_ALERT_SOURCES: TAdSource[] = [EAdSource.LEBONCOIN];
