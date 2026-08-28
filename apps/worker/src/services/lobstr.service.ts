@@ -78,9 +78,6 @@ const saveAdsFromLobstr = async (
     adsToPersist.push(adPromise.value);
   });
 
-  console.log(
-    `[lobstr] run ${runId} (${source}): ${adsToPersist.length}/${ads.length} ad(s) to persist`,
-  );
   if (adsToPersist.length === 0) {
     return;
   }
@@ -98,9 +95,6 @@ const saveAdsFromLobstr = async (
         target: [adsTable.source, adsTable.originalAdId],
         set: setAdUpdateOnConflict,
       });
-    console.log(
-      `[lobstr] run ${runId}: upserted ${Math.min(i + BATCH_SIZE, adsToPersist.length)}/${adsToPersist.length} ads`,
-    );
   }
 };
 

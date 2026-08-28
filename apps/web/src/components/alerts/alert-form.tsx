@@ -1,11 +1,9 @@
-'use client';
+"use client";
 
-import { createAlert, updateAlert } from '@/actions/alert.actions';
-import { pages } from '@/config/routes';
-import type { TAccountAlert } from '@/services/alert.service';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
+import { createAlert, updateAlert } from "@/actions/alert.actions";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -14,28 +12,30 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { MultiSelect } from '@/components/ui/multi-select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { getErrorMessage } from '@/utils/error-messages.utils';
-import { alertFormSchema, type TAlertFormData } from '@/validation-schemas';
-import type { TBrand, TLocation, TVehicleModel } from '@alertdeals/db';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { MultiSelect } from "@/components/ui/multi-select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { pages } from "@/config/routes";
+import type { TAccountAlert } from "@/services/alert.service";
+import { getErrorMessage } from "@/utils/error-messages.utils";
+import { alertFormSchema, type TAlertFormData } from "@/validation-schemas";
+import type { TBrand, TLocation, TVehicleModel } from "@alertdeals/db";
 import {
-  ENABLED_AD_SOURCE_DEFINITIONS,
-  ENABLED_AD_SOURCE_VALUES,
   ALERT_MODE_DEFINITIONS,
   DEFAULT_ALERT_SOURCES,
   EAlertMode,
+  ENABLED_AD_SOURCE_DEFINITIONS,
+  ENABLED_AD_SOURCE_VALUES,
   getAdSourceLabel,
   getSourcesMissingFilter,
-} from '@alertdeals/shared';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
-import { toast } from 'sonner';
-import { LocationSearch } from './location-search';
+} from "@alertdeals/shared";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
+import { LocationSearch } from "./location-search";
 
 type Props = {
   brands: TBrand[];
@@ -47,24 +47,25 @@ type Props = {
 // Empêche la saisie de valeurs négatives ou en notation scientifique dans les inputs numériques
 // (montant, kilométrage, années…). On bloque au keydown plutôt qu'au validate pour un retour immédiat.
 const blockNegativeKeystroke = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  if (e.key === '-' || e.key === 'e' || e.key === 'E') e.preventDefault();
+  if (e.key === "-" || e.key === "e" || e.key === "E") e.preventDefault();
 };
 
 // Liste centralisée des canaux de notification.
 // Chaque canal peut porter un `warning` affiché sous la case si elle est cochée
 // (ex. tuto d'installation pour les notifs téléphone, rappel de fournir le numéro WhatsApp).
 const CHANNEL_OPTIONS: {
-  key: 'email' | 'phone' | 'whatsapp';
+  key: "email" | "phone" | "whatsapp";
   label: string;
   warning?: React.ReactNode;
 }[] = [
-  { key: 'email', label: 'Email' },
+  { key: "email", label: "Email" },
   {
-    key: 'phone',
-    label: 'Téléphone',
+    key: "phone",
+    label: "Téléphone",
     warning: (
       <>
-        Pour ce mode, tu dois d'abord installer l'application sur ton téléphone. Regarde le tuto{' '}
+        Pour ce mode, tu dois d'abord installer l'application sur ton téléphone.
+        Regarde le tuto{" "}
         <a href="#" className="font-medium underline">
           ici
         </a>
@@ -73,12 +74,12 @@ const CHANNEL_OPTIONS: {
     ),
   },
   {
-    key: 'whatsapp',
-    label: 'WhatsApp',
+    key: "whatsapp",
+    label: "WhatsApp",
     warning: (
       <>
-        Tu devras nous communiquer le numéro WhatsApp sur lequel t'envoyer les alertes. Tu peux le
-        faire{' '}
+        Tu devras nous communiquer le numéro WhatsApp sur lequel t'envoyer les
+        alertes. Tu peux le faire{" "}
         <a href="#" className="font-medium underline">
           ici
         </a>
@@ -88,7 +89,12 @@ const CHANNEL_OPTIONS: {
   },
 ];
 
-export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props) {
+export function AlertForm({
+  brands,
+  vehicleModels,
+  hasFullAccess,
+  alert,
+}: Props) {
   const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const isEditMode = !!alert;
@@ -96,7 +102,7 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
   const form = useForm<TAlertFormData>({
     resolver: zodResolver(alertFormSchema),
     defaultValues: {
-      name: alert?.name ?? '',
+      name: alert?.name ?? "",
       // Platforms disabled since the alert was created are dropped silently
       sources:
         alert?.sources?.filter((source) =>
@@ -126,18 +132,23 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
     },
   });
 
-  const selectedBrandIds = useWatch({ control: form.control, name: 'brandIds' }) ?? [];
-  const selectedMode = useWatch({ control: form.control, name: 'mode' });
-  const selectedSources = useWatch({ control: form.control, name: 'sources' }) ?? [];
+  const selectedBrandIds =
+    useWatch({ control: form.control, name: "brandIds" }) ?? [];
+  const selectedMode = useWatch({ control: form.control, name: "mode" });
+  const selectedSources =
+    useWatch({ control: form.control, name: "sources" }) ?? [];
   // Margin mode needs a market estimate, which not every platform provides
   const sourcesWithoutMargin =
     selectedMode === EAlertMode.MARGIN_MIN
-      ? getSourcesMissingFilter('marginMin', selectedSources)
+      ? getSourcesMissingFilter("marginMin", selectedSources)
       : [];
-  const excludeDamaged = useWatch({ control: form.control, name: 'excludeDamaged' });
+  const excludeDamaged = useWatch({
+    control: form.control,
+    name: "excludeDamaged",
+  });
   // The damage flag is not reported by every platform: their ads pass the filter
   const sourcesWithoutVehicleState = excludeDamaged
-    ? getSourcesMissingFilter('vehicleState', selectedSources)
+    ? getSourcesMissingFilter("vehicleState", selectedSources)
     : [];
   // Local state to display the selected location's name/zipcode in the LocationSearch trigger.
   // The form only stores the locationId, which is what the server action expects.
@@ -152,13 +163,17 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
 
   const onSubmit = async (data: TAlertFormData) => {
     setSubmitError(null);
-    const result = isEditMode ? await updateAlert(alert.id, data) : await createAlert(data);
-    if ('error' in result) {
+    const result = isEditMode
+      ? await updateAlert(alert.id, data)
+      : await createAlert(data);
+    if ("error" in result) {
       setSubmitError(getErrorMessage(result.error));
       return;
     }
     toast.success(
-      isEditMode ? 'Alerte mise à jour avec succès !' : 'Alerte créée avec succès !',
+      isEditMode
+        ? "Alerte mise à jour avec succès !"
+        : "Alerte créée avec succès !",
     );
     router.push(pages.alerts.list);
   };
@@ -194,10 +209,12 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                 <Input
                   placeholder="Ex. Peugeot 208 Île-de-France"
                   {...field}
-                  value={field.value ?? ''}
+                  value={field.value ?? ""}
                 />
               </FormControl>
-              <FormDescription>Pour retrouver l'alerte plus facilement.</FormDescription>
+              <FormDescription>
+                Pour retrouver l'alerte plus facilement.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -240,7 +257,8 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                     </div>
                   </FormControl>
                   <FormDescription>
-                    Plateformes sur lesquelles cette alerte surveille les annonces.
+                    Plateformes sur lesquelles cette alerte surveille les
+                    annonces.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -272,10 +290,13 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                             .filter((m) => ids.includes(m.brandId))
                             .map((m) => m.id),
                         );
-                        const currentModelIds = form.getValues('modelIds') ?? [];
+                        const currentModelIds =
+                          form.getValues("modelIds") ?? [];
                         form.setValue(
-                          'modelIds',
-                          currentModelIds.filter((id) => allowedModelIds.has(id)),
+                          "modelIds",
+                          currentModelIds.filter((id) =>
+                            allowedModelIds.has(id),
+                          ),
                         );
                       }}
                       placeholder="Toutes les marques"
@@ -302,7 +323,7 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                       placeholder={
                         selectedBrandIds.length === 0
                           ? "Sélectionnez d'abord une marque"
-                          : 'Tous les modèles'
+                          : "Tous les modèles"
                       }
                       countLabel="modèles choisis"
                     />
@@ -319,7 +340,14 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                 <FormItem>
                   <FormLabel>Année min</FormLabel>
                   <FormControl>
-                    <Input type="number" min={0} onKeyDown={blockNegativeKeystroke} placeholder="2018" {...field} value={field.value ?? ''} />
+                    <Input
+                      type="number"
+                      min={0}
+                      onKeyDown={blockNegativeKeystroke}
+                      placeholder="2018"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -333,7 +361,14 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                 <FormItem>
                   <FormLabel>Année max</FormLabel>
                   <FormControl>
-                    <Input type="number" min={0} onKeyDown={blockNegativeKeystroke} placeholder="2024" {...field} value={field.value ?? ''} />
+                    <Input
+                      type="number"
+                      min={0}
+                      onKeyDown={blockNegativeKeystroke}
+                      placeholder="2024"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -347,7 +382,14 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                 <FormItem>
                   <FormLabel>Kilométrage min</FormLabel>
                   <FormControl>
-                    <Input type="number" min={0} onKeyDown={blockNegativeKeystroke} placeholder="0" {...field} value={field.value ?? ''} />
+                    <Input
+                      type="number"
+                      min={0}
+                      onKeyDown={blockNegativeKeystroke}
+                      placeholder="0"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -367,7 +409,7 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                       onKeyDown={blockNegativeKeystroke}
                       placeholder="150000"
                       {...field}
-                      value={field.value ?? ''}
+                      value={field.value ?? ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -400,7 +442,14 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                 <FormItem>
                   <FormLabel>Périmètre (km) *</FormLabel>
                   <FormControl>
-                    <Input type="number" min={0} onKeyDown={blockNegativeKeystroke} placeholder="50" {...field} value={field.value ?? ''} />
+                    <Input
+                      type="number"
+                      min={0}
+                      onKeyDown={blockNegativeKeystroke}
+                      placeholder="50"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -414,7 +463,14 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                 <FormItem className="md:col-span-2">
                   <FormLabel>Prix minimum (EUR)</FormLabel>
                   <FormControl>
-                    <Input type="number" min={0} onKeyDown={blockNegativeKeystroke} placeholder="3000" {...field} value={field.value ?? ''} />
+                    <Input
+                      type="number"
+                      min={0}
+                      onKeyDown={blockNegativeKeystroke}
+                      placeholder="3000"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -428,21 +484,27 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                 <FormItem className="space-y-2 md:col-span-2">
                   <div className="flex flex-row items-center gap-3">
                     <FormControl>
-                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
                     </FormControl>
                     <FormLabel className="cursor-pointer">
                       Ignorer les véhicules endommagés
                     </FormLabel>
                   </div>
                   <FormDescription className="ml-7">
-                    Une épave affichée à bas prix n&apos;est pas une bonne affaire.
+                    Une épave affichée à bas prix n&apos;est pas une bonne
+                    affaire.
                     {sourcesWithoutVehicleState.length > 0 && (
                       <>
-                        {' '}
+                        {" "}
                         <span className="text-amber-600">
-                          {sourcesWithoutVehicleState.map(getAdSourceLabel).join(', ')}{' '}
-                          n&apos;indique pas l&apos;état du véhicule : ses annonces ne
-                          seront pas filtrées.
+                          {sourcesWithoutVehicleState
+                            .map(getAdSourceLabel)
+                            .join(", ")}{" "}
+                          n&apos;indique pas l&apos;état du véhicule : ses
+                          annonces ne seront pas filtrées.
                         </span>
                       </>
                     )}
@@ -510,7 +572,7 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                         onKeyDown={blockNegativeKeystroke}
                         placeholder="15000"
                         {...field}
-                        value={field.value ?? ''}
+                        value={field.value ?? ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -534,15 +596,14 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                         onKeyDown={blockNegativeKeystroke}
                         placeholder="15"
                         {...field}
-                        value={field.value ?? ''}
+                        value={field.value ?? ""}
                       />
                     </FormControl>
                     {sourcesWithoutMargin.length > 0 && (
                       <FormDescription className="text-amber-600">
-                        Le mode marge nécessite une estimation du marché :
-                        aucune annonce de{' '}
-                        {sourcesWithoutMargin.map(getAdSourceLabel).join(', ')}{' '}
-                        ne pourra matcher cette alerte.
+                        Actuellement, nous n'offrons pas encore l'alerte de
+                        marge pour{" "}
+                        {sourcesWithoutMargin.map(getAdSourceLabel).join(", ")}.
                       </FormDescription>
                     )}
                     <FormMessage />
@@ -567,14 +628,19 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
                   <FormItem className="space-y-2 rounded-lg border border-border bg-card p-3 transition hover:bg-accent">
                     <div className="flex flex-row items-center gap-3">
                       <FormControl>
-                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
                       </FormControl>
                       <FormLabel className="cursor-pointer">{label}</FormLabel>
                     </div>
                     {/* Affiche le warning associé au canal s'il existe et que la case est cochée.
                         Évite de hard-coder un test par canal (ex: `channel === 'whatsapp'`). */}
                     {warning && field.value && (
-                      <p className="ml-7 text-xs text-muted-foreground">{warning}</p>
+                      <p className="ml-7 text-xs text-muted-foreground">
+                        {warning}
+                      </p>
                     )}
                   </FormItem>
                 )}
@@ -595,14 +661,19 @@ export function AlertForm({ brands, vehicleModels, hasFullAccess, alert }: Props
           </div>
         )}
 
-        <Button type="submit" size="lg" disabled={form.formState.isSubmitting} className="w-full">
+        <Button
+          type="submit"
+          size="lg"
+          disabled={form.formState.isSubmitting}
+          className="w-full"
+        >
           {form.formState.isSubmitting
             ? isEditMode
-              ? 'Enregistrement en cours…'
-              : 'Création en cours…'
+              ? "Enregistrement en cours…"
+              : "Création en cours…"
             : isEditMode
-              ? 'Enregistrer les modifications'
-              : 'Créer mon alerte'}
+              ? "Enregistrer les modifications"
+              : "Créer mon alerte"}
         </Button>
       </form>
     </Form>
